@@ -30,3 +30,4 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Discord: fabioarieira8850
 
 
+

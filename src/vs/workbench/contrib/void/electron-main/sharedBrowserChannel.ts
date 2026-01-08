@@ -46,6 +46,7 @@ export class SharedBrowserChannel implements IServerChannel {
 			case 'captureSnapshot': return this.service.captureSnapshot();
 			case 'setControlMode': return this.service.setControlMode(arg);
 			case 'getState': return this.service.getState();
+			case 'getHtmlContent': return this.service.getHtmlContent();
 			case 'close': return this.service.close();
 		}
 		throw new Error(`Call not found: ${command}`);
@@ -83,6 +84,10 @@ export class SharedBrowserChannelClient implements ISharedBrowserMainService {
 
 	async getState(): Promise<BrowserState> {
 		return this.channel.call('getState') as Promise<BrowserState>;
+	}
+
+	async getHtmlContent(): Promise<string | null> {
+		return this.channel.call('getHtmlContent') as Promise<string | null>;
 	}
 
 	async close(): Promise<void> {

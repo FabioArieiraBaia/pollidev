@@ -1,14 +1,12 @@
-/*--------------------------------------------------------------------------------------
- *  Copyright 2025 Glass Devtools, Inc. All rights reserved.
- *  Licensed under the Apache License, Version 2.0. See LICENSE.txt for more information.
- *--------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Glass Devtools, Inc. All rights reserved.
+ *  Void Editor additions licensed under the AGPL 3.0 License.
+ *--------------------------------------------------------------------------------------------*/
 
+import { BrowserWindow } from 'electron';
+import { Emitter, Event } from '../../../../base/common/event.js';
 import { Disposable } from '../../../../base/common/lifecycle.js';
 import { createDecorator } from '../../../../platform/instantiation/common/instantiation.js';
-import { registerSingleton, InstantiationType } from '../../../../platform/instantiation/common/extensions.js';
-import { ILogService } from '../../../../platform/log/common/log.js';
-import { Emitter, Event } from '../../../../base/common/event.js';
-import { BrowserWindow } from 'electron';
 import { BrowserAction, BrowserState } from './sharedBrowserChannel.js';
 
 export const ISharedBrowserMainService = createDecorator<ISharedBrowserMainService>('SharedBrowserMainService');
@@ -22,10 +20,15 @@ export interface ISharedBrowserMainService {
 	captureSnapshot(): Promise<string | null>;
 	setControlMode(mode: 'agent' | 'user'): Promise<void>;
 	getState(): Promise<BrowserState>;
+	getHtmlContent(): Promise<string | null>;
 	close(): Promise<void>;
 }
 
-export class SharedBrowserMainService extends Disposable implements ISharedBrowserMainService {
+export interface ISharedProcessSharedBrowserService extends ISharedBrowserMainService {
+	readonly onBrowserClosed: Event<void>;
+}
+
+export class SharedBrowserMainService extends Disposable implements ISharedBrowserMainService, ISharedProcessSharedBrowserService {
 	_serviceBrand: undefined;
 
 	private browserWindow: BrowserWindow | null = null;
@@ -36,67 +39,45 @@ export class SharedBrowserMainService extends Disposable implements ISharedBrows
 		isActive: false,
 	};
 
+	private readonly _onBrowserClosed = this._register(new Emitter<void>());
+	readonly onBrowserClosed = this._onBrowserClosed.event;
+
 	private readonly _onDidUpdateState = this._register(new Emitter<void>());
 	readonly onDidUpdateState = this._onDidUpdateState.event;
 
-	constructor(
-		@ILogService private readonly logService: ILogService,
-	) {
-		super();
-	}
-
-	async getState(): Promise<BrowserState> {
-		return { ...this._state };
-	}
-
 	async createBrowserWindow(): Promise<void> {
 		if (this.browserWindow && !this.browserWindow.isDestroyed()) {
-			this.logService.info('[SharedBrowserMainService] Browser window already exists');
 			return;
 		}
 
 		this.browserWindow = new BrowserWindow({
 			width: 1200,
 			height: 800,
-			show: false, // Don't show by default, will be controlled by renderer
+			show: false, // Don't show until ready to prevent white flash
 			webPreferences: {
-				sandbox: false, // Need full control for automation
 				nodeIntegration: false,
-				contextIsolation: true,
+				contextIsolation: true
 			},
 		});
 
-		// Load blank page initially
-		await this.browserWindow.loadURL('about:blank');
-
-		// Listen for navigation events
-		this.browserWindow.webContents.on('did-navigate', (event, url) => {
-			this._state.currentUrl = url;
-			this._onDidUpdateState.fire();
-			this.logService.info(`[SharedBrowserMainService] Navigated to ${url}`);
+		// Show window when ready to prevent white flash
+		this.browserWindow.once('ready-to-show', () => {
+			this.browserWindow?.show();
 		});
 
-		this.browserWindow.webContents.on('did-navigate-in-page', (event, url) => {
-			this._state.currentUrl = url;
-			this._onDidUpdateState.fire();
-		});
-
-		// Handle window close
 		this.browserWindow.on('closed', () => {
 			this.browserWindow = null;
 			this._state.isActive = false;
-			this._state.currentUrl = null;
-			this._state.currentSnapshot = null;
+			this._onBrowserClosed.fire();
 			this._onDidUpdateState.fire();
 		});
 
 		this._state.isActive = true;
 		this._onDidUpdateState.fire();
-		this.logService.info('[SharedBrowserMainService] Browser window created');
 	}
 
 	async navigate(url: string): Promise<void> {
-		if (!this.browserWindow || this.browserWindow.isDestroyed()) {
+		if (!this.browserWindow) {
 			await this.createBrowserWindow();
 		}
 
@@ -104,114 +85,64 @@ export class SharedBrowserMainService extends Disposable implements ISharedBrows
 			await this.browserWindow.loadURL(url);
 			this._state.currentUrl = url;
 			this._onDidUpdateState.fire();
+			// Ensure window is shown after navigation
+			if (!this.browserWindow.isVisible()) {
+				this.browserWindow.show();
+			}
 		}
 	}
 
 	async executeAction(action: BrowserAction): Promise<any> {
 		if (!this.browserWindow || this.browserWindow.isDestroyed()) {
-			throw new Error('Browser window not available');
+			throw new Error('Browser window is not open');
 		}
 
 		const webContents = this.browserWindow.webContents;
 
-		try {
-			switch (action.type) {
-				case 'navigate':
-					if (action.url) {
-						await this.navigate(action.url);
-					}
-					break;
-
-				case 'click':
-					// For clicks, we'd need to use CDP or inject JavaScript
-					// This is a simplified version - full implementation would require element coordinates
-					if (action.ref) {
-						await webContents.executeJavaScript(`
-							const element = document.querySelector('[data-ref="${action.ref}"]');
-							if (element) element.click();
-						`);
-					}
-					break;
-
-				case 'type':
-					if (action.ref && action.text) {
-						await webContents.executeJavaScript(`
-							const element = document.querySelector('[data-ref="${action.ref}"]');
-							if (element) {
-								element.value = ${JSON.stringify(action.text)};
-								element.dispatchEvent(new Event('input', { bubbles: true }));
-							}
-						`);
-					}
-					break;
-
-				case 'press_key':
-					if (action.key) {
-						webContents.sendInputEvent({
-							type: 'keyDown',
-							keyCode: action.key,
-						} as any);
-						webContents.sendInputEvent({
-							type: 'keyUp',
-							keyCode: action.key,
-						} as any);
-					}
-					break;
-
-				case 'hover':
-					if (action.ref) {
-						await webContents.executeJavaScript(`
-							const element = document.querySelector('[data-ref="${action.ref}"]');
-							if (element) {
-								element.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
-							}
-						`);
-					}
-					break;
-
-				case 'wait_for':
-					if (action.time) {
-						await new Promise(resolve => setTimeout(resolve, action.time! * 1000));
-					} else if (action.text) {
-						// Wait for text to appear
-						await webContents.executeJavaScript(`
-							new Promise((resolve) => {
-								const observer = new MutationObserver(() => {
-									if (document.body.innerText.includes(${JSON.stringify(action.text)})) {
-										observer.disconnect();
-										resolve();
-									}
-								});
-								observer.observe(document.body, { childList: true, subtree: true });
-								// Timeout after 10 seconds
-								setTimeout(() => {
-									observer.disconnect();
-									resolve();
-								}, 10000);
-							});
-						`);
-					}
-					break;
-
-				case 'select_option':
-					if (action.ref && action.values) {
-						await webContents.executeJavaScript(`
-							const element = document.querySelector('[data-ref="${action.ref}"]');
-							if (element && element.tagName === 'SELECT') {
-								element.value = ${JSON.stringify(action.values[0])};
-								element.dispatchEvent(new Event('change', { bubbles: true }));
-							}
-						`);
-					}
-					break;
-			}
-
-			// Capture snapshot after action
-			await this.captureSnapshot();
-			return { success: true };
-		} catch (error) {
-			this.logService.error('[SharedBrowserMainService] Error executing action:', error);
-			throw error;
+		switch (action.type) {
+			case 'navigate':
+				if (action.url) {
+					await this.navigate(action.url);
+				}
+				break;
+			case 'click':
+				if (action.ref) {
+					await webContents.executeJavaScript(`
+						const element = document.querySelector('[data-ref="${action.ref}"]');
+						if (element) element.click();
+					`);
+				} else if (action.element) {
+					await webContents.executeJavaScript(`
+						const element = document.querySelector('${action.element}');
+						if (element) element.click();
+					`);
+				}
+				break;
+			case 'type':
+				if (action.ref && action.text) {
+					await webContents.executeJavaScript(`
+						const element = document.querySelector('[data-ref="${action.ref}"]');
+						if (element) {
+							element.value = ${JSON.stringify(action.text)};
+							element.dispatchEvent(new Event('input', { bubbles: true }));
+						}
+					`);
+				} else if (action.element && action.text) {
+					await webContents.executeJavaScript(`
+						const element = document.querySelector('${action.element}');
+						if (element) {
+							element.value = ${JSON.stringify(action.text)};
+							element.dispatchEvent(new Event('input', { bubbles: true }));
+						}
+					`);
+				}
+				break;
+			case 'screenshot':
+				return await this.captureSnapshot();
+			case 'snapshot':
+				return await this.getSnapshot();
+			default:
+				throw new Error(`Unsupported action type: ${action.type}`);
 		}
 	}
 
@@ -219,16 +150,13 @@ export class SharedBrowserMainService extends Disposable implements ISharedBrows
 		if (!this.browserWindow || this.browserWindow.isDestroyed()) {
 			return null;
 		}
-
 		try {
 			const image = await this.browserWindow.webContents.capturePage();
-			const buffer = image.toPNG();
-			const base64 = buffer.toString('base64');
-			this._state.currentSnapshot = base64;
+			const dataUrl = image.toDataURL();
+			this._state.currentSnapshot = dataUrl;
 			this._onDidUpdateState.fire();
-			return base64;
+			return dataUrl;
 		} catch (error) {
-			this.logService.error('[SharedBrowserMainService] Error capturing snapshot:', error);
 			return null;
 		}
 	}
@@ -236,21 +164,86 @@ export class SharedBrowserMainService extends Disposable implements ISharedBrows
 	async setControlMode(mode: 'agent' | 'user'): Promise<void> {
 		this._state.controlMode = mode;
 		this._onDidUpdateState.fire();
-		this.logService.info(`[SharedBrowserMainService] Control mode set to ${mode}`);
+	}
+
+	async getState(): Promise<BrowserState> {
+		return { ...this._state };
+	}
+
+	async getHtmlContent(): Promise<string | null> {
+		if (!this.browserWindow || this.browserWindow.isDestroyed()) {
+			return null;
+		}
+		try {
+			return await this.browserWindow.webContents.executeJavaScript('document.documentElement.outerHTML');
+		} catch (error) {
+			return null;
+		}
 	}
 
 	async close(): Promise<void> {
 		if (this.browserWindow && !this.browserWindow.isDestroyed()) {
 			this.browserWindow.close();
+			this.browserWindow = null;
+			this._state.isActive = false;
+			this._state.currentUrl = null;
+			this._state.currentSnapshot = null;
+			this._onDidUpdateState.fire();
 		}
-		this.browserWindow = null;
-		this._state.isActive = false;
-		this._state.currentUrl = null;
-		this._state.currentSnapshot = null;
-		this._onDidUpdateState.fire();
-		this.logService.info('[SharedBrowserMainService] Browser window closed');
+	}
+
+	async click(selector: string): Promise<void> {
+		if (!this.browserWindow) {
+			throw new Error('Browser window is not open');
+		}
+		await this.browserWindow.webContents.executeJavaScript(`
+			document.querySelector('${selector}')?.click();
+		`);
+	}
+
+	async type(selector: string, text: string): Promise<void> {
+		if (!this.browserWindow) {
+			throw new Error('Browser window is not open');
+		}
+		await this.browserWindow.webContents.executeJavaScript(`
+			const element = document.querySelector('${selector}');
+			if (element) {
+				element.value = '${text}';
+				element.dispatchEvent(new Event('input', { bubbles: true }));
+			}
+		`);
+	}
+
+	async screenshot(): Promise<string> {
+		if (!this.browserWindow) {
+			throw new Error('Browser window is not open');
+		}
+		const image = await this.browserWindow.webContents.capturePage();
+		return image.toDataURL();
+	}
+
+	async getSnapshot(): Promise<any> {
+		if (!this.browserWindow) {
+			throw new Error('Browser window is not open');
+		}
+
+		const snapshot = await this.browserWindow.webContents.executeJavaScript(`
+			(function() {
+				function getAccessibilityTree(element) {
+					const role = element.getAttribute('role') || element.tagName.toLowerCase();
+					const name = element.getAttribute('aria-label') || element.getAttribute('name') || element.textContent?.trim().substring(0, 50);
+					const tree = { role, name, children: [] };
+					
+					for (let child of element.children) {
+						tree.children.push(getAccessibilityTree(child));
+					}
+					
+					return tree;
+				}
+				return getAccessibilityTree(document.body);
+			})();
+		`);
+
+		return { ...snapshot, timestamp: Date.now() };
 	}
 }
-
-registerSingleton(ISharedBrowserMainService, SharedBrowserMainService, InstantiationType.Eager);
-

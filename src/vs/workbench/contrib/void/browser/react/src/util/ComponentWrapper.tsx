@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------*/
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import ErrorBoundary from '../sidebar-tsx/ErrorBoundary.js';
 
 interface ComponentWrapperProps {
 	/**
@@ -97,18 +96,9 @@ export class ComponentWrapper extends Component<ComponentWrapperProps, Component
 			return legacyComponent;
 		}
 
-		// Wrap modern component in ErrorBoundary for additional protection
-		return (
-			<ErrorBoundary
-				fallback={legacyComponent}
-				onDismiss={() => {
-					// Reset error state when dismissed
-					this.setState({ hasError: false, error: null });
-				}}
-			>
-				{modernComponent}
-			</ErrorBoundary>
-		);
+		// REMOVED: ErrorBoundary duplo - ComponentWrapper já é um ErrorBoundary
+		// Renderizar o componente moderno diretamente para evitar renderização dupla
+		return modernComponent;
 	}
 }
 
@@ -119,5 +109,6 @@ export class ComponentWrapper extends Component<ComponentWrapperProps, Component
 export const SafeComponentWrapper: React.FC<ComponentWrapperProps> = (props) => {
 	return <ComponentWrapper {...props} />;
 };
+
 
 

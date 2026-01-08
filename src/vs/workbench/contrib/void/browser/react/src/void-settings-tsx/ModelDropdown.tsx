@@ -109,22 +109,24 @@ export const ModelDropdown = ({ featureName, className, filterByVision }: { feat
 		} />
 
 	return (
-		<ComponentWrapper
-			modernComponent={
-				<ModernModelSelector 
-					featureName={featureName} 
-					className={className} 
-					filterByVision={filterByVision} 
-				/>
-			}
-			legacyComponent={
-				<MemoizedModelDropdown 
-					featureName={featureName} 
-					className={className} 
-					filterByVision={filterByVision} 
-				/>
-			}
-			featureEnabled={useModernUI}
-		/>
+		<ErrorBoundary>
+			<ComponentWrapper
+				modernComponent={
+					<ModernModelSelector 
+						featureName={featureName} 
+						className={className} 
+						filterByVision={filterByVision} 
+					/>
+				}
+				legacyComponent={
+					<MemoizedModelDropdown 
+						featureName={featureName} 
+						className={className} 
+						filterByVision={filterByVision} 
+					/>
+				}
+				featureEnabled={useModernUI}
+			/>
+		</ErrorBoundary>
 	);
 }

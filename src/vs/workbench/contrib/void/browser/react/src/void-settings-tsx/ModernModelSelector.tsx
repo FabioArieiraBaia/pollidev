@@ -68,14 +68,20 @@ export const ModernModelSelector = ({ featureName, className = '', filterByVisio
 			);
 		}
 
-		// Apply category filter
+		// Apply category filter - cache capabilities for performance
 		if (selectedCategory !== 'all') {
+			const capabilityCache = new Map<string, ReturnType<typeof getModelCapabilities>>();
 			filtered = filtered.filter(option => {
-				const capabilities = getModelCapabilities(
-					option.selection.providerName,
-					option.selection.modelName,
-					settingsState.overridesOfModel
-				);
+				const cacheKey = `${option.selection.providerName}-${option.selection.modelName}`;
+				let capabilities = capabilityCache.get(cacheKey);
+				if (!capabilities) {
+					capabilities = getModelCapabilities(
+						option.selection.providerName,
+						option.selection.modelName,
+						settingsState.overridesOfModel
+					);
+					capabilityCache.set(cacheKey, capabilities);
+				}
 
 				switch (selectedCategory) {
 					case 'coding':
@@ -203,7 +209,7 @@ export const ModernModelSelector = ({ featureName, className = '', filterByVisio
 			{/* Dropdown panel */}
 			{isDropdownOpen && (
 				<div className={`
-					absolute z-50 w-full mt-1 bg-void-bg-1 border border-void-border-1 rounded shadow-lg
+					absolute z-10 w-full mt-1 bg-void-bg-1 border border-void-border-1 rounded shadow-lg
 					max-h-[600px] overflow-hidden flex flex-col
 				`}>
 					{/* Search bar */}
@@ -347,5 +353,6 @@ export const ModernModelSelector = ({ featureName, className = '', filterByVisio
 		</div>
 	);
 };
+
 
 

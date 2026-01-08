@@ -90,37 +90,60 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 			this._syncStateFromMain();
 		}));
 
-		// Auto-open if enabled in settings
+		// Auto-open if enabled in settings (com delay para evitar múltiplas chamadas)
 		this._register(this.settingsService.onDidChangeState(() => {
 			const sharedBrowserEnabled = this.settingsService.state.globalSettings.sharedBrowserEnabled;
-			if (sharedBrowserEnabled === true && !this._state.isActive) {
-				this.open();
+			if (sharedBrowserEnabled === true && !this._state.isActive && !this._isOpening) {
+				// Delay para evitar múltiplas chamadas durante inicialização
+				setTimeout(() => {
+					if (!this._state.isActive && !this._isOpening) {
+						this.open();
+					}
+				}, 1000);
 			} else if (sharedBrowserEnabled === false && this._state.isActive) {
 				this.close();
 			}
 		}));
 
-		// Check initial state
+		// Check initial state (com delay para garantir que o workbench esteja pronto)
 		if (this.settingsService.state.globalSettings.sharedBrowserEnabled === true) {
-			this.open();
+			// Delay para garantir que o workbench esteja totalmente inicializado
+			setTimeout(() => {
+				if (!this._state.isActive && !this._isOpening) {
+					this.open();
+				}
+			}, 2000);
 		}
 	}
 
-	async open(): Promise<void> {
-		// #region agent log
-		fetch('http://127.0.0.1:7243/ingest/1ce6e17d-b708-4230-aa86-6bd5be848bbc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sharedBrowserService.ts:90',message:'SharedBrowserService.open: called',data:{isActive:this._state.isActive},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-		// #endregion
-		
-		if (this._state.isActive) return;
+	private _isOpening = false; // Prevenir múltiplas chamadas simultâneas
 
+	async open(): Promise<void> {
+		// Prevenir múltiplas chamadas simultâneas
+		if (this._isOpening) {
+			this.logService.info('[SharedBrowserService] open() already in progress, skipping...');
+			return;
+		}
+		
+		if (this._state.isActive && this._webviewPanel && !this._webviewPanel.isDisposed) {
+			this.logService.info('[SharedBrowserService] Browser already active, revealing existing webview...');
+			this.webviewWorkbenchService.revealWebview(this._webviewPanel, ACTIVE_GROUP, false);
+			return;
+		}
+
+		this._isOpening = true;
 		try {
 			// 1. Open the WebviewPanel in the editor
 			await this._openWebviewPanel(this._state.currentUrl || 'about:blank');
 			
 			// 2. Notify main process to create the background browser window if needed
+			// NOTA: Isso cria uma janela Electron separada para automação do agente
+			// A janela visível para o usuário é o WebviewPanel no editor
 			try {
 				await this._sharedBrowserMainService.createBrowserWindow();
+				this.logService.info('[SharedBrowserService] Background browser window created for agent automation');
 			} catch (ipcError) {
+				// Se falhar, não é crítico - o WebviewPanel ainda funciona para o usuário
 				this.logService.debug(`[SharedBrowserService] Main process browser window creation skipped or failed: ${ipcError}`);
 			}
 
@@ -133,6 +156,8 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 			this._state.isActive = false;
 			this.logService.error(`[SharedBrowserService] Failed to open browser panel: ${error}`);
 			throw error;
+		} finally {
+			this._isOpening = false;
 		}
 	}
 	
@@ -280,6 +305,8 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 				});
 				// Fire state update immediately
 				this._onDidUpdateState.fire();
+				// Synchronize the visible browser with the agent's browser
+				void this._syncBrowserWithAgent();
 			}
 		} else if (toolName === 'mcp_cursor-ide-browser_browser_click') {
 			const element = toolCall.rawParams?.element as string | undefined;
@@ -291,6 +318,8 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 				description: `Clicked on element: ${element || ref || 'unknown'}`,
 				element: element || ref,
 			});
+			// Synchronize the visible browser with the agent's browser
+			void this._syncBrowserWithAgent();
 		} else if (toolName === 'mcp_cursor-ide-browser_browser_type') {
 			const text = toolCall.rawParams?.text as string | undefined;
 			const element = toolCall.rawParams?.element as string | undefined;
@@ -303,6 +332,8 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 				element,
 				text,
 			});
+			// Synchronize the visible browser with the agent's browser
+			void this._syncBrowserWithAgent();
 		} else if (toolName === 'mcp_cursor-ide-browser_browser_snapshot') {
 			channelAction = { type: 'snapshot' };
 			this._addAction({
@@ -310,6 +341,8 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 				type: 'snapshot',
 				description: 'Took accessibility snapshot of page',
 			});
+			// Synchronize the visible browser with the agent's browser
+			void this._syncBrowserWithAgent();
 		} else if (toolName === 'mcp_cursor-ide-browser_browser_take_screenshot') {
 			channelAction = { type: 'screenshot' };
 			this._addAction({
@@ -395,9 +428,6 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 
 	private async _openWebviewPanel(url: string): Promise<void> {
 		try {
-			// #region agent log
-			fetch('http://127.0.0.1:7243/ingest/1ce6e17d-b708-4230-aa86-6bd5be848bbc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sharedBrowserService.ts:396',message:'_openWebviewPanel entry',data:{url,hasPanel:!!this._webviewPanel,disposed:this._webviewPanel?.isDisposed},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-			// #endregion
 			this.logService.info(`[SharedBrowserService] _openWebviewPanel called: url=${url}, hasPanel=${!!this._webviewPanel}, disposed=${this._webviewPanel?.isDisposed}`);
 			
 			// If webview panel already exists, update its content
@@ -407,17 +437,15 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 				const html = this._getBrowserHtml(url, cspSource);
 				this.logService.info(`[SharedBrowserService] Updating existing webview: url=${url}, cspSource=${cspSource}, htmlLength=${html.length}`);
 				webview.html = html;
+				// Reveal the webview to ensure it's visible
+				await timeout(100); // Small delay to ensure webview is ready
 				this.webviewWorkbenchService.revealWebview(this._webviewPanel, ACTIVE_GROUP, false);
-				// #region agent log
-				fetch('http://127.0.0.1:7243/ingest/1ce6e17d-b708-4230-aa86-6bd5be848bbc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sharedBrowserService.ts:408',message:'Updated existing webview',data:{url},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-				// #endregion
+				this.logService.info(`[SharedBrowserService] Existing webview revealed for: ${url}`);
 				return;
 			}
 
-			// #region agent log
-			fetch('http://127.0.0.1:7243/ingest/1ce6e17d-b708-4230-aa86-6bd5be848bbc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sharedBrowserService.ts:411',message:'Before openWebview call',data:{url},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-			// #endregion
 			// Create new webview panel
+			this.logService.info(`[SharedBrowserService] Creating new WebviewPanel...`);
 			this._webviewPanel = this.webviewWorkbenchService.openWebview(
 				{ 
 					providedViewType: 'void.sharedBrowser', 
@@ -430,82 +458,105 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 				'Shared Browser',
 				{ group: ACTIVE_GROUP, preserveFocus: false }
 			);
-
-			// #region agent log
-			fetch('http://127.0.0.1:7243/ingest/1ce6e17d-b708-4230-aa86-6bd5be848bbc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sharedBrowserService.ts:424',message:'After openWebview call',data:{hasPanel:!!this._webviewPanel,hasOnWillDispose:typeof this._webviewPanel?.onWillDispose === 'function',type:typeof this._webviewPanel},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-			// #endregion
-
+			
+			this.logService.info(`[SharedBrowserService] WebviewPanel created, setting up listeners and content...`);
+			
 			// Register a listener to update internal state if the panel is disposed externally
-			// Listen to onWillDispose from EditorInput (parent class of WebviewInput)
 			if (this._webviewPanel && typeof this._webviewPanel.onWillDispose === 'function') {
-				// #region agent log
-				fetch('http://127.0.0.1:7243/ingest/1ce6e17d-b708-4230-aa86-6bd5be848bbc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sharedBrowserService.ts:428',message:'Registering onWillDispose listener',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-				// #endregion
 				const disposeListener = this._webviewPanel.onWillDispose(() => {
 					this.logService.info('[SharedBrowserService] WebviewPanel will be disposed');
-					// #region agent log
-					fetch('http://127.0.0.1:7243/ingest/1ce6e17d-b708-4230-aa86-6bd5be848bbc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sharedBrowserService.ts:431',message:'onWillDispose fired',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-					// #endregion
 					this._state.isActive = false;
 					this._state.currentUrl = null;
 					this._state.currentSnapshot = null;
 					this._state.actionHistory = [];
-					// Don't set _webviewPanel to null here as it may still be in use
 					this._onDidUpdateState.fire();
 				});
-				// #region agent log
-				fetch('http://127.0.0.1:7243/ingest/1ce6e17d-b708-4230-aa86-6bd5be848bbc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sharedBrowserService.ts:442',message:'Before _register disposeListener',data:{hasDisposeListener:!!disposeListener,type:typeof disposeListener},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-				// #endregion
 				this._register(disposeListener);
-				// #region agent log
-				fetch('http://127.0.0.1:7243/ingest/1ce6e17d-b708-4230-aa86-6bd5be848bbc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sharedBrowserService.ts:445',message:'After _register disposeListener',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-				// #endregion
 			} else {
-				// #region agent log
-				fetch('http://127.0.0.1:7243/ingest/1ce6e17d-b708-4230-aa86-6bd5be848bbc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sharedBrowserService.ts:448',message:'onWillDispose not available',data:{hasPanel:!!this._webviewPanel,type:typeof this._webviewPanel?.onWillDispose},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-				// #endregion
 				this.logService.warn('[SharedBrowserService] onWillDispose not available on webviewPanel');
 			}
 
-			// Set initial HTML content
-			// #region agent log
-			fetch('http://127.0.0.1:7243/ingest/1ce6e17d-b708-4230-aa86-6bd5be848bbc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sharedBrowserService.ts:451',message:'Before setting HTML',data:{hasWebview:!!this._webviewPanel?.webview,hasCspSource:!!this._webviewPanel?.webview?.cspSource},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-			// #endregion
+			// Get CSP source before setting HTML
 			const cspSource = this._webviewPanel.webview.cspSource || `'self' https://*.vscode-cdn.net`;
 			const html = this._getBrowserHtml(url, cspSource);
-			this.logService.info(`[SharedBrowserService] Setting HTML on new webview: url=${url}, cspSource=${cspSource}, htmlLength=${html.length}`);
+			
+			// Set HTML content
+			this.logService.info(`[SharedBrowserService] Setting HTML content: url=${url}, cspSource=${cspSource}, htmlLength=${html.length}`);
 			this._webviewPanel.webview.html = html;
-			// #region agent log
-			fetch('http://127.0.0.1:7243/ingest/1ce6e17d-b708-4230-aa86-6bd5be848bbc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sharedBrowserService.ts:456',message:'After setting HTML',data:{url,htmlLength:html.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-			// #endregion
 
-			// Handle webview messages for navigation
+			// Add message listener
 			this._register(this._webviewPanel.webview.onMessage((event: { message: any }) => {
 				const message = event.message;
 				if (message && message.type === 'navigate') {
 					this._state.currentUrl = message.url;
-					// Não recriar o HTML inteiro, apenas atualizar o estado
-					// O JavaScript no iframe já atualiza a URL
 					this._onDidUpdateState.fire();
+					this.logService.info(`[SharedBrowserService] Navigation message received: ${message.url}`);
 				} else if (message && message.type === 'openExternal') {
-					// Opcional: implementar abertura no navegador externo se necessário
 					this.logService.info(`[SharedBrowserService] Open external requested: ${message.url}`);
+				} else if (message && message.type === 'action') {
+					this.logService.info(`[SharedBrowserService] Action from webview: ${JSON.stringify(message.action)}`);
+					if (this._state.controlMode === 'user') {
+						this.logService.info('[SharedBrowserService] User action in webview ignored as control mode is USER');
+					} else {
+						this._addAction({
+							timestamp: Date.now(),
+							type: message.action.type,
+							description: message.action.description || `Performed action: ${message.action.type}`,
+							element: message.action.element,
+							text: message.action.type === 'type' ? message.action.text : undefined,
+							url: message.action.url,
+						});
+						this._onDidUpdateState.fire();
+					}
+				} else if (message && message.type === 'updateState') {
+					this.logService.info('[SharedBrowserService] State update from webview');
+					this._state = { ...this._state, ...message.state };
+					this._onDidUpdateState.fire();
 				}
 			}));
 
-			this.logService.info(`[SharedBrowserService] WebviewPanel opened for: ${url}`);
+			this.logService.info(`[SharedBrowserService] WebviewPanel setup complete for: ${url}`);
+			
+			// Wait a bit for the webview to be fully mounted before revealing
+			await timeout(500);
 			
 			// Explicitly reveal the webview to ensure it's visible in the editor
+			this.logService.info(`[SharedBrowserService] Revealing webview in editor (first attempt)...`);
 			this.webviewWorkbenchService.revealWebview(this._webviewPanel, ACTIVE_GROUP, false);
 			
-			// #region agent log
-			fetch('http://127.0.0.1:7243/ingest/1ce6e17d-b708-4230-aa86-6bd5be848bbc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sharedBrowserService.ts:467',message:'_openWebviewPanel success',data:{url},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-			// #endregion
+			// Additional reveals with delays to ensure visibility
+			await timeout(300);
+			this.logService.info(`[SharedBrowserService] Revealing webview in editor (second attempt)...`);
+			this.webviewWorkbenchService.revealWebview(this._webviewPanel, ACTIVE_GROUP, false);
+			
+			await timeout(200);
+			this.logService.info(`[SharedBrowserService] Revealing webview in editor (third attempt)...`);
+			this.webviewWorkbenchService.revealWebview(this._webviewPanel, ACTIVE_GROUP, false);
+			
+			this.logService.info(`[SharedBrowserService] WebviewPanel opened and revealed for: ${url}`);
 		} catch (error) {
-			// #region agent log
-			fetch('http://127.0.0.1:7243/ingest/1ce6e17d-b708-4230-aa86-6bd5be848bbc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sharedBrowserService.ts:470',message:'_openWebviewPanel error',data:{error:String(error),errorName:error?.name,errorMessage:error?.message,stack:error?.stack?.substring(0,500)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-			// #endregion
 			this.logService.error(`[SharedBrowserService] Failed to open WebviewPanel: ${error}`, error);
+			throw error;
+		}
+	}
+
+	private async _syncBrowserWithAgent(): Promise<void> {
+		// This method synchronizes the visible iframe with the agent's browser window
+		// by capturing screenshots or state from the main process browser
+		if (!this._webviewPanel) return;
+
+		try {
+			// Request a screenshot from the main process browser window
+			const screenshot = await this._sharedBrowserMainService.captureSnapshot();
+			if (screenshot) {
+				// Post the screenshot data to the webview to display it
+				this._webviewPanel.webview.postMessage({
+					type: 'updateScreenshot',
+					data: screenshot
+				});
+			}
+		} catch (error) {
+			this.logService.debug(`[SharedBrowserService] Failed to sync browser screenshot: ${error}`);
 		}
 	}
 
@@ -632,13 +683,13 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 			<button class="icon" id="open-external-btn" title="Open in external browser" aria-label="Open externally">↗</button>
 		</nav>
 	</header>
-	<div class="content">
-		<iframe 
-			id="browser-frame"
-			sandbox="allow-scripts allow-forms allow-same-origin allow-downloads allow-popups allow-popups-to-escape-sandbox allow-top-navigation allow-top-navigation-by-user-activation"
-			style="width: 100%; height: 100%; border: 0; display: block;"
-		></iframe>
-	</div>
+		<div class="content">
+			<iframe 
+				id="browser-frame"
+				sandbox="allow-scripts allow-forms allow-same-origin allow-downloads allow-popups allow-popups-to-escape-sandbox allow-top-navigation allow-top-navigation-by-user-activation"
+				style="width: 100%; height: 100%; border: 0; display: block !important; visibility: visible !important; opacity: 1 !important; position: relative; z-index: 1;"
+			></iframe>
+		</div>
 	<script nonce="${nonce}">
 		(function() {
 			const vscode = acquireVsCodeApi();
@@ -831,10 +882,23 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 				iframe.style.opacity = '1';
 				iframe.style.width = '100%';
 				iframe.style.height = '100%';
+				iframe.style.position = 'relative';
+				iframe.style.zIndex = '1';
 			}
 			
 			// Forçar carregamento inicial após um pequeno delay para garantir que o VS Code terminou de montar o Webview
 			setTimeout(() => {
+				// Garantir visibilidade primeiro
+				if (iframe && iframe.style) {
+					iframe.style.display = 'block !important';
+					iframe.style.visibility = 'visible !important';
+					iframe.style.opacity = '1 !important';
+					iframe.style.width = '100%';
+					iframe.style.height = '100%';
+					iframe.style.position = 'relative';
+					iframe.style.zIndex = '1';
+				}
+				
 				// Se ainda não tiver src definido ou estiver em about:blank sem URL, tentar carregar
 				if (!iframe.src || iframe.src === 'about:blank') {
 					if (currentUrl && currentUrl !== 'about:blank') {
@@ -845,11 +909,16 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 						updateButtons();
 					}
 				}
-				// Garantir visibilidade novamente após o timeout
-				iframe.style.display = 'block';
-				iframe.style.visibility = 'visible';
-				iframe.style.opacity = '1';
 			}, 500);
+			
+			// Segundo timeout para garantir visibilidade após o primeiro
+			setTimeout(() => {
+				if (iframe && iframe.style) {
+					iframe.style.display = 'block !important';
+					iframe.style.visibility = 'visible !important';
+					iframe.style.opacity = '1 !important';
+				}
+			}, 1000);
 		})();
 	</script>
 </body>
@@ -859,4 +928,6 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 }
 
 registerSingleton(ISharedBrowserService, SharedBrowserService, InstantiationType.Eager);
+
+
 
