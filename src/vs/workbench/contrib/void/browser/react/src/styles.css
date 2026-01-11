@@ -106,6 +106,20 @@
 }
 
 /* Modern Scrollbars */
+.custom-scrollbar::-webkit-scrollbar {
+	width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+	background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+	background: var(--void-border-2);
+	border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+	background: var(--void-accent-1, var(--polly-accent));
+}
+
 .void-sidebar-container ::-webkit-scrollbar {
 	width: 6px;
 }

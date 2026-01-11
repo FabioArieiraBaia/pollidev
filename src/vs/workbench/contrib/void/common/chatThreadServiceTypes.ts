@@ -11,6 +11,7 @@ import { ToolCallParams, ToolName, ToolResult } from './toolsServiceTypes.js';
 export type ToolMessage<T extends ToolName> = {
 	role: 'tool';
 	content: string; // give this result to LLM (string of value)
+	imageData?: string; // optional base64 image data (for screenshots to send to vision models)
 	id: string;
 	rawParams: RawToolParamsObj;
 	mcpServerName: string | undefined; // the server name at the time of the call
@@ -53,6 +54,7 @@ export type ChatMessage =
 		content: string; // content displayed to the LLM on future calls - allowed to be '', will be replaced with (empty)
 		displayContent: string; // content displayed to user  - allowed to be '', will be ignored
 		selections: StagingSelectionItem[] | null; // the user's selection
+		imageAttachments?: Array<{ type: 'image' | 'audio' | 'video', data: string, mimeType: string }>; // optional image/audio/video attachments (base64 data URLs)
 		state: {
 			stagingSelections: StagingSelectionItem[];
 			isBeingEdited: boolean;

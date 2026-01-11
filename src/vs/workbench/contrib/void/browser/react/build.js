@@ -196,7 +196,7 @@ if (isWatch) {
 		console.log(`📋 Copying bundles to ${globalOutDir}...`);
 		
 		// Copy all bundles from react/out to global out/
-		const bundles = ['sidebar-tsx', 'shared-browser-tsx', 'void-settings-tsx', 'void-onboarding', 'void-tooltip', 'void-editor-widgets-tsx', 'quick-edit-tsx', 'diff'];
+		const bundles = ['sidebar-tsx', 'shared-browser-tsx', 'void-settings-tsx', 'void-onboarding', 'void-tooltip', 'void-editor-widgets-tsx', 'quick-edit-tsx', 'diff', 'agent-manager-tsx', 'multi-agent-tsx'];
 		
 		for (const bundle of bundles) {
 			const srcFile = path.join(reactOutDir, bundle, 'index.js');

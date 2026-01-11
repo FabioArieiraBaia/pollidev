@@ -118,5 +118,3 @@ export class ThreadMetadataService extends Disposable implements IThreadMetadata
 registerSingleton(IThreadMetadataService, ThreadMetadataService, 1);
 
 
-
-

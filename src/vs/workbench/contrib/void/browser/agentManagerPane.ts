@@ -40,9 +40,17 @@ export class AgentManagerViewPane extends ViewPane {
 
 	protected override renderBody(container: HTMLElement): void {
 		super.renderBody(container);
+		container.style.userSelect = 'text';
+
 		this.instantiationService.invokeFunction(accessor => {
 			const disposeFn: (() => void) | undefined = mountAgentManager(container, accessor)?.dispose;
 			this._register(toDisposable(() => disposeFn?.()));
 		});
+	}
+
+	protected override layoutBody(height: number, width: number): void {
+		super.layoutBody(height, width);
+		this.element.style.height = `${height}px`;
+		this.element.style.width = `${width}px`;
 	}
 }

@@ -7,7 +7,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSettingsState, useAccessor, useCtrlKZoneStreamingState } from '../util/services.js';
 import { TextAreaFns, VoidInputBox2 } from '../util/inputs.js';
 import { QuickEditPropsType } from '../../../quickEditActions.js';
-import { ButtonStop, ButtonSubmit, IconX, VoidChatArea } from '../sidebar-tsx/SidebarChat.js';
+import { ButtonStop, ButtonSubmit, ChatAttachment, IconX, VoidChatArea } from '../sidebar-tsx/SidebarChat.js';
 import { VOID_CTRL_K_ACTION_ID } from '../../../actionIDs.js';
 import { useRefState } from '../util/helpers.js';
 import { isFeatureNameDisabled } from '../../../../../../../workbench/contrib/void/common/voidSettingsTypes.js';
@@ -93,6 +93,8 @@ export const QuickEditChat = ({
 
 	const keybindingString = accessor.get('IKeybindingService').lookupKeybinding(VOID_CTRL_K_ACTION_ID)?.getLabel()
 
+	const [attachments, setAttachments] = useState<ChatAttachment[]>([])
+
 	const chatAreaRef = useRef<HTMLDivElement | null>(null)
 	return <div ref={sizerRef} style={{ maxWidth: 450 }} className={`py-2 w-full`}>
 		<VoidChatArea
@@ -104,6 +106,8 @@ export const QuickEditChat = ({
 			isStreaming={isStreamingRef.current}
 			loadingIcon={loadingIcon}
 			isDisabled={isDisabled}
+			attachments={attachments}
+			setAttachments={setAttachments}
 			onClickAnywhere={() => { textAreaRef.current?.focus() }}
 		>
 			<VoidInputBox2

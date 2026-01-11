@@ -17,11 +17,12 @@ if (viewContainer) {
 	const viewsRegistry = Registry.as<IViewsRegistry>(ViewExtensions.ViewsRegistry);
 	const viewDescriptor: IViewDescriptor = {
 		id: AgentManagerViewPane.ID,
-		name: nls.localize2('agentManager', 'Agentes'),
+		name: nls.localize2('agentManager', 'Agents'),
 		ctorDescriptor: new SyncDescriptor(AgentManagerViewPane),
 		canToggleVisibility: true,
-		canMoveView: true,
-		order: 2,
+		canMoveView: false,
+		weight: 100,
+		order: 0,
 	};
 	viewsRegistry.registerViews([viewDescriptor], viewContainer);
 }

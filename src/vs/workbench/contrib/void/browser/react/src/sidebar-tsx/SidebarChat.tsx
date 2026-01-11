@@ -41,6 +41,8 @@ import { AgentChecklist, ActiveAgentsView } from '../multi-agent-tsx/index.js';
 import { IAgentOrchestratorService } from '../../../../common/agentOrchestratorService.js';
 
 
+type Attachment = { type: 'image' | 'audio' | 'video', file: File, preview?: string };
+
 
 export const IconX = ({ size, className = '', ...props }: { size: number, className?: string } & React.SVGProps<SVGSVGElement>) => {
 	return (
@@ -399,6 +401,9 @@ interface VoidChatAreaProps {
 	onClose?: () => void;
 
 	featureName: FeatureName;
+
+	attachments?: Attachment[];
+	setAttachments?: React.Dispatch<React.SetStateAction<Attachment[]>>;
 }
 
 export const VoidChatArea: React.FC<VoidChatAreaProps> = ({
@@ -418,6 +423,8 @@ export const VoidChatArea: React.FC<VoidChatAreaProps> = ({
 	setSelections,
 	featureName,
 	loadingIcon,
+	attachments = [],
+	setAttachments = () => { },
 }) => {
 	return (
 		<div
@@ -479,7 +486,7 @@ export const VoidChatArea: React.FC<VoidChatAreaProps> = ({
 
 				<div className="flex items-center gap-2">
 					{/* Attachment buttons based on model capabilities */}
-					<AttachmentButtons featureName={featureName} />
+					<AttachmentButtons featureName={featureName} attachments={attachments} setAttachments={setAttachments} />
 
 					{isStreaming && loadingIcon}
 
@@ -542,53 +549,31 @@ export const ButtonStop = ({ className, ...props }: ButtonHTMLAttributes<HTMLBut
 }
 
 // Attachment buttons that appear based on model capabilities
-const AttachmentButtons = ({ featureName }: { featureName: FeatureName }) => {
+const AttachmentButtons = ({ featureName, attachments, setAttachments }: { featureName: FeatureName, attachments: Attachment[], setAttachments: React.Dispatch<React.SetStateAction<Attachment[]>> }) => {
 	const settingsState = useSettingsState()
 	const fileInputRef = useRef<HTMLInputElement>(null)
 	const audioInputRef = useRef<HTMLInputElement>(null)
 	const videoInputRef = useRef<HTMLInputElement>(null)
-	const [attachments, setAttachments] = useState<{ type: 'image' | 'audio' | 'video', file: File, preview?: string }[]>([])
 
 	// Safety check: ensure settingsState is available
-	// #region agent log
-	fetch('http://127.0.0.1:7243/ingest/1ce6e17d-b708-4230-aa86-6bd5be848bbc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SidebarChat.tsx:546',message:'AttachmentButtons render',data:{hasSettingsState:!!settingsState,hasModelSelection:!!settingsState?.modelSelection,featureName},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-	// #endregion
 	if (!settingsState) {
 		return null
 	}
 
 	// Get current model capabilities with fallback
-	// Tentar obter a seleção do feature atual, depois Chat como fallback
-	const modelSelection = settingsState.modelSelection?.[featureName] 
-		|| settingsState.modelSelection?.['Chat']
-		|| settingsState.modelSelection?.['QuickEdit']
-		|| settingsState.modelSelection?.['MultiAgent'];
+	const modelSelection = settingsState.modelSelectionOfFeature?.[featureName] 
+		|| settingsState.modelSelectionOfFeature?.['Chat'];
 	
-	// #region agent log
-	fetch('http://127.0.0.1:7243/ingest/1ce6e17d-b708-4230-aa86-6bd5be848bbc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SidebarChat.tsx:552',message:'Model selection check',data:{hasModelSelection:!!modelSelection,featureName},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-	// #endregion
-
-	// Se não houver seleção de modelo, usar valores padrão para permitir que os botões apareçam
-	// Isso evita que os botões desapareçam quando há problemas de sincronização de estado
 	const providerName = modelSelection?.providerName || 'pollinations';
 	const modelName = modelSelection?.modelName || '';
 	
-	// Only check capabilities if both providerName and modelName are available
-	// Se não soubermos o modelo, assumir que suporta visão por padrão (para evitar que botões sumam)
-	// #region agent log
-	fetch('http://127.0.0.1:7243/ingest/1ce6e17d-b708-4230-aa86-6bd5be848bbc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SidebarChat.tsx:560',message:'Provider and model check',data:{providerName,modelName,hasProvider:!!providerName,hasModel:!!modelName},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-	// #endregion
-
-	// Verificar capacidades, mas com fallback para true se não soubermos o modelo
-	const supportsVision = modelName ? modelSupportsCapability(providerName, modelName, 'vision') : true;
-	const supportsAudio = modelName ? modelSupportsCapability(providerName, modelName, 'audio') : true;
+	// Only show buttons if the model explicitly supports the capability
+	const supportsVision = modelName ? modelSupportsCapability(providerName, modelName, 'vision') : false;
+	const supportsAudio = modelName ? modelSupportsCapability(providerName, modelName, 'audio') : false;
 	const supportsVideo = modelName ? modelSupportsCapability(providerName, modelName, 'video') : false;
-	// #region agent log
-	fetch('http://127.0.0.1:7243/ingest/1ce6e17d-b708-4230-aa86-6bd5be848bbc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SidebarChat.tsx:564',message:'Capability check result',data:{providerName,modelName,supportsVision,supportsAudio,supportsVideo},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-	// #endregion
 
-	// Don't show if no capabilities (mas só se tivermos certeza que não suporta)
-	if (modelName && !supportsVision && !supportsAudio && !supportsVideo) return null
+	// Don't show if no capabilities (strictly)
+	if (!supportsVision && !supportsAudio && !supportsVideo) return null
 
 	const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const files = e.target.files
@@ -1701,6 +1686,16 @@ const titleOfBuiltinToolName = {
 
 	'read_lint_errors': { done: `Read lint errors`, proposed: 'Read lint errors', running: loadingTitleWrapper('Reading lint errors') },
 	'search_in_file': { done: 'Searched in file', proposed: 'Search in file', running: loadingTitleWrapper('Searching in file') },
+
+	'browser_navigate': { done: `Navigated to`, proposed: 'Navigate to', running: loadingTitleWrapper('Navigating') },
+	'browser_click': { done: `Clicked`, proposed: 'Click', running: loadingTitleWrapper('Clicking') },
+	'browser_type': { done: `Typed`, proposed: 'Type', running: loadingTitleWrapper('Typing') },
+	'browser_snapshot': { done: `Took snapshot`, proposed: 'Take snapshot', running: loadingTitleWrapper('Taking snapshot') },
+	'browser_screenshot': { done: `Took screenshot`, proposed: 'Take screenshot', running: loadingTitleWrapper('Taking screenshot') },
+	'browser_hover': { done: `Hovered`, proposed: 'Hover', running: loadingTitleWrapper('Hovering') },
+	'browser_press_key': { done: `Pressed key`, proposed: 'Press key', running: loadingTitleWrapper('Pressing key') },
+	'browser_select_option': { done: `Selected option`, proposed: 'Select option', running: loadingTitleWrapper('Selecting option') },
+	'browser_wait_for': { done: `Waited`, proposed: 'Wait', running: loadingTitleWrapper('Waiting') },
 } as const satisfies Record<BuiltinToolName, { done: any, proposed: any, running: any }>
 
 
@@ -1840,6 +1835,40 @@ const toolNameToDesc = (toolName: BuiltinToolName, _toolParams: BuiltinToolCallP
 				desc1: getBasename(toolParams.uri.fsPath),
 				desc1Info: getRelative(toolParams.uri, accessor),
 			}
+		},
+		'browser_navigate': () => {
+			const toolParams = _toolParams as BuiltinToolCallParams['browser_navigate']
+			return { desc1: toolParams.url }
+		},
+		'browser_click': () => {
+			const toolParams = _toolParams as BuiltinToolCallParams['browser_click']
+			return { desc1: toolParams.element }
+		},
+		'browser_type': () => {
+			const toolParams = _toolParams as BuiltinToolCallParams['browser_type']
+			return { desc1: toolParams.element }
+		},
+		'browser_snapshot': () => {
+			return { desc1: '' }
+		},
+		'browser_screenshot': () => {
+			return { desc1: '' }
+		},
+		'browser_hover': () => {
+			const toolParams = _toolParams as BuiltinToolCallParams['browser_hover']
+			return { desc1: toolParams.element }
+		},
+		'browser_press_key': () => {
+			const toolParams = _toolParams as BuiltinToolCallParams['browser_press_key']
+			return { desc1: toolParams.key }
+		},
+		'browser_select_option': () => {
+			const toolParams = _toolParams as BuiltinToolCallParams['browser_select_option']
+			return { desc1: toolParams.element }
+		},
+		'browser_wait_for': () => {
+			const toolParams = _toolParams as BuiltinToolCallParams['browser_wait_for']
+			return { desc1: toolParams.text || toolParams.textGone || (toolParams.time ? `${toolParams.time}s` : '') }
 		}
 	}
 
@@ -2194,6 +2223,35 @@ const MCPToolWrapper = ({ toolMessage }: WrapperProps<string>) => {
 }
 
 type ResultWrapper<T extends ToolName> = (props: WrapperProps<T>) => React.ReactNode
+
+const BrowserTool = ({ toolMessage }: WrapperProps<BuiltinToolName>) => {
+	const accessor = useAccessor()
+	const { desc1, desc1Info } = toolNameToDesc(toolMessage.name, toolMessage.params, accessor)
+	const title = getTitle(toolMessage)
+	const icon = <Globe size={16} />
+	const isError = toolMessage.type === 'tool_error'
+	const isRejected = toolMessage.type === 'rejected'
+	const componentParams: ToolHeaderParams = { title, desc1, desc1Info, isError, icon, isRejected }
+
+	if (toolMessage.type === 'success') {
+		const { result } = toolMessage as any
+		if (result?.snapshot || result?.screenshot) {
+			componentParams.children = <ToolChildrenWrapper>
+				<SmallProseWrapper>
+					{result.snapshot && <div>Captured accessibility snapshot.</div>}
+					{result.screenshot && <div>Captured screenshot.</div>}
+				</SmallProseWrapper>
+			</ToolChildrenWrapper>
+		}
+	} else if (toolMessage.type === 'tool_error') {
+		const { result } = toolMessage
+		componentParams.bottomChildren = <BottomChildren title='Error'>
+			<CodeChildren>{result}</CodeChildren>
+		</BottomChildren>
+	}
+
+	return <ToolHeaderWrapper {...componentParams} />
+}
 
 const builtinToolNameToComponent: { [T in BuiltinToolName]: { resultWrapper: ResultWrapper<T>, } } = {
 	'read_file': {
@@ -2726,6 +2784,16 @@ const builtinToolNameToComponent: { [T in BuiltinToolName]: { resultWrapper: Res
 			return <ToolHeaderWrapper {...componentParams} />
 		},
 	},
+
+	'browser_navigate': { resultWrapper: (params) => <BrowserTool {...params} /> },
+	'browser_click': { resultWrapper: (params) => <BrowserTool {...params} /> },
+	'browser_type': { resultWrapper: (params) => <BrowserTool {...params} /> },
+	'browser_snapshot': { resultWrapper: (params) => <BrowserTool {...params} /> },
+	'browser_screenshot': { resultWrapper: (params) => <BrowserTool {...params} /> },
+	'browser_hover': { resultWrapper: (params) => <BrowserTool {...params} /> },
+	'browser_press_key': { resultWrapper: (params) => <BrowserTool {...params} /> },
+	'browser_select_option': { resultWrapper: (params) => <BrowserTool {...params} /> },
+	'browser_wait_for': { resultWrapper: (params) => <BrowserTool {...params} /> },
 };
 
 
@@ -3177,7 +3245,7 @@ const PollyHeader = ({ isRunning, streamState }: PollyHeaderProps) => {
 		} else if (isRunning === 'tool') {
 			setGlowClass('void-logo-glow-yellow')
 			setIsPulsing(true)
-			const toolName = streamState?.toolInfo?.name
+			const toolName = streamState?.toolInfo?.toolName
 			if (toolName) {
 				// Extract tool name without prefix
 				const cleanToolName = toolName.replace(/^(browser_|mcp_cursor-ide-browser_)/, '').replace(/_/g, ' ')
@@ -3246,6 +3314,7 @@ export const SidebarChat = () => {
 	// state of current message
 	const initVal = ''
 	const [instructionsAreEmpty, setInstructionsAreEmpty] = useState(!initVal)
+	const [attachments, setAttachments] = useState<Attachment[]>([])
 
 	const isDisabled = instructionsAreEmpty || !!isFeatureNameDisabled('Chat', settingsState)
 
@@ -3262,16 +3331,32 @@ export const SidebarChat = () => {
 		const userMessage = _forceSubmit || textAreaRef.current?.value || ''
 
 		try {
-			await chatThreadsService.addUserMessageAndStreamResponse({ userMessage, threadId })
+			// Convert attachments to the format expected by the service
+			const imageAttachments = attachments.length > 0 ? await Promise.all(attachments.map(async (att) => {
+				return new Promise<{ type: 'image' | 'audio' | 'video', data: string, mimeType: string }>((resolve) => {
+					const reader = new FileReader();
+					reader.onload = (e) => {
+						resolve({
+							type: att.type,
+							data: e.target?.result as string,
+							mimeType: att.file.type
+						});
+					};
+					reader.readAsDataURL(att.file);
+				});
+			})) : undefined;
+
+			await chatThreadsService.addUserMessageAndStreamResponse({ userMessage, threadId, imageAttachments })
 		} catch (e) {
 			console.error('Error while sending message in chat:', e)
 		}
 
 		setSelections([]) // clear staging
+		setAttachments([]) // clear attachments
 		textAreaFnsRef.current?.setValue('')
 		textAreaRef.current?.focus() // focus input after submit
 
-	}, [chatThreadsService, isDisabled, isRunning, textAreaRef, textAreaFnsRef, setSelections, settingsState])
+	}, [chatThreadsService, isDisabled, isRunning, textAreaRef, textAreaFnsRef, setSelections, settingsState, attachments])
 
 	const onAbort = async () => {
 		const threadId = currentThread.id
@@ -3408,6 +3493,8 @@ export const SidebarChat = () => {
 		selections={selections}
 		setSelections={setSelections}
 		onClickAnywhere={() => { textAreaRef.current?.focus() }}
+		attachments={attachments}
+		setAttachments={setAttachments}
 	>
 		<VoidInputBox2
 			enableAtToMention
@@ -3500,7 +3587,7 @@ export const SidebarChat = () => {
 	
 	// Get multi-agent plan if in multi-agent mode
 	const chatMode = settingsState.globalSettings.chatMode;
-	const orchestratorService = accessor.get('IAgentOrchestratorService') as IAgentOrchestratorService | undefined;
+	const orchestratorService = accessor.get('IAgentOrchestratorService' as any) as unknown as IAgentOrchestratorService | undefined;
 	const agentContext = orchestratorService?.getContext(threadId);
 	const currentPlan = agentContext?.currentPlan || null;
 

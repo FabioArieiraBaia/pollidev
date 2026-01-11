@@ -107,8 +107,8 @@ export const defaultModelsOfProvider = {
 		'gemini-2.5-flash',
 		'gemini-2.5-flash-lite',
 		'gemini-2.5-pro',
-		'gemini-3-flash',
-		'gemini-3-pro',
+		'gemini-1.5-flash',
+		'gemini-1.5-pro',
 	],
 	deepseek: [ // https://api-docs.deepseek.com/quick_start/pricing
 		'deepseek-chat',
@@ -459,11 +459,11 @@ const extensiveModelOptionsFallback: VoidStaticProviderInfo['modelOptionsFallbac
 		};
 	}
 
-	// Gemini 3.x models
+	// Gemini 3.x models (now mapped to 1.5 models)
 	if (lower.includes('gemini') && (lower.includes('3') || lower.includes('three'))) {
-		if (lower.includes('pro')) return toFallback(geminiModelOptions, 'gemini-3-pro')
-		if (lower.includes('flash')) return toFallback(geminiModelOptions, 'gemini-3-flash')
-		return toFallback(geminiModelOptions, 'gemini-3-flash')
+		if (lower.includes('pro')) return toFallback(geminiModelOptions, 'gemini-1.5-pro')
+		if (lower.includes('flash')) return toFallback(geminiModelOptions, 'gemini-1.5-flash')
+		return toFallback(geminiModelOptions, 'gemini-1.5-flash')
 	}
 	// Gemini 2.5.x models
 	if (lower.includes('gemini') && (lower.includes('2.5') || lower.includes('2-5'))) {
@@ -943,7 +943,7 @@ const geminiModelOptions = { // https://ai.google.dev/gemini-api/docs/pricing
 			reasoningReservedOutputTokenSpace: 8192,
 		},
 	},
-	'gemini-3-flash': {
+	'gemini-1.5-flash': {
 		contextWindow: 1_048_576,
 		reservedOutputTokenSpace: 8_192,
 		cost: { input: 0.10, output: 0.40 },
@@ -959,7 +959,7 @@ const geminiModelOptions = { // https://ai.google.dev/gemini-api/docs/pricing
 			reasoningReservedOutputTokenSpace: 8192,
 		},
 	},
-	'gemini-3-pro': {
+	'gemini-1.5-pro': {
 		contextWindow: 2_097_152,
 		reservedOutputTokenSpace: 8_192,
 		cost: { input: 1.25, output: 5.00 },
@@ -981,12 +981,12 @@ const geminiSettings: VoidStaticProviderInfo = {
 	modelOptions: geminiModelOptions,
 	modelOptionsFallback: (modelName) => {
 		const lower = modelName.toLowerCase()
-		// Recognize Gemini 3.x models
+		// Recognize Gemini 1.5 models (mapped from 3.x)
 		if (lower.includes('gemini') && (lower.includes('3') || lower.includes('three'))) {
-			if (lower.includes('pro')) return { modelName: 'gemini-3-pro', recognizedModelName: 'gemini-3-pro', ...geminiModelOptions['gemini-3-pro'] }
-			if (lower.includes('flash')) return { modelName: 'gemini-3-flash', recognizedModelName: 'gemini-3-flash', ...geminiModelOptions['gemini-3-flash'] }
-			// Default to flash for gemini-3
-			return { modelName: 'gemini-3-flash', recognizedModelName: 'gemini-3-flash', ...geminiModelOptions['gemini-3-flash'] }
+			if (lower.includes('pro')) return { modelName: 'gemini-1.5-pro', recognizedModelName: 'gemini-1.5-pro', ...geminiModelOptions['gemini-1.5-pro'] }
+			if (lower.includes('flash')) return { modelName: 'gemini-1.5-flash', recognizedModelName: 'gemini-1.5-flash', ...geminiModelOptions['gemini-1.5-flash'] }
+			// Default to flash for gemini-1.5
+			return { modelName: 'gemini-1.5-flash', recognizedModelName: 'gemini-1.5-flash', ...geminiModelOptions['gemini-1.5-flash'] }
 		}
 		// Recognize Gemini 2.5.x models
 		if (lower.includes('gemini') && (lower.includes('2.5') || lower.includes('2-5'))) {
@@ -1016,6 +1016,7 @@ const geminiSettings: VoidStaticProviderInfo = {
 				...defaultModelOptions,
 				specialToolFormat: 'gemini-style',
 				supportsTools: true,
+				supportsVision: true, // Modelos Gemini suportam visão
 			}
 		}
 		return null
@@ -1200,13 +1201,118 @@ const groqSettings: VoidStaticProviderInfo = {
 
 
 // ---------------- GOOGLE VERTEX ----------------
+// Updated with correct capabilities from https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/call-vertex-using-openai-library
 const googleVertexModelOptions = {
+	// === Gemini 1.5 Series ===
+	'gemini-1.5-pro': {
+		contextWindow: 2_000_000, // 2M tokens
+		reservedOutputTokenSpace: 8_192,
+		supportsFIM: false,
+		supportsSystemMessage: 'system-role',
+		specialToolFormat: 'openai-style',
+		reasoningCapabilities: { supportsReasoning: true, canTurnOffReasoning: true, canIOReasoning: true },
+		supportsTools: true,
+		supportsVision: true,
+		supportsAudio: true,
+		supportsVideo: true,
+		cost: { input: 0, output: 0 },
+		downloadable: false,
+	},
+	'gemini-1.5-flash': {
+		contextWindow: 1_000_000, // 1M tokens
+		reservedOutputTokenSpace: 8_192,
+		supportsFIM: false,
+		supportsSystemMessage: 'system-role',
+		specialToolFormat: 'openai-style',
+		reasoningCapabilities: { supportsReasoning: true, canTurnOffReasoning: true, canIOReasoning: true },
+		supportsTools: true,
+		supportsVision: true,
+		supportsAudio: true,
+		supportsVideo: true,
+		cost: { input: 0, output: 0 },
+		downloadable: false,
+	},
+	'gemini-2.0-flash-exp': {
+		contextWindow: 1_000_000, // 1M tokens
+		reservedOutputTokenSpace: 8_192,
+		supportsFIM: false,
+		supportsSystemMessage: 'system-role',
+		specialToolFormat: 'openai-style',
+		reasoningCapabilities: { supportsReasoning: true, canTurnOffReasoning: true, canIOReasoning: true },
+		supportsTools: true,
+		supportsVision: true,
+		supportsAudio: true,
+		supportsVideo: true,
+		cost: { input: 0, output: 0 },
+		downloadable: false,
+	},
+	'gemini-2.0-flash-thinking-exp': {
+		contextWindow: 1_000_000, // 1M tokens
+		reservedOutputTokenSpace: 8_192,
+		supportsFIM: false,
+		supportsSystemMessage: 'system-role',
+		specialToolFormat: 'openai-style',
+		reasoningCapabilities: { supportsReasoning: true, canTurnOffReasoning: false, canIOReasoning: true },
+		supportsTools: true,
+		supportsVision: true,
+		supportsAudio: true,
+		supportsVideo: true,
+		cost: { input: 0, output: 0 },
+		downloadable: false,
+	},
+
+	// === Gemini 1.0 Series ===
+	'gemini-1.0-pro': {
+		contextWindow: 1_048_576, // 1M tokens
+		reservedOutputTokenSpace: 8_192,
+		supportsFIM: false,
+		supportsSystemMessage: 'system-role',
+		specialToolFormat: 'openai-style',
+		reasoningCapabilities: false,
+		supportsTools: true,
+		supportsVision: true,
+		cost: { input: 0, output: 0 },
+		downloadable: false,
+	},
+	'gemini-1.0-pro-002': {
+		contextWindow: 1_048_576, // 1M tokens
+		reservedOutputTokenSpace: 8_192,
+		supportsFIM: false,
+		supportsSystemMessage: 'system-role',
+		specialToolFormat: 'openai-style',
+		reasoningCapabilities: false,
+		supportsTools: true,
+		supportsVision: true,
+		cost: { input: 0, output: 0 },
+		downloadable: false,
+	},
 } as const satisfies Record<string, VoidStaticModelInfo>
+
 const googleVertexSettings: VoidStaticProviderInfo = {
 	modelOptions: googleVertexModelOptions,
-	modelOptionsFallback: (modelName) => { return null },
+	modelOptionsFallback: (modelName) => {
+		// Google Vertex is OpenAI-compatible, convert gemini-style if needed
+		const res = extensiveModelOptionsFallback(modelName)
+		// Pollinations is OpenAI-compatible, use openai-style
+		if (res?.specialToolFormat === 'gemini-style') {
+			res.specialToolFormat = 'openai-style'
+		}
+		// Se o modelo não foi reconhecido mas contém "gemini", garantir openai-style para ferramentas funcionarem
+		if (!res && modelName.toLowerCase().includes('gemini')) {
+			return {
+				modelName,
+				recognizedModelName: modelName,
+				...defaultModelOptions,
+				specialToolFormat: 'openai-style',
+				supportsTools: true,
+				supportsVision: true, // Modelos Gemini suportam visão
+			}
+		}
+		return res
+	},
 	providerReasoningIOSettings: {
 		input: { includeInPayload: openAICompatIncludeInPayloadReasoning },
+		output: { nameOfFieldInDelta: 'reasoning' },
 	},
 }
 
@@ -1846,6 +1952,7 @@ const pollinationsSettings: VoidStaticProviderInfo = {
 			res.specialToolFormat = 'openai-style'
 		}
 		// Se o modelo não foi reconhecido mas contém "gemini", garantir openai-style para ferramentas funcionarem
+		// Nota: Pollinations revende modelos do Google, então precisamos garantir compatibilidade
 		if (!res && modelName.toLowerCase().includes('gemini')) {
 			return {
 				modelName,
@@ -1853,6 +1960,7 @@ const pollinationsSettings: VoidStaticProviderInfo = {
 				...defaultModelOptions,
 				specialToolFormat: 'openai-style',
 				supportsTools: true,
+				supportsVision: true, // Modelos Gemini suportam visão
 			}
 		}
 		return res

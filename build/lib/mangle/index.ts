@@ -670,8 +670,14 @@ export class Mangler {
 					if (lastEdit && lastEdit.offset === edit.offset) {
 						//
 						if (lastEdit.length !== edit.length || lastEdit.newText !== edit.newText) {
+							console.error('\n❌ OVERLAPPING EDIT DETECTED:');
+							console.error(`   File: ${item.fileName}`);
+							console.error(`   Offset: ${edit.offset}`);
+							console.error(`   Last Edit: length=${lastEdit.length}, text="${lastEdit.newText}"`);
+							console.error(`   Current Edit: length=${edit.length}, text="${edit.newText}"`);
+							console.error(`   Total edits in file: ${edits.length}\n`);
 							this.log('ERROR: Overlapping edit', item.fileName, edit.offset, edits);
-							throw new Error('OVERLAPPING edit');
+							throw new Error(`OVERLAPPING edit in ${item.fileName} at offset ${edit.offset}`);
 						} else {
 							continue;
 						}
