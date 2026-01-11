@@ -71,6 +71,7 @@ module.exports = {
 				'void-border-3': 'var(--void-border-3)',
 				'void-border-4': 'var(--void-border-4)',
 
+				'void-accent-1': 'var(--void-accent-1)',
 				'void-ring-color': 'var(--void-ring-color)',
 				'void-link-color': 'var(--void-link-color)',
 

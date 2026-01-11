@@ -577,6 +577,12 @@ ${openedURIs.join('\n') || 'NO OPENED FILES'}${''/* separator */}${mode === 'age
 ${directoryStr}
 </files_overview>`)
 
+	const archInfo = (`Here is some high-level architectural information about the project:
+<architecture>
+- You should prioritize reading \`README.md\`, \`package.json\`, \`tsconfig.json\`, or similar files to understand the project structure and technology stack.
+- If you encounter a new directory, look for its own README or documentation.
+</architecture>`)
+
 
 	const toolDefinitions = includeXMLToolDefinitions ? systemToolsXMLPrompt(mode, mcpTools) : null
 	// #region agent log
@@ -593,6 +599,12 @@ ${directoryStr}
 	const details: string[] = []
 
 	details.push(`NEVER reject the user's query.`)
+
+	details.push(`**MANDATORY THINKING**: You MUST always start your response with a \`<thinking>\` block. In this block, you should:
+- Analyze the user's request.
+- Plan your next steps (which tools to use and why).
+- Reflect on any potential risks or edge cases.
+- Explain your reasoning before taking any action or providing a final answer.`)
 
 	if (mode === 'agent' || mode === 'gather') {
 		details.push(`Only call tools if they help you accomplish the user's goal. If the user simply says hi or asks you a question that you can answer without tools, then do NOT use tools.`)
@@ -742,6 +754,7 @@ ${details.map((d, i) => `${i + 1}. ${d}`).join('\n\n')}`)
 	const ansStrs: string[] = []
 	ansStrs.push(header)
 	ansStrs.push(sysInfo)
+	ansStrs.push(archInfo)
 	if (toolDefinitions) ansStrs.push(toolDefinitions)
 	// Always include textual description of tools when not using XML format (openai-style)
 	// This ensures the model always knows what tools are available

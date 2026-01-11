@@ -57,15 +57,16 @@ export const persistentTerminalNameOfId = (id: string) => {
 	return `PolliDev Agent (${id})`
 }
 export const idOfPersistentTerminalName = (name: string) => {
+	if (!name) return null;
 	// Novo formato: PolliDev Agent
 	if (name === 'PolliDev Agent') return '1'
 	const match = name.match(/PolliDev Agent \((\d+)\)/)
-	if (match && Number.isInteger(match[1]) && Number(match[1]) >= 1) return match[1]
+	if (match && match[1] && Number(match[1]) >= 1) return match[1]
 	
 	// Fallback para formato antigo: Void Agent (compatibilidade)
 	if (name === 'Void Agent') return '1'
 	const oldMatch = name.match(/Void Agent \((\d+)\)/)
-	if (oldMatch && Number.isInteger(oldMatch[1]) && Number(oldMatch[1]) >= 1) return oldMatch[1]
+	if (oldMatch && oldMatch[1] && Number(oldMatch[1]) >= 1) return oldMatch[1]
 	
 	return null
 }
@@ -84,20 +85,40 @@ export class TerminalToolService extends Disposable implements ITerminalToolServ
 
 		// runs on ALL terminals for simplicity
 		const initializeTerminal = (terminal: ITerminalInstance) => {
-			// when exit, remove
-			const d = terminal.onExit(() => {
-				const terminalId = idOfPersistentTerminalName(terminal.title)
-				if (terminalId !== null && (terminalId in this.persistentTerminalInstanceOfId)) delete this.persistentTerminalInstanceOfId[terminalId]
-				d.dispose()
-			})
+			const updateMapping = () => {
+				const id = idOfPersistentTerminalName(terminal.title);
+				
+				// Remove terminal from any old IDs if title changed
+				for (const [existingId, instance] of Object.entries(this.persistentTerminalInstanceOfId)) {
+					if (instance === terminal && existingId !== id) {
+						delete this.persistentTerminalInstanceOfId[existingId];
+					}
+				}
+
+				// Add to new ID if recognized
+				if (id) {
+					this.persistentTerminalInstanceOfId[id] = terminal;
+				}
+			};
+
+			updateMapping();
+
+			// Listeners to ensure persistence survives title changes and exits
+			const dTitle = terminal.onTitleChanged(() => updateMapping());
+			const dExit = terminal.onExit(() => {
+				for (const [id, instance] of Object.entries(this.persistentTerminalInstanceOfId)) {
+					if (instance === terminal) {
+						delete this.persistentTerminalInstanceOfId[id];
+					}
+				}
+				dTitle.dispose();
+				dExit.dispose();
+			});
 		}
 
 
 		// initialize any terminals that are already open
 		for (const terminal of terminalService.instances) {
-			const proposedTerminalId = idOfPersistentTerminalName(terminal.title)
-			if (proposedTerminalId) this.persistentTerminalInstanceOfId[proposedTerminalId] = terminal
-
 			initializeTerminal(terminal)
 		}
 

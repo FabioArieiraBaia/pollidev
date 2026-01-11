@@ -27,12 +27,14 @@ export const EMPTY_MESSAGE = '(empty message)'
 type SimpleLLMMessage = {
 	role: 'tool';
 	content: string;
+	imageData?: string; // optional base64 image data (for screenshots to send to vision models)
 	id: string;
 	name: ToolName;
 	rawParams: RawToolParamsObj;
 } | {
 	role: 'user';
 	content: string;
+	imageAttachments?: Array<{ type: 'image' | 'audio' | 'video', data: string, mimeType: string }>; // optional image/audio/video attachments (base64 data URLs)
 } | {
 	role: 'assistant';
 	content: string;
@@ -70,7 +72,7 @@ openai on developer system message - https://cdn.openai.com/spec/model-spec-2024
 */
 
 
-const prepareMessages_openai_tools = (messages: SimpleLLMMessage[], includeThoughtSignature: boolean = false): AnthropicOrOpenAILLMMessage[] => {
+const prepareMessages_openai_tools = (messages: SimpleLLMMessage[], includeThoughtSignature: boolean = false, supportsVision: boolean = false): AnthropicOrOpenAILLMMessage[] => {
 
 	const newMessages: OpenAILLMChatMessage[] = [];
 
@@ -79,8 +81,76 @@ const prepareMessages_openai_tools = (messages: SimpleLLMMessage[], includeThoug
 
 		if (currMsg.role !== 'tool') {
 			const msgCopy: any = { ...currMsg }
-			// Ensure content is formatted correctly for OpenAI (string or array of parts)
-			if (Array.isArray(msgCopy.content)) {
+			
+			// If this is a user message with attachments and vision is supported, format content as array
+			if (currMsg.role === 'user' && supportsVision && currMsg.imageAttachments && currMsg.imageAttachments.length > 0) {
+				// #region debug log
+				console.log('[convertToLLMMessageService] prepareMessages_openai_tools: Processing image attachments', {
+					supportsVision,
+					imageAttachmentsCount: currMsg.imageAttachments.length,
+					imageTypes: currMsg.imageAttachments.map(att => att.type),
+					firstImageDataFormat: currMsg.imageAttachments[0]?.data?.substring(0, 50)
+				});
+				// #endregion
+				
+				const contentParts: Array<{ type: 'text'; text: string } | { type: 'image_url'; image_url: { url: string } }> = [];
+				// Add text content if it exists
+				if (currMsg.content && currMsg.content.trim()) {
+					contentParts.push({ type: 'text', text: currMsg.content });
+				}
+				// Add image attachments (only images for OpenAI, audio/video may not be supported)
+				for (const att of currMsg.imageAttachments) {
+					if (att.type === 'image') {
+						// Validate and ensure data URL format is correct
+						let imageUrl = att.data;
+						
+						// If it's not already a data URL, try to construct one
+						if (!imageUrl.startsWith('data:')) {
+							const mimeType = att.mimeType || 'image/png';
+							// If it's already base64, wrap it in data URL format
+							if (imageUrl.match(/^[A-Za-z0-9+/=]+$/)) {
+								imageUrl = `data:${mimeType};base64,${imageUrl}`;
+							} else {
+								console.warn('[convertToLLMMessageService] prepareMessages_openai_tools: Invalid image data format, skipping image', {
+									hasData: !!att.data,
+									dataLength: att.data?.length,
+									mimeType: att.mimeType
+								});
+								continue;
+							}
+						}
+						
+						// Validate data URL format
+						if (!imageUrl.match(/^data:image\/[^;]+;base64,[A-Za-z0-9+/=]+$/)) {
+							console.warn('[convertToLLMMessageService] prepareMessages_openai_tools: Invalid data URL format, skipping image', {
+								urlPreview: imageUrl.substring(0, 50),
+								mimeType: att.mimeType
+							});
+							continue;
+						}
+						
+						contentParts.push({ type: 'image_url', image_url: { url: imageUrl } });
+						
+						// #region debug log
+						console.log('[convertToLLMMessageService] prepareMessages_openai_tools: Added image to content parts', {
+							mimeType: att.mimeType,
+							urlPreview: imageUrl.substring(0, 60) + '...',
+							totalParts: contentParts.length
+						});
+						// #endregion
+					}
+					// Note: OpenAI API may not support audio/video in the same way, so we skip them for now
+				}
+				msgCopy.content = contentParts.length > 0 ? contentParts : currMsg.content;
+				
+				// #region debug log
+				console.log('[convertToLLMMessageService] prepareMessages_openai_tools: Final message content', {
+					isArray: Array.isArray(msgCopy.content),
+					contentLength: Array.isArray(msgCopy.content) ? msgCopy.content.length : msgCopy.content?.length,
+					hasImages: Array.isArray(msgCopy.content) ? msgCopy.content.some((p: any) => p.type === 'image_url') : false
+				});
+				// #endregion
+			} else if (Array.isArray(msgCopy.content)) {
 				// It's already multipart, keep it
 			} else if (typeof msgCopy.content === 'string') {
 				// It's a string, keep it
@@ -126,10 +196,19 @@ const prepareMessages_openai_tools = (messages: SimpleLLMMessage[], includeThoug
 		}
 
 		// add the tool response
+		// If model supports vision and we have image data, format content as array with text and image
+		let toolContent: string | Array<{ type: 'text'; text: string } | { type: 'image_url'; image_url: { url: string } }> = currMsg.content;
+		if (supportsVision && currMsg.imageData) {
+			toolContent = [
+				{ type: 'text', text: currMsg.content },
+				{ type: 'image_url', image_url: { url: currMsg.imageData } }
+			];
+		}
+		
 		newMessages.push({
 			role: 'tool',
 			tool_call_id: currMsg.id,
-			content: currMsg.content,
+			content: toolContent,
 		})
 	}
 	return newMessages
@@ -194,9 +273,41 @@ const prepareMessages_anthropic_tools = (messages: SimpleLLMMessage[], supportsA
 		}
 
 		if (currMsg.role === 'user') {
-			newMessages[i] = {
-				role: 'user',
-				content: currMsg.content,
+			// If user message has image attachments, format content as array
+			if (currMsg.imageAttachments && currMsg.imageAttachments.length > 0) {
+				const contentParts: Array<{ type: 'text'; text: string } | { type: 'image'; source: { type: 'base64'; media_type: 'image/png' | 'image/jpeg' | 'image/gif' | 'image/webp'; data: string } }> = [];
+				// Add text content if it exists
+				if (currMsg.content && currMsg.content.trim()) {
+					contentParts.push({ type: 'text', text: currMsg.content });
+				}
+				// Add image attachments (Anthropic supports images via base64)
+				for (const att of currMsg.imageAttachments) {
+					if (att.type === 'image') {
+						// Extract base64 data from data URL (remove data:mimeType;base64, prefix)
+						const base64Match = att.data.match(/^data:([^;]+);base64,(.+)$/);
+						if (base64Match) {
+							const [, mimeType, base64Data] = base64Match;
+							contentParts.push({ 
+								type: 'image', 
+								source: { 
+									type: 'base64', 
+									media_type: (mimeType || att.mimeType || 'image/png') as 'image/png' | 'image/jpeg' | 'image/gif' | 'image/webp',
+									data: base64Data 
+								} 
+							});
+						}
+					}
+					// Note: Anthropic may not support audio/video in the same way, so we skip them for now
+				}
+				newMessages[i] = {
+					role: 'user',
+					content: contentParts.length > 0 ? contentParts : currMsg.content,
+				}
+			} else {
+				newMessages[i] = {
+					role: 'user',
+					content: currMsg.content,
+				}
 			}
 			continue
 		}
@@ -281,6 +392,7 @@ const prepareOpenAIOrAnthropicMessages = ({
 	contextWindow,
 	reservedOutputTokenSpace,
 	includeThoughtSignature,
+	supportsVision,
 }: {
 	messages: SimpleLLMMessage[],
 	systemMessage: string,
@@ -291,6 +403,7 @@ const prepareOpenAIOrAnthropicMessages = ({
 	contextWindow: number,
 	reservedOutputTokenSpace: number | null | undefined,
 	includeThoughtSignature?: boolean,
+	supportsVision?: boolean,
 }): { messages: AnthropicOrOpenAILLMMessage[], separateSystemMessage: string | undefined } => {
 
 	reservedOutputTokenSpace = Math.max(
@@ -409,7 +522,7 @@ const prepareOpenAIOrAnthropicMessages = ({
 		llmChatMessages = prepareMessages_anthropic_tools(messages as SimpleLLMMessage[], supportsAnthropicReasoning)
 	}
 	else if (specialToolFormat === 'openai-style') {
-		llmChatMessages = prepareMessages_openai_tools(messages as SimpleLLMMessage[], includeThoughtSignature ?? false)
+		llmChatMessages = prepareMessages_openai_tools(messages as SimpleLLMMessage[], includeThoughtSignature ?? false, supportsVision ?? false)
 	}
 	const llmMessages = llmChatMessages
 
@@ -534,19 +647,20 @@ const prepareMessages = (params: {
 	reservedOutputTokenSpace: number | null | undefined,
 	providerName: ProviderName,
 	includeThoughtSignature?: boolean,
+	supportsVision?: boolean,
 }): { messages: LLMChatMessage[], separateSystemMessage: string | undefined } => {
 
 	const specialFormat = params.specialToolFormat // this is just for ts stupidness
 
 	// if need to convert to gemini style of messaes, do that (treat as anthropic style, then convert to gemini style)
 	if (params.providerName === 'gemini' || specialFormat === 'gemini-style') {
-		const res = prepareOpenAIOrAnthropicMessages({ ...params, specialToolFormat: specialFormat === 'gemini-style' ? 'anthropic-style' : undefined, includeThoughtSignature: params.includeThoughtSignature })
+		const res = prepareOpenAIOrAnthropicMessages({ ...params, specialToolFormat: specialFormat === 'gemini-style' ? 'anthropic-style' : undefined, includeThoughtSignature: params.includeThoughtSignature, supportsVision: params.supportsVision })
 		const messages = res.messages as AnthropicLLMChatMessage[]
 		const messages2 = prepareGeminiMessages(messages)
 		return { messages: messages2, separateSystemMessage: res.separateSystemMessage }
 	}
 
-	return prepareOpenAIOrAnthropicMessages({ ...params, specialToolFormat: specialFormat, includeThoughtSignature: params.includeThoughtSignature })
+	return prepareOpenAIOrAnthropicMessages({ ...params, specialToolFormat: specialFormat, includeThoughtSignature: params.includeThoughtSignature, supportsVision: params.supportsVision })
 }
 
 
@@ -685,17 +799,18 @@ class ConvertToLLMMessageService extends Disposable implements IConvertToLLMMess
 				simpleLLMMessages.push({
 					role: m.role,
 					content: m.content,
+					imageData: m.imageData,
 					name: m.name,
 					id: m.id,
 					rawParams: m.rawParams,
 				})
 			}
 			else if (m.role === 'user') {
-				// TODO: Add image support when we have image data in ChatMessage
-				// For now, just pass the text content
+				// Pass content and image attachments
 				simpleLLMMessages.push({
 					role: m.role,
 					content: m.content,
+					imageAttachments: m.imageAttachments,
 				})
 			}
 		}
@@ -712,7 +827,25 @@ class ConvertToLLMMessageService extends Disposable implements IConvertToLLMMess
 			specialToolFormat,
 			contextWindow,
 			supportsSystemMessage,
+			supportsVision,
 		} = getModelCapabilities(providerName, modelName, overridesOfModel)
+
+		// #region debug log
+		const userSimpleMessages = simpleMessages.filter((m): m is Extract<SimpleLLMMessage, { role: 'user' }> => m.role === 'user');
+		const hasImageAttachments = userSimpleMessages.some(m => 'imageAttachments' in m && m.imageAttachments && m.imageAttachments.length > 0);
+		const imageAttachmentsCount = userSimpleMessages
+			.filter(m => 'imageAttachments' in m && m.imageAttachments)
+			.reduce((sum, m) => sum + (m.imageAttachments?.length || 0), 0);
+		console.log('[convertToLLMMessageService] prepareLLMSimpleMessages: Model capabilities', {
+			providerName,
+			modelName,
+			supportsVision,
+			supportsVisionType: typeof supportsVision,
+			hasImageAttachments,
+			specialToolFormat,
+			imageAttachmentsCount
+		});
+		// #endregion
 
 		const modelSelectionOptions = this.voidSettingsService.state.optionsOfModelSelection[featureName][modelSelection.providerName]?.[modelSelection.modelName]
 
@@ -720,15 +853,34 @@ class ConvertToLLMMessageService extends Disposable implements IConvertToLLMMess
 		const aiInstructions = this._getCombinedAIInstructions();
 
 		const isReasoningEnabled = getIsReasoningEnabledState(featureName, providerName, modelName, modelSelectionOptions, overridesOfModel)
-		const reservedOutputTokenSpace = getReservedOutputTokenSpace(providerName, modelName, { isReasoningEnabled, overridesOfModel })
-
-		// Check if we need thought_signature: Pollinations + Gemini + Reasoning + Tools
+		
+		// Check if we need to disable reasoning for Pollinations Gemini with tools
+		// Vertex AI requires thought_signature when reasoning is enabled, which causes errors
 		const hasTools = simpleMessages.some(m => m.role === 'tool')
-		const isPollinationsGeminiWithReasoning = providerName === 'pollinations' && 
+		const shouldDisableReasoningForPollinations = providerName === 'pollinations' && 
 			modelName.startsWith('gemini') && 
-			isReasoningEnabled && 
 			hasTools &&
 			specialToolFormat === 'openai-style';
+		
+		const effectiveReasoningEnabled = shouldDisableReasoningForPollinations ? false : isReasoningEnabled
+		const reservedOutputTokenSpace = getReservedOutputTokenSpace(providerName, modelName, { isReasoningEnabled: effectiveReasoningEnabled, overridesOfModel })
+
+		// Check if we need thought_signature: Pollinations + Gemini + Tools
+		// Vertex AI requires thought_signature for tool calls when reasoning is enabled OR for some models/configurations
+		const isPollinationsGeminiWithTools = providerName === 'pollinations' && 
+			modelName.startsWith('gemini') && 
+			hasTools &&
+			specialToolFormat === 'openai-style';
+
+		const supportsVisionFinal = supportsVision === true;
+		// #region debug log
+		console.log('[convertToLLMMessageService] prepareLLMSimpleMessages: Calling prepareMessages', {
+			supportsVisionRaw: supportsVision,
+			supportsVisionFinal,
+			hasImageAttachments,
+			willIncludeImages: supportsVisionFinal && hasImageAttachments
+		});
+		// #endregion
 
 		const { messages, separateSystemMessage } = prepareMessages({
 			messages: simpleMessages,
@@ -740,7 +892,8 @@ class ConvertToLLMMessageService extends Disposable implements IConvertToLLMMess
 			contextWindow,
 			reservedOutputTokenSpace,
 			providerName,
-			includeThoughtSignature: isPollinationsGeminiWithReasoning,
+			includeThoughtSignature: isPollinationsGeminiWithTools,
+			supportsVision: supportsVisionFinal,
 		})
 		return { messages, separateSystemMessage };
 	}
@@ -754,7 +907,25 @@ class ConvertToLLMMessageService extends Disposable implements IConvertToLLMMess
 			specialToolFormat,
 			contextWindow,
 			supportsSystemMessage,
+			supportsVision,
 		} = getModelCapabilities(providerName, modelName, overridesOfModel)
+
+		// #region debug log
+		const userChatMessages = chatMessages.filter((m): m is Extract<ChatMessage, { role: 'user' }> => m.role === 'user');
+		const hasImageAttachments = userChatMessages.some(m => 'imageAttachments' in m && m.imageAttachments && m.imageAttachments.length > 0);
+		const imageAttachmentsCount = userChatMessages
+			.filter(m => 'imageAttachments' in m && m.imageAttachments)
+			.reduce((sum, m) => sum + (m.imageAttachments?.length || 0), 0);
+		console.log('[convertToLLMMessageService] prepareLLMChatMessages: Model capabilities', {
+			providerName,
+			modelName,
+			supportsVision,
+			supportsVisionType: typeof supportsVision,
+			hasImageAttachments,
+			specialToolFormat,
+			imageAttachmentsCount
+		});
+		// #endregion
 
 		const { disableSystemMessage } = this.voidSettingsService.state.globalSettings;
 		const fullSystemMessage = await this._generateChatMessagesSystemMessage(chatMode, specialToolFormat)
@@ -765,18 +936,37 @@ class ConvertToLLMMessageService extends Disposable implements IConvertToLLMMess
 		// Get combined AI instructions
 		const aiInstructions = this._getCombinedAIInstructions();
 		const isReasoningEnabled = getIsReasoningEnabledState('Chat', providerName, modelName, modelSelectionOptions, overridesOfModel)
-		const reservedOutputTokenSpace = getReservedOutputTokenSpace(providerName, modelName, { isReasoningEnabled, overridesOfModel })
-		const llmMessages = this._chatMessagesToSimpleMessages(chatMessages)
-
-		// Check if we need thought_signature: Pollinations + Gemini + Reasoning + Tools
+		
+		// Check if we need to disable reasoning for Pollinations Gemini with tools
+		// Vertex AI requires thought_signature when reasoning is enabled, which causes errors
 		// Tools are available when chatMode is 'agent' or 'gather', OR when there are MCP tools
 		const mcpTools = this._getMCPToolsWithRetry()
 		const hasToolsAvailable = (chatMode === 'agent' || chatMode === 'gather') || (mcpTools && Array.isArray(mcpTools) && mcpTools.length > 0)
-		const isPollinationsGeminiWithReasoning = providerName === 'pollinations' && 
+		const shouldDisableReasoningForPollinations = providerName === 'pollinations' && 
 			modelName.startsWith('gemini') && 
-			isReasoningEnabled && 
 			hasToolsAvailable &&
 			specialToolFormat === 'openai-style';
+		
+		const effectiveReasoningEnabled = shouldDisableReasoningForPollinations ? false : isReasoningEnabled
+		const reservedOutputTokenSpace = getReservedOutputTokenSpace(providerName, modelName, { isReasoningEnabled: effectiveReasoningEnabled, overridesOfModel })
+		const llmMessages = this._chatMessagesToSimpleMessages(chatMessages)
+
+		// Check if we need thought_signature: Pollinations + Gemini + Tools
+		// Vertex AI requires thought_signature for tool calls when reasoning is enabled OR for some models/configurations
+		const isPollinationsGeminiWithTools = providerName === 'pollinations' && 
+			modelName.startsWith('gemini') && 
+			hasToolsAvailable &&
+			specialToolFormat === 'openai-style';
+
+		const supportsVisionFinal = supportsVision === true;
+		// #region debug log
+		console.log('[convertToLLMMessageService] prepareLLMChatMessages: Calling prepareMessages', {
+			supportsVisionRaw: supportsVision,
+			supportsVisionFinal,
+			hasImageAttachments,
+			willIncludeImages: supportsVisionFinal && hasImageAttachments
+		});
+		// #endregion
 
 		const { messages, separateSystemMessage } = prepareMessages({
 			messages: llmMessages,
@@ -788,7 +978,8 @@ class ConvertToLLMMessageService extends Disposable implements IConvertToLLMMess
 			contextWindow,
 			reservedOutputTokenSpace,
 			providerName,
-			includeThoughtSignature: isPollinationsGeminiWithReasoning,
+			includeThoughtSignature: isPollinationsGeminiWithTools,
+			supportsVision: supportsVisionFinal,
 		})
 		return { messages, separateSystemMessage };
 	}
@@ -858,9 +1049,22 @@ ${messages.prefix}`
 				return true
 			})
 			
-			const result = validTools.length > 0 ? validTools : undefined
+			// Filtrar ferramentas de browser se sharedBrowserEnabled === false
+			const sharedBrowserEnabled = this.voidSettingsService.state.globalSettings.sharedBrowserEnabled
+			const filteredTools = sharedBrowserEnabled 
+				? validTools 
+				: validTools.filter(tool => {
+					// Filtrar ferramentas que começam com mcp_cursor-ide-browser_ ou mcp_cursor-browser-extension_
+					// ou contêm 'browser_' no nome
+					const isBrowserTool = tool.name.startsWith('mcp_cursor-ide-browser_') ||
+						tool.name.startsWith('mcp_cursor-browser-extension_') ||
+						tool.name.includes('browser_')
+					return !isBrowserTool
+				})
+			
+			const result = filteredTools.length > 0 ? filteredTools : undefined
 			// #region agent log
-			fetch('http://127.0.0.1:7243/ingest/1ce6e17d-b708-4230-aa86-6bd5be848bbc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'convertToLLMMessageService.ts:846',message:'_getMCPToolsWithRetry: validated tools result',data:{validToolsCount:result?.length||0,validToolsNames:result?.map(t=>t.name)||[],hasBrowserTools:result?.some(t=>t.name?.includes('browser'))||false},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+			fetch('http://127.0.0.1:7243/ingest/1ce6e17d-b708-4230-aa86-6bd5be848bbc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'convertToLLMMessageService.ts:846',message:'_getMCPToolsWithRetry: validated tools result',data:{validToolsCount:validTools.length,filteredToolsCount:filteredTools.length,sharedBrowserEnabled,resultCount:result?.length||0,validToolsNames:validTools.map(t=>t.name)||[],filteredToolsNames:filteredTools.map(t=>t.name)||[],hasBrowserTools:result?.some(t=>t.name?.includes('browser'))||false},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
 			// #endregion
 			return result
 		} catch (error) {

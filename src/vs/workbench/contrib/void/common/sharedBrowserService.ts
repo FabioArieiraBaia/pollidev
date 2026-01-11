@@ -91,32 +91,51 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 		}));
 
 		// Auto-open if enabled in settings (com delay para evitar múltiplas chamadas)
+		// IMPORTANTE: Não abrir automaticamente na inicialização - apenas quando o usuário habilitar explicitamente
+		// ou quando uma ferramenta de browser for chamada
 		this._register(this.settingsService.onDidChangeState(() => {
 			const sharedBrowserEnabled = this.settingsService.state.globalSettings.sharedBrowserEnabled;
-			if (sharedBrowserEnabled === true && !this._state.isActive && !this._isOpening) {
-				// Delay para evitar múltiplas chamadas durante inicialização
+			
+			// Só reagir a mudanças APÓS a inicialização ser concluída
+			// Isso evita que o browser abra automaticamente na inicialização
+			if (!this._isInitialized) {
+				// Marcar como inicializado após um pequeno delay
 				setTimeout(() => {
-					if (!this._state.isActive && !this._isOpening) {
-						this.open();
-					}
-				}, 1000);
+					this._isInitialized = true;
+					this.logService.info('[SharedBrowserService] Initialization complete. Auto-open disabled on startup.');
+				}, 2000);
+				return; // Não processar mudanças durante a inicialização
+			}
+			
+			// Só abrir se o usuário mudou explicitamente para true E não estava ativo antes
+			if (sharedBrowserEnabled === true && !this._state.isActive && !this._isOpening) {
+				// Cancelar timeout anterior se existir
+				if (this._pendingOpenTimeout) {
+					clearTimeout(this._pendingOpenTimeout);
+					this._pendingOpenTimeout = undefined;
+				}
+				// Não abrir automaticamente - o browser será aberto quando necessário
+				this.logService.info('[SharedBrowserService] sharedBrowserEnabled is true, but not auto-opening. Browser will open when a browser tool is called or user navigates.');
 			} else if (sharedBrowserEnabled === false && this._state.isActive) {
 				this.close();
 			}
 		}));
 
-		// Check initial state (com delay para garantir que o workbench esteja pronto)
-		if (this.settingsService.state.globalSettings.sharedBrowserEnabled === true) {
-			// Delay para garantir que o workbench esteja totalmente inicializado
-			setTimeout(() => {
-				if (!this._state.isActive && !this._isOpening) {
-					this.open();
-				}
-			}, 2000);
-		}
+		// Marcar como inicializado após um delay para evitar auto-open na inicialização
+		setTimeout(() => {
+			this._isInitialized = true;
+			this.logService.info('[SharedBrowserService] Initialization complete. Auto-open disabled on startup.');
+		}, 3000);
+
+		// O browser não deve abrir automaticamente na inicialização
+		// Ele será aberto apenas quando:
+		// 1. Uma ferramenta de browser for chamada (handleBrowserToolCall)
+		// 2. O usuário executar uma ação de navegação explicitamente (executeUserAction)
 	}
 
 	private _isOpening = false; // Prevenir múltiplas chamadas simultâneas
+	private _pendingOpenTimeout: NodeJS.Timeout | undefined; // Prevenir múltiplas chamadas assíncronas
+	private _isInitialized = false; // Rastrear se a inicialização foi concluída
 
 	async open(): Promise<void> {
 		// Prevenir múltiplas chamadas simultâneas
@@ -125,40 +144,52 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 			return;
 		}
 		
-		if (this._state.isActive && this._webviewPanel && !this._webviewPanel.isDisposed) {
-			this.logService.info('[SharedBrowserService] Browser already active, revealing existing webview...');
-			this.webviewWorkbenchService.revealWebview(this._webviewPanel, ACTIVE_GROUP, false);
+		// Se já está ativo, não fazer nada (evitar chamadas redundantes)
+		if (this._state.isActive) {
+			this.logService.info('[SharedBrowserService] Browser already active, skipping...');
 			return;
 		}
 
 		this._isOpening = true;
 		try {
-			// 1. Open the WebviewPanel in the editor
-			await this._openWebviewPanel(this._state.currentUrl || 'about:blank');
-			
-			// 2. Notify main process to create the background browser window if needed
-			// NOTA: Isso cria uma janela Electron separada para automação do agente
-			// A janela visível para o usuário é o WebviewPanel no editor
+			// Criar APENAS o background browser window para automação do agente
+			// O WebviewPanel será criado apenas quando o usuário solicitar visualização
 			try {
 				await this._sharedBrowserMainService.createBrowserWindow();
 				this.logService.info('[SharedBrowserService] Background browser window created for agent automation');
 			} catch (ipcError) {
-				// Se falhar, não é crítico - o WebviewPanel ainda funciona para o usuário
 				this.logService.debug(`[SharedBrowserService] Main process browser window creation skipped or failed: ${ipcError}`);
 			}
 
-			// 3. Update state
+			// Marcar como ativo SEM criar WebviewPanel ainda
 			this._state.isActive = true;
 			this._onDidUpdateState.fire();
 			
-			this.logService.info('[SharedBrowserService] Browser view opened in editor panel');
+			this.logService.info('[SharedBrowserService] Browser opened (background only, no webview panel)');
 		} catch (error) {
 			this._state.isActive = false;
-			this.logService.error(`[SharedBrowserService] Failed to open browser panel: ${error}`);
+			this.logService.error(`[SharedBrowserService] Failed to open browser: ${error}`);
 			throw error;
 		} finally {
 			this._isOpening = false;
 		}
+	}
+	
+	async openWebviewPanel(): Promise<void> {
+		// Se não está ativo, abrir background browser primeiro
+		if (!this._state.isActive) {
+			await this.open(); // Abre background browser também
+		}
+		
+		// Se WebviewPanel já existe e não está disposed, apenas revelar
+		if (this._webviewPanel && !this._webviewPanel.isDisposed) {
+			this.logService.info('[SharedBrowserService] WebviewPanel already exists, revealing...');
+			this.webviewWorkbenchService.revealWebview(this._webviewPanel, ACTIVE_GROUP, false);
+			return;
+		}
+		
+		// Criar WebviewPanel para visualização do usuário
+		await this._openWebviewPanel(this._state.currentUrl || 'about:blank');
 	}
 	
 	private async _syncStateFromMain(): Promise<void> {
@@ -174,6 +205,12 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 	}
 
 	async close(): Promise<void> {
+		// Cancelar timeout pendente se existir
+		if (this._pendingOpenTimeout) {
+			clearTimeout(this._pendingOpenTimeout);
+			this._pendingOpenTimeout = undefined;
+		}
+
 		if (!this._state.isActive) return;
 
 		// Dispose of the webview panel if it exists
@@ -231,10 +268,10 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 			timestamp: Date.now(),
 		});
 
-		// For navigation, open WebviewPanel in editor (solves CSP issue)
+		// For navigation, ensure WebviewPanel exists for user visualization
 		if (action.type === 'navigate' && action.url) {
 			this._state.currentUrl = action.url;
-			await this._openWebviewPanel(action.url);
+			await this.openWebviewPanel(); // Usar novo método que garante single instance
 			this._onDidUpdateState.fire();
 			this.logService.info(`[SharedBrowserService] User navigated to: ${action.url}`);
 			return;
@@ -293,9 +330,8 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 		if (toolName === 'mcp_cursor-ide-browser_browser_navigate' || toolName === 'browser_navigate') {
 			const url = toolCall.rawParams?.url as string | undefined;
 			if (url) {
-				// Open WebviewPanel in editor (solves CSP issue)
+				// NÃO criar WebviewPanel durante automação - apenas atualizar state e executar via IPC
 				this._state.currentUrl = url;
-				await this._openWebviewPanel(url);
 				channelAction = { type: 'navigate', url };
 				this._addAction({
 					timestamp,
@@ -305,8 +341,6 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 				});
 				// Fire state update immediately
 				this._onDidUpdateState.fire();
-				// Synchronize the visible browser with the agent's browser
-				void this._syncBrowserWithAgent();
 			}
 		} else if (toolName === 'mcp_cursor-ide-browser_browser_click') {
 			const element = toolCall.rawParams?.element as string | undefined;
@@ -430,17 +464,32 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 		try {
 			this.logService.info(`[SharedBrowserService] _openWebviewPanel called: url=${url}, hasPanel=${!!this._webviewPanel}, disposed=${this._webviewPanel?.isDisposed}`);
 			
-			// If webview panel already exists, update its content
+			// If webview panel already exists, optimize update
 			if (this._webviewPanel && !this._webviewPanel.isDisposed) {
+				// If URL is the same, just reveal without updating HTML to avoid style accumulation
+				if (this._state.currentUrl === url) {
+					this.logService.info(`[SharedBrowserService] URL unchanged (${url}), just revealing webview`);
+					await timeout(100);
+					this.webviewWorkbenchService.revealWebview(this._webviewPanel, ACTIVE_GROUP, false);
+					return;
+				}
+				
+				// If URL changed, update only the iframe src via postMessage instead of redefining entire HTML
 				const webview = this._webviewPanel.webview;
-				const cspSource = webview.cspSource || `'self' https://*.vscode-cdn.net`;
-				const html = this._getBrowserHtml(url, cspSource);
-				this.logService.info(`[SharedBrowserService] Updating existing webview: url=${url}, cspSource=${cspSource}, htmlLength=${html.length}`);
-				webview.html = html;
-				// Reveal the webview to ensure it's visible
-				await timeout(100); // Small delay to ensure webview is ready
+				const normalizedUrl = this._normalizeUrl(url);
+				
+				this.logService.info(`[SharedBrowserService] URL changed from ${this._state.currentUrl} to ${url}, updating iframe via postMessage`);
+				
+				// Update iframe src via postMessage to avoid redefining entire HTML
+				webview.postMessage({
+					type: 'navigateIframe',
+					url: normalizedUrl
+				});
+				
+				this._state.currentUrl = url;
+				this._onDidUpdateState.fire();
+				await timeout(100);
 				this.webviewWorkbenchService.revealWebview(this._webviewPanel, ACTIVE_GROUP, false);
-				this.logService.info(`[SharedBrowserService] Existing webview revealed for: ${url}`);
 				return;
 			}
 
@@ -520,19 +569,8 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 			// Wait a bit for the webview to be fully mounted before revealing
 			await timeout(500);
 			
-			// Explicitly reveal the webview to ensure it's visible in the editor
-			this.logService.info(`[SharedBrowserService] Revealing webview in editor (first attempt)...`);
+			// Reveal the webview once (removed multiple redundant reveals to avoid performance issues)
 			this.webviewWorkbenchService.revealWebview(this._webviewPanel, ACTIVE_GROUP, false);
-			
-			// Additional reveals with delays to ensure visibility
-			await timeout(300);
-			this.logService.info(`[SharedBrowserService] Revealing webview in editor (second attempt)...`);
-			this.webviewWorkbenchService.revealWebview(this._webviewPanel, ACTIVE_GROUP, false);
-			
-			await timeout(200);
-			this.logService.info(`[SharedBrowserService] Revealing webview in editor (third attempt)...`);
-			this.webviewWorkbenchService.revealWebview(this._webviewPanel, ACTIVE_GROUP, false);
-			
 			this.logService.info(`[SharedBrowserService] WebviewPanel opened and revealed for: ${url}`);
 		} catch (error) {
 			this.logService.error(`[SharedBrowserService] Failed to open WebviewPanel: ${error}`, error);
@@ -557,6 +595,24 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 			}
 		} catch (error) {
 			this.logService.debug(`[SharedBrowserService] Failed to sync browser screenshot: ${error}`);
+		}
+	}
+
+	private _normalizeUrl(url: string): string {
+		if (!url || url.trim() === '') {
+			return 'about:blank';
+		}
+		url = url.trim();
+		try {
+			// Se já é uma URL válida, retornar
+			new URL(url);
+			return url;
+		} catch (e) {
+			// Tentar adicionar https://
+			if (!url.match(/^[a-zA-Z][a-zA-Z\d+.-]*:/)) {
+				return 'https://' + url;
+			}
+			return url;
 		}
 	}
 
@@ -661,11 +717,15 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 			background-color: #ffffff;
 			min-height: 0;
 		}
-		iframe {
+		.browser-frame {
 			width: 100%;
 			height: 100%;
 			border: 0;
-			display: block;
+			display: block !important;
+			visibility: visible !important;
+			opacity: 1 !important;
+			position: relative;
+			z-index: 1;
 			background-color: #ffffff;
 			min-height: 0;
 		}
@@ -686,8 +746,8 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 		<div class="content">
 			<iframe 
 				id="browser-frame"
+				class="browser-frame"
 				sandbox="allow-scripts allow-forms allow-same-origin allow-downloads allow-popups allow-popups-to-escape-sandbox allow-top-navigation allow-top-navigation-by-user-activation"
-				style="width: 100%; height: 100%; border: 0; display: block !important; visibility: visible !important; opacity: 1 !important; position: relative; z-index: 1;"
 			></iframe>
 		</div>
 	<script nonce="${nonce}">
@@ -875,30 +935,9 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 				updateButtons();
 			}
 			
-			// Garantir que o iframe esteja visível desde o início
-			if (iframe && iframe.style) {
-				iframe.style.display = 'block';
-				iframe.style.visibility = 'visible';
-				iframe.style.opacity = '1';
-				iframe.style.width = '100%';
-				iframe.style.height = '100%';
-				iframe.style.position = 'relative';
-				iframe.style.zIndex = '1';
-			}
-			
 			// Forçar carregamento inicial após um pequeno delay para garantir que o VS Code terminou de montar o Webview
+			// Estilos agora são gerenciados via CSS (classe browser-frame), sem necessidade de estilos inline
 			setTimeout(() => {
-				// Garantir visibilidade primeiro
-				if (iframe && iframe.style) {
-					iframe.style.display = 'block !important';
-					iframe.style.visibility = 'visible !important';
-					iframe.style.opacity = '1 !important';
-					iframe.style.width = '100%';
-					iframe.style.height = '100%';
-					iframe.style.position = 'relative';
-					iframe.style.zIndex = '1';
-				}
-				
 				// Se ainda não tiver src definido ou estiver em about:blank sem URL, tentar carregar
 				if (!iframe.src || iframe.src === 'about:blank') {
 					if (currentUrl && currentUrl !== 'about:blank') {
@@ -911,14 +950,44 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 				}
 			}, 500);
 			
-			// Segundo timeout para garantir visibilidade após o primeiro
-			setTimeout(() => {
-				if (iframe && iframe.style) {
-					iframe.style.display = 'block !important';
-					iframe.style.visibility = 'visible !important';
-					iframe.style.opacity = '1 !important';
+			// Handler para receber mensagens do VS Code (ex: navigateIframe para evitar redefinir HTML completo)
+			window.addEventListener('message', (event) => {
+				const message = event.data;
+				if (message && message.type === 'navigateIframe' && message.url) {
+					// Atualizar apenas o iframe src sem recarregar HTML completo
+					const normalizedUrl = normalizeUrl(message.url);
+					let finalUrl = normalizedUrl;
+					if (normalizedUrl !== 'about:blank' && !normalizedUrl.startsWith('about:')) {
+						try {
+							const urlObj = new URL(normalizedUrl);
+							urlObj.searchParams.set('vscodeBrowserReqId', Date.now().toString());
+							finalUrl = urlObj.toString();
+						} catch (e) {
+							finalUrl = normalizedUrl;
+						}
+					}
+					
+					// Atualizar src do iframe (visibilidade gerenciada via CSS)
+					iframe.src = finalUrl;
+					currentUrl = normalizedUrl;
+					urlInput.value = currentUrl;
+					
+					// Atualizar histórico
+					if (history[history.length - 1] !== currentUrl) {
+						history = history.slice(0, historyIndex + 1);
+						history.push(currentUrl);
+						historyIndex = history.length - 1;
+					}
+					
+					updateButtons();
+					
+					// Notificar extensão
+					vscode.postMessage({
+						type: 'navigate',
+						url: currentUrl
+					});
 				}
-			}, 1000);
+			});
 		})();
 	</script>
 </body>

@@ -762,11 +762,15 @@ export class ToolsService implements IToolsService {
 				const { resolveReason, result: result_, } = result
 				// success
 				if (resolveReason.type === 'done') {
-					return `${result_}\n(exit code ${resolveReason.exitCode})`
+					let feedback = `${result_}\n(exit code ${resolveReason.exitCode})`
+					if (resolveReason.exitCode !== 0) {
+						feedback += `\n\nTIP: The command failed. Analyze the output for error messages. If a file is missing, use ls_dir to check the path. If a port is in use, use netstat or lsof to find the process.`
+					}
+					return feedback
 				}
 				// normal command
 				if (resolveReason.type === 'timeout') {
-					return `${result_}\nTerminal command ran, but was automatically killed by Void after ${MAX_TERMINAL_INACTIVE_TIME}s of inactivity and did not finish successfully. To try with more time, open a persistent terminal and run the command there.`
+					return `${result_}\nTerminal command ran, but was automatically killed by Void after ${MAX_TERMINAL_INACTIVE_TIME}s of inactivity and did not finish successfully. If this is a long-running process like a server, use open_persistent_terminal instead.`
 				}
 				throw new Error(`Unexpected internal error: Terminal command did not resolve with a valid reason.`)
 			},
@@ -776,11 +780,15 @@ export class ToolsService implements IToolsService {
 				const { persistentTerminalId } = params
 				// success
 				if (resolveReason.type === 'done') {
-					return `${result_}\n(exit code ${resolveReason.exitCode})`
+					let feedback = `${result_}\n(exit code ${resolveReason.exitCode})`
+					if (resolveReason.exitCode !== 0) {
+						feedback += `\n\nTIP: The persistent command failed. You might want to check the terminal logs or try a different command.`
+					}
+					return feedback
 				}
 				// bg command
 				if (resolveReason.type === 'timeout') {
-					return `${result_}\nTerminal command is running in terminal ${persistentTerminalId}. The given outputs are the results after ${MAX_TERMINAL_BG_COMMAND_TIME} seconds.`
+					return `${result_}\nTerminal command is running in terminal ${persistentTerminalId}. The given outputs are the results after ${MAX_TERMINAL_BG_COMMAND_TIME} seconds. You can use read_terminal later to check its progress.`
 				}
 				throw new Error(`Unexpected internal error: Terminal command did not resolve with a valid reason.`)
 			},

@@ -104,6 +104,12 @@ const vscodeResourceIncludes = [
 
 	// Tree Sitter injection queries
 	'out-build/vs/editor/common/languages/injections/*.scm',
+
+	// Void - Agent Manager and React bundles
+	'out-build/vs/workbench/contrib/void/browser/agentManagerPane.js',
+	'out-build/vs/workbench/contrib/void/browser/agentManager.contribution.js',
+	'out-build/vs/workbench/contrib/void/browser/threadMetadataService.js',
+	'out-build/vs/workbench/contrib/void/browser/react/out/**',
 ];
 
 const vscodeResources = [
@@ -248,6 +254,15 @@ function packageTask(platform, arch, sourceFolderName, destinationFolderName, op
 			.pipe(rename(function (path) { path.dirname = path.dirname.replace(new RegExp('^' + out), 'out'); }))
 			.pipe(util.setExecutableBit(['**/*.sh']));
 
+		// Copy void individual files that aren't bundled (base: '.' to match src stream)
+		const voidFiles = gulp.src([
+			'out-build/vs/workbench/contrib/void/browser/**/*.js',
+			'!out-build/vs/workbench/contrib/void/browser/**/*.map',
+			'!out-build/vs/workbench/contrib/void/browser/react/src/**',
+			'!out-build/vs/workbench/contrib/void/browser/react/src2/**'
+		], { base: '.', allowEmpty: true })
+			.pipe(rename(function (p) { p.dirname = p.dirname.replace(/^out-build/, 'out'); }));
+
 		const platformSpecificBuiltInExtensionsExclusions = product.builtInExtensions.filter(ext => {
 			if (!ext.platforms) {
 				return false;
@@ -259,7 +274,7 @@ function packageTask(platform, arch, sourceFolderName, destinationFolderName, op
 
 		const extensions = gulp.src(['.build/extensions/**', ...platformSpecificBuiltInExtensionsExclusions], { base: '.build', dot: true });
 
-		const sources = es.merge(src, extensions)
+		const sources = es.merge(src, voidFiles, extensions)
 			.pipe(filter(['**', '!**/*.js.map'], { dot: true }));
 
 		let version = packageJson.version;

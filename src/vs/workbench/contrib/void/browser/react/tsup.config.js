@@ -16,6 +16,7 @@ export default defineConfig({
 		'./src2/diff/index.tsx',
 		'./src2/shared-browser-tsx/index.tsx',
 		'./src2/multi-agent-tsx/index.tsx',
+		'./src2/agent-manager-tsx/index.tsx',
 	],
 	outDir: './out',
 	format: ['esm'],

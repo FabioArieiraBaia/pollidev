@@ -58,6 +58,7 @@ import { ISharedBrowserService } from '../../../../common/sharedBrowserService.j
 import { IRAGIndexingService } from '../../../../common/ragIndexingService.js';
 import { IRAGVectorService } from '../../../../common/ragVectorService.js';
 import { IProgressService } from '../../../../../../../platform/progress/common/progress.js';
+import { IThreadMetadataService, ThreadMetadataMap } from '../../../threadMetadataService.js';
 
 // normally to do this you'd use a useEffect that calls .onDidChangeState(), but useEffect mounts too late and misses initial state changes
 
@@ -86,6 +87,8 @@ const activeURIListeners: Set<(uri: URI | null) => void> = new Set();
 
 const mcpListeners: Set<() => void> = new Set()
 
+let threadMetadataState: ThreadMetadataMap
+const threadMetadataListeners: Set<(s: ThreadMetadataMap) => void> = new Set()
 
 // must call this before you can use any of the hooks below
 // this should only be called ONCE! this is the only place you don't need to dispose onDidChange. If you use state.onDidChange anywhere else, make sure to dispose it!
@@ -104,12 +107,19 @@ export const _registerServices = (accessor: ServicesAccessor) => {
 		voidCommandBarService: accessor.get(IVoidCommandBarService),
 		modelService: accessor.get(IModelService),
 		mcpService: accessor.get(IMCPService),
+		threadMetadataService: accessor.get(IThreadMetadataService),
 	}
 
-	const { settingsStateService, chatThreadsStateService, refreshModelService, themeService, editCodeService, voidCommandBarService, modelService, mcpService } = stateServices
+	const { settingsStateService, chatThreadsStateService, refreshModelService, themeService, editCodeService, voidCommandBarService, modelService, mcpService, threadMetadataService } = stateServices
 
 
-
+	threadMetadataState = threadMetadataService.getAllMetadata()
+	disposables.push(
+		threadMetadataService.onDidChangeMetadata(() => {
+			threadMetadataState = threadMetadataService.getAllMetadata()
+			threadMetadataListeners.forEach(l => l(threadMetadataState))
+		})
+	)
 
 	chatThreadsState = chatThreadsStateService.state
 	disposables.push(
@@ -236,6 +246,7 @@ const getReactAccessor = (accessor: ServicesAccessor) => {
 		IProgressService: accessor.get(IProgressService),
 
 		IStorageService: accessor.get(IStorageService),
+		IThreadMetadataService: accessor.get(IThreadMetadataService),
 
 	} as const
 	return reactAccessor
@@ -410,6 +421,30 @@ export const useMCPServiceState = () => {
 	return s
 }
 
+
+
+export const useThreadMetadataState = () => {
+	const accessor = useAccessor()
+	const service = accessor.get('IThreadMetadataService')
+	const [s, ss] = useState(threadMetadataState)
+
+	useEffect(() => {
+		ss(threadMetadataState)
+		threadMetadataListeners.add(ss)
+		return () => { threadMetadataListeners.delete(ss) }
+	}, [ss])
+
+	return {
+		allMetadata: s,
+		setMetadata: service.setMetadata.bind(service),
+		deleteMetadata: service.deleteMetadata.bind(service),
+		pinThread: service.pinThread.bind(service),
+		unpinThread: service.unpinThread.bind(service),
+		archiveThread: service.archiveThread.bind(service),
+		unarchiveThread: service.unarchiveThread.bind(service),
+		setCustomTitle: service.setCustomTitle.bind(service),
+	}
+}
 
 
 export const useIsOptedOut = () => {

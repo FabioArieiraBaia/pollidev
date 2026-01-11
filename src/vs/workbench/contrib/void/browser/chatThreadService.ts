@@ -284,7 +284,7 @@ export interface IChatThreadService {
 	editUserMessageAndStreamResponse({ userMessage, messageIdx, threadId }: { userMessage: string, messageIdx: number, threadId: string }): Promise<void>;
 
 	// call to add a message
-	addUserMessageAndStreamResponse({ userMessage, threadId }: { userMessage: string, threadId: string }): Promise<void>;
+	addUserMessageAndStreamResponse({ userMessage, threadId, imageAttachments }: { userMessage: string, threadId: string, imageAttachments?: Array<{ type: 'image' | 'audio' | 'video', data: string, mimeType: string }> }): Promise<void>;
 
 	// approve/reject
 	approveLatestToolRequest(threadId: string): void;
@@ -613,11 +613,11 @@ class ChatThreadService extends Disposable implements IChatThreadService {
 		const isBrowserTool = toolName.startsWith('browser_') || toolName.startsWith('mcp_cursor-ide-browser_')
 		
 		if (isBrowserTool) {
-			// Auto-open browser view if not already active
-			if (!this._sharedBrowserService.state.isActive) {
-				await this._sharedBrowserService.open();
-				this.logService.info('[ChatThreadService] Auto-opened SharedBrowserView on first browser tool call');
-			}
+			// REMOVER: Auto-open browser view - isso já é feito em _runToolCall
+			// if (!this._sharedBrowserService.state.isActive) {
+			// 	await this._sharedBrowserService.open();
+			// 	this.logService.info('[ChatThreadService] Auto-opened SharedBrowserView on first browser tool call');
+			// }
 
 			// Verify if current model supports vision before allowing browser use
 			const modelSelection = this._settingsService.state.modelSelectionOfFeature['Chat'];
@@ -700,6 +700,9 @@ class ChatThreadService extends Disposable implements IChatThreadService {
 						await this._sharedBrowserService.open()
 						// Wait for browser to fully initialize and sync state
 						await timeout(800)
+					} else {
+						// Browser já está ativo, não precisa abrir novamente
+						this.logService.info(`[ChatThreadService] Browser already active, skipping open() call`);
 					}
 					
 					// Force state sync to ensure we have latest state
@@ -797,7 +800,27 @@ class ChatThreadService extends Disposable implements IChatThreadService {
 		}
 
 		// 5. add to history and keep going
-		const toolMessage: ToolMessage<ToolName> = { role: 'tool', type: 'success', params: toolParams, result: toolResult, name: toolName, content: toolResultStr, id: toolId, rawParams: opts.unvalidatedToolParams, mcpServerName }
+		// Extract image data for browser_screenshot to preserve for vision models
+		let imageData: string | undefined = undefined;
+		if (toolName === 'browser_screenshot' && toolResult && typeof toolResult === 'object' && 'result' in toolResult) {
+			const result = (toolResult as any).result;
+			if (result && typeof result === 'object' && 'screenshot' in result && result.screenshot) {
+				imageData = typeof result.screenshot === 'string' ? result.screenshot : undefined;
+			}
+		}
+		
+		const toolMessage: ToolMessage<ToolName> = { 
+			role: 'tool', 
+			type: 'success', 
+			params: toolParams, 
+			result: toolResult, 
+			name: toolName, 
+			content: toolResultStr, 
+			imageData,
+			id: toolId, 
+			rawParams: opts.unvalidatedToolParams, 
+			mcpServerName 
+		}
 		this._updateLatestTool(threadId, toolMessage)
 		
 		// Notify SharedBrowserService if this is a browser tool
@@ -1328,7 +1351,7 @@ We only need to do it for files that were edited since `from`, ie files between 
 	}
 
 
-	private async _addUserMessageAndStreamResponse({ userMessage, _chatSelections, threadId }: { userMessage: string, _chatSelections?: StagingSelectionItem[], threadId: string }) {
+	private async _addUserMessageAndStreamResponse({ userMessage, _chatSelections, threadId, imageAttachments }: { userMessage: string, _chatSelections?: StagingSelectionItem[], threadId: string, imageAttachments?: Array<{ type: 'image' | 'audio' | 'video', data: string, mimeType: string }> }) {
 		const thread = this.state.allThreads[threadId]
 		if (!thread) return // should never happen
 
@@ -1380,7 +1403,7 @@ We only need to do it for files that were edited since `from`, ie files between 
 
 		const userMessageContent = await chat_userMessageContent(instructions + ragContext, currSelns, { directoryStrService: this._directoryStringService, fileService: this._fileService }) // user message + names of files (NOT content)
 		// displayContent mostra apenas o texto original do usuário, content inclui contexto RAG
-		const userHistoryElt: ChatMessage = { role: 'user', content: userMessageContent, displayContent: instructions, selections: currSelns, state: defaultMessageState }
+		const userHistoryElt: ChatMessage = { role: 'user', content: userMessageContent, displayContent: instructions, selections: currSelns, imageAttachments, state: defaultMessageState }
 		this._addMessageToThread(threadId, userHistoryElt)
 
 		this._setThreadState(threadId, { currCheckpointIdx: null }) // no longer at a checkpoint because started streaming
@@ -1397,7 +1420,7 @@ We only need to do it for files that were edited since `from`, ie files between 
 	}
 
 
-	async addUserMessageAndStreamResponse({ userMessage, _chatSelections, threadId }: { userMessage: string, _chatSelections?: StagingSelectionItem[], threadId: string }) {
+	async addUserMessageAndStreamResponse({ userMessage, _chatSelections, threadId, imageAttachments }: { userMessage: string, _chatSelections?: StagingSelectionItem[], threadId: string, imageAttachments?: Array<{ type: 'image' | 'audio' | 'video', data: string, mimeType: string }> }) {
 		const thread = this.state.allThreads[threadId];
 		if (!thread) return
 
@@ -1420,7 +1443,7 @@ We only need to do it for files that were edited since `from`, ie files between 
 		}
 
 		// Now call the original method to add the user message and stream the response
-		await this._addUserMessageAndStreamResponse({ userMessage, _chatSelections, threadId });
+		await this._addUserMessageAndStreamResponse({ userMessage, _chatSelections, threadId, imageAttachments });
 
 	}
 
