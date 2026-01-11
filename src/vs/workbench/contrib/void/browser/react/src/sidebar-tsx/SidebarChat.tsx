@@ -74,7 +74,7 @@ const IconArrowUp = ({ size, className = '' }: { size: number, className?: strin
 			xmlns="http://www.w3.org/2000/svg"
 		>
 			<path
-				fill="black"
+				fill="currentColor"
 				fillRule="evenodd"
 				clipRule="evenodd"
 				d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z"
@@ -83,13 +83,12 @@ const IconArrowUp = ({ size, className = '' }: { size: number, className?: strin
 	);
 };
 
-
 const IconSquare = ({ size, className = '' }: { size: number, className?: string }) => {
 	return (
 		<svg
 			className={className}
-			stroke="black"
-			fill="black"
+			stroke="currentColor"
+			fill="currentColor"
 			strokeWidth="0"
 			viewBox="0 0 24 24"
 			width={size}
@@ -504,33 +503,41 @@ export const VoidChatArea: React.FC<VoidChatAreaProps> = ({
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>
 const DEFAULT_BUTTON_SIZE = 22;
-export const ButtonSubmit = ({ className, disabled, ...props }: ButtonProps & Required<Pick<ButtonProps, 'disabled'>>) => {
+export const ButtonSubmit = ({ className, disabled, agentMode, ...props }: ButtonProps & { disabled: boolean, agentMode?: string }) => {
+
+	const getModeColor = () => {
+		if (disabled) return 'bg-void-bg-1 text-void-fg-3';
+
+		switch (agentMode) {
+			case 'plan': return 'bg-void-accent-1 hover:brightness-110 text-white';
+			case 'debug': return 'bg-orange-500 hover:bg-orange-400 text-white';
+			case 'ask': return 'bg-blue-500 hover:bg-blue-400 text-white';
+			default: return 'bg-void-accent-1 hover:brightness-110 text-white';
+		}
+	};
 
 	return <button
 		type='button'
-		className={`rounded-full flex-shrink-0 flex-grow-0 flex items-center justify-center
-			${disabled ? 'bg-vscode-disabled-fg cursor-default' : 'bg-green-500 hover:bg-green-600 cursor-pointer'}
+		className={`w-7 h-7 rounded-full flex-shrink-0 flex-grow-0 flex items-center justify-center transition-all
+			${getModeColor()}
 			${className}
 		`}
-		// data-tooltip-id='void-tooltip'
-		// data-tooltip-content={'Send'}
-		// data-tooltip-place='left'
 		{...props}
 	>
-		<IconArrowUp size={DEFAULT_BUTTON_SIZE} className="stroke-[2] p-[2px] text-white" />
+		<IconArrowUp size={16} className={`${disabled ? 'opacity-50' : 'opacity-100'}`} />
 	</button>
 }
 
 export const ButtonStop = ({ className, ...props }: ButtonHTMLAttributes<HTMLButtonElement>) => {
 	return <button
-		className={`rounded-full flex-shrink-0 flex-grow-0 cursor-pointer flex items-center justify-center
-			bg-white
+		className={`w-7 h-7 rounded-full flex-shrink-0 flex-grow-0 cursor-pointer flex items-center justify-center
+			bg-white text-black hover:bg-opacity-90 transition-all
 			${className}
 		`}
 		type='button'
 		{...props}
 	>
-		<IconSquare size={DEFAULT_BUTTON_SIZE} className="stroke-[3] p-[7px]" />
+		<IconSquare size={12} className="" />
 	</button>
 }
 
