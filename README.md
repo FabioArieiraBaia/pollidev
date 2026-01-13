@@ -7,13 +7,31 @@
 		width="300"
 	 	height="300"
 	/>
+	
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version](https://img.shields.io/badge/version-1.96.0-blue.svg)](https://github.com/FabioArieiraBaia/pollidev)
+[![Pollinations](https://img.shields.io/badge/Powered%20by-Pollinations-purple.svg)](https://pollinations.ai)
+[![Download](https://img.shields.io/badge/Download-fabioarieira.com-green.svg)](https://fabioarieira.com/pollidev)
+
 </div>
 
-**PolliDev** é um editor de código com inteligência artificial.
+**PolliDev** é um editor de código avançado com inteligência artificial integrada, baseado no VS Code.
 
-Desenvolvido por **Fabio Arieira Baia** - Full Stack Developer
+🌟 **Editor profissional com IA nativa | Integração com Pollinations.ai | Multiplataforma**
+
+Desenvolvido por **[Fabio Arieira Baia](https://github.com/FabioArieiraBaia)** - Full Stack Developer
 
 ## 🚀 Características
+
+### 🌸 Integração com Pollinations.ai
+
+- 🎨 **Geração de Imagens** - Crie imagens diretamente no editor usando Pollinations
+- 💬 **IA de Texto** - Acesso nativo à API de texto do Pollinations
+- 🔄 **Multi-Modelos** - Suporte para GPT, Claude, Llama e mais através do Pollinations
+- ⚡ **Streaming em Tempo Real** - Respostas em tempo real com streaming
+- 🆓 **API Gratuita** - Aproveite os recursos do Pollinations sem custo
+
+### 🤖 Recursos de IA
 
 - 🤖 **Agentes de IA Integrados** - Use modelos de IA diretamente no editor
 - 🔍 **Busca Semântica RAG** - Sistema de busca semântica com Retrieval Augmented Generation
@@ -23,13 +41,38 @@ Desenvolvido por **Fabio Arieira Baia** - Full Stack Developer
 - 🌐 **Automação de Navegador** - Ferramentas integradas para automação web
 - 🎯 **Indexação Semântica** - Indexe seu workspace para busca inteligente
 
-## 📋 Pré-requisitos
+## 📥 Download
+
+### Versões Pré-Compiladas (Recomendado)
+
+Baixe a versão mais recente do PolliDev para o seu sistema operacional:
+
+**🌐 [Download PolliDev - fabioarieira.com/pollidev](https://fabioarieira.com/pollidev)**
+
+#### Versões Disponíveis:
+
+- **Windows**: PolliDev-Setup-1.96.0.exe
+- **macOS**: PolliDev-1.96.0.dmg
+- **Linux**: PolliDev-1.96.0.AppImage
+
+### Instalação Rápida
+
+1. Acesse [fabioarieira.com/pollidev](https://fabioarieira.com/pollidev)
+2. Baixe a versão para seu sistema operacional
+3. Execute o instalador
+4. Pronto! PolliDev estará pronto para uso
+
+---
+
+## 📋 Pré-requisitos (Para Desenvolvimento)
 
 - Node.js (versão recomendada: 18+)
 - npm ou yarn
 - Git
 
-## 🛠️ Instalação
+## 🛠️ Instalação (Build do Código Fonte)
+
+Se preferir compilar do código fonte:
 
 ```bash
 # Clone o repositório
