@@ -24,3 +24,9 @@ export const VOID_REJECT_FILE_ACTION_ID = 'void.rejectFile'
 export const VOID_ACCEPT_ALL_DIFFS_ACTION_ID = 'void.acceptAllDiffs'
 
 export const VOID_REJECT_ALL_DIFFS_ACTION_ID = 'void.rejectAllDiffs'
+
+export const VOID_OPEN_BROWSER_ACTION_ID = 'void.openBrowser'
+
+export const VOID_TAKE_SCREENSHOT_ACTION_ID = 'void.takeScreenshot'
+
+export const VOID_BROWSER_SNAPSHOT_ACTION_ID = 'void.browserSnapshot'

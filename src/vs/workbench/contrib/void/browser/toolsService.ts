@@ -1,5 +1,6 @@
 import { CancellationToken } from '../../../../base/common/cancellation.js'
 import { URI } from '../../../../base/common/uri.js'
+import { VSBuffer } from '../../../../base/common/buffer.js'
 import { IFileService } from '../../../../platform/files/common/files.js'
 import { registerSingleton, InstantiationType } from '../../../../platform/instantiation/common/extensions.js'
 import { createDecorator, IInstantiationService } from '../../../../platform/instantiation/common/instantiation.js'
@@ -151,8 +152,8 @@ export class ToolsService implements IToolsService {
 	private sharedBrowserMainService: ISharedBrowserMainService | null = null;
 
 	constructor(
-		@IFileService fileService: IFileService,
-		@IWorkspaceContextService workspaceContextService: IWorkspaceContextService,
+		@IFileService private readonly fileService: IFileService,
+		@IWorkspaceContextService private readonly workspaceContextService: IWorkspaceContextService,
 		@ISearchService searchService: ISearchService,
 		@IInstantiationService instantiationService: IInstantiationService,
 		@IVoidModelService voidModelService: IVoidModelService,
@@ -626,6 +627,10 @@ export class ToolsService implements IToolsService {
 						const state = await this.sharedBrowserMainService.getState();
 						return { result: { screenshot: state.currentSnapshot || null } };
 					}
+					// Save screenshot as file (fire and forget)
+					this.saveScreenshotToFile(screenshot).catch(err => {
+						this.logService.warn(`[ToolsService] Failed to save screenshot file: ${err}`);
+					});
 					return { result: { screenshot } };
 				} catch (error) {
 					this.logService.error(`[ToolsService] browser_screenshot error: ${error}`);
@@ -828,7 +833,7 @@ export class ToolsService implements IToolsService {
 				return `Failed to capture snapshot.`;
 			},
 			browser_screenshot: (_params, result) => {
-				return result.screenshot ? `Screenshot captured successfully.` : `Failed to capture screenshot.`;
+				return result.screenshot ? `Screenshot captured successfully (${result.screenshot.length} bytes).` : `Failed to capture screenshot.`;
 			},
 			browser_hover: (params, result) => {
 				return result.success ? `Successfully hovered over "${params.element}"` : `Failed to hover over "${params.element}"`;
@@ -923,6 +928,38 @@ export class ToolsService implements IToolsService {
 		} catch (error) {
 			// Log do erro mas não interrompe o fluxo
 			this.logService.error(`[ToolsService] Failed to notify SharedBrowserService about browser tool call: ${error}`);
+		}
+	}
+
+	/**
+	 * Save a base64 screenshot to workspace folder
+	 */
+	private async saveScreenshotToFile(base64Data: string): Promise<void> {
+		try {
+			const workspace = this.workspaceContextService.getWorkspace();
+			if (!workspace.folders || workspace.folders.length === 0) {
+				this.logService.info('[ToolsService] No workspace folder, skipping screenshot save');
+				return;
+			}
+			
+			const timestamp = Date.now();
+			const filename = `void_screenshot_${timestamp}.png`;
+			const workspaceRoot = workspace.folders[0].uri;
+			const screenshotsDir = URI.joinPath(workspaceRoot, '.void', 'screenshots');
+			const filePath = URI.joinPath(screenshotsDir, filename);
+			
+			// Remove data:image/png;base64, prefix if present
+			const base64Clean = base64Data.replace(/^data:image\/\w+;base64,/, '');
+			
+			// Convert base64 to binary buffer
+			const binaryData = Uint8Array.from(atob(base64Clean), c => c.charCodeAt(0));
+			
+			// Write to file
+			await this.fileService.writeFile(filePath, VSBuffer.wrap(binaryData));
+			
+			this.logService.info(`[ToolsService] Screenshot saved to: ${filePath.fsPath}`);
+		} catch (error) {
+			this.logService.warn(`[ToolsService] Failed to save screenshot file (non-critical): ${error}`);
 		}
 	}
 

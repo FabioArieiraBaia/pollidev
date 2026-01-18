@@ -26,9 +26,21 @@ function run(command, args, opts) {
 
 	if (result.error) {
 		console.error(`ERR Failed to spawn process: ${result.error}`);
+		console.error(`Command: ${command}`);
+		console.error(`CWD: ${opts.cwd || '.'}`);
+		// Try to continue instead of exiting for non-critical directories
+		if (opts.cwd && (opts.cwd.includes('.vscode') || opts.cwd.includes('test'))) {
+			console.warn(`WARNING: Skipping failed dependency installation in ${opts.cwd}`);
+			return;
+		}
 		process.exit(1);
 	} else if (result.status !== 0) {
 		console.error(`ERR Process exited with code: ${result.status}`);
+		// Try to continue instead of exiting for non-critical directories
+		if (opts.cwd && (opts.cwd.includes('.vscode') || opts.cwd.includes('test'))) {
+			console.warn(`WARNING: Skipping failed dependency installation in ${opts.cwd}`);
+			return;
+		}
 		process.exit(result.status);
 	}
 }

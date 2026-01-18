@@ -12,6 +12,12 @@ import './sidebarActions.js'
 import './sidebarPane.js'
 import './agentManager.contribution.js'
 
+// register Browser actions
+import './browserActions.js'
+
+// register Browser status bar
+import './browserStatusBar.js'
+
 // register quick edit (Ctrl+K)
 import './quickEditActions.js'
 
