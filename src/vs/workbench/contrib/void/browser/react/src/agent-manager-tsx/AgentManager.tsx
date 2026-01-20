@@ -12,7 +12,6 @@ export const AgentManager = () => {
 	const { allThreads, currentThreadId } = useChatThreadsState();
 	const { allMetadata, pinThread, unpinThread, archiveThread, unarchiveThread } = useThreadMetadataState();
 	const streamStates = useFullChatThreadsStreamState();
-	const [searchQuery, setSearchQuery] = useState('');
 
 	// Organizar threads em seções
 	const { pinnedThreads, activeThreads, archivedThreads } = useMemo(() => {
@@ -20,24 +19,13 @@ export const AgentManager = () => {
 		const active = [];
 		const archived = [];
 
-		// Converter o objeto allThreads em uma lista ordenada por data de modificação (mais recente primeiro)
 		const sortedThreads = Object.values(allThreads)
 			.filter((t): t is any => !!t)
 			.sort((a, b) => new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime());
 
 		for (const thread of sortedThreads) {
-			// Filtro de busca
-			const matchesSearch = thread.messages.some((m: any) => 
-				m.displayContent?.toLowerCase().includes(searchQuery.toLowerCase())
-			) || (thread.id.toLowerCase().includes(searchQuery.toLowerCase()));
-			
-			// Usar título customizado se existir, senão usar o primeiro conteúdo de mensagem ou o ID
 			const firstUserMsg = thread.messages.find((m: any) => m.role === 'user');
 			thread.displayTitle = allMetadata[thread.id]?.customTitle || firstUserMsg?.displayContent || `Agente ${thread.id.slice(0, 4)}`;
-
-			const matchesTitle = thread.displayTitle.toLowerCase().includes(searchQuery.toLowerCase());
-
-			if (searchQuery && !matchesSearch && !matchesTitle) continue;
 
 			const metadata = allMetadata[thread.id];
 			if (metadata?.isPinned) {
@@ -50,7 +38,7 @@ export const AgentManager = () => {
 		}
 
 		return { pinnedThreads: pinned, activeThreads: active, archivedThreads: archived };
-	}, [allThreads, allMetadata, searchQuery]);
+	}, [allThreads, allMetadata]);
 
 	const handleNewAgent = useCallback(() => {
 		chatThreadService.openNewThread();
@@ -88,46 +76,45 @@ export const AgentManager = () => {
 			<div
 				onClick={() => handleSwitchThread(thread.id)}
 				className={`
-					group p-2.5 rounded transition-colors cursor-pointer mb-1
+					group flex items-center gap-2 py-1.5 px-2 rounded cursor-pointer
 					${thread.id === currentThreadId 
-						? 'bg-void-bg-3 border border-void-accent-1' 
-						: 'bg-void-bg-1 border border-void-border-1 hover:border-void-border-2'}
+						? 'bg-void-bg-3/50' 
+						: 'hover:bg-void-bg-2/50'}
 				`}
 			>
-				<div className="flex justify-between items-start gap-2">
-					<div className="flex-1 min-w-0">
-						<div className="font-medium text-sm truncate text-void-fg-1 flex items-center gap-1.5">
-							{isPinned && <span>📌</span>}
-							<span className="truncate">{thread.displayTitle}</span>
-							{isRunning && <IconLoading className="size-3 opacity-70" />}
-						</div>
-						<div className="text-[10px] text-void-fg-3 mt-1 uppercase tracking-wider">
-							{formatLastModified(thread.lastModified)}
-						</div>
-					</div>
-					<div className="flex space-x-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-						<button
-							onClick={(e) => { e.stopPropagation(); isPinned ? unpinThread(thread.id) : pinThread(thread.id); }}
-							className="p-1 hover:bg-void-bg-2 rounded text-void-fg-2"
-							title={isPinned ? "Desafixar" : "Fixar"}
-						>
-							{isPinned ? '📍' : '📌'}
-						</button>
-						<button
-							onClick={(e) => { e.stopPropagation(); isArchived ? unarchiveThread(thread.id) : archiveThread(thread.id); }}
-							className="p-1 hover:bg-void-bg-2 rounded text-void-fg-2"
-							title={isArchived ? "Desarquivar" : "Arquivar"}
-						>
-							{isArchived ? '📤' : '📥'}
-						</button>
-						<button
-							onClick={(e) => handleDeleteThread(e, thread.id)}
-							className="p-1 hover:bg-void-bg-2 rounded text-void-fg-2 hover:text-red-400"
-							title="Excluir"
-						>
-							🗑️
-						</button>
-					</div>
+				<span className="text-xs opacity-50">
+					{isArchived ? '📤' : isPinned ? '📌' : '•'}
+				</span>
+				<span className={`
+					flex-1 text-xs truncate
+					${isRunning ? 'text-void-accent-1 drop-shadow-[0_0_8px_rgba(0,127,212,0.8)]' : ''}
+					${isArchived ? 'opacity-50' : ''}
+				`}>
+					{thread.displayTitle}
+				</span>
+				{isRunning && <IconLoading className="size-3 opacity-70" />}
+				<div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+					<button
+						onClick={(e) => { e.stopPropagation(); isPinned ? unpinThread(thread.id) : pinThread(thread.id); }}
+						className="p-0.5 hover:bg-void-bg-3 rounded text-void-fg-2 text-xs"
+						title={isPinned ? "Desafixar" : "Fixar"}
+					>
+						{isPinned ? '📍' : '📌'}
+					</button>
+					<button
+						onClick={(e) => { e.stopPropagation(); isArchived ? unarchiveThread(thread.id) : archiveThread(thread.id); }}
+						className="p-0.5 hover:bg-void-bg-3 rounded text-void-fg-2 text-xs"
+						title={isArchived ? "Desarquivar" : "Arquivar"}
+					>
+						{isArchived ? '📤' : '📥'}
+					</button>
+					<button
+						onClick={(e) => handleDeleteThread(e, thread.id)}
+						className="p-0.5 hover:bg-void-bg-3 rounded text-void-fg-2 hover:text-red-400 text-xs"
+						title="Excluir"
+					>
+						🗑️
+					</button>
 				</div>
 			</div>
 		);
@@ -142,55 +129,64 @@ export const AgentManager = () => {
 				<ErrorBoundary>
 					<div className="flex flex-col h-full">
 						{/* Header */}
-						<div className="p-4 border-b border-void-border-1">
-							<div className="flex items-center justify-between mb-4">
-								<h2 className="text-sm font-bold uppercase tracking-widest text-void-fg-1">Agentes</h2>
+						<div className="p-3 border-b border-void-border-1/30">
+							<div className="flex items-center justify-end">
 								<button
 									onClick={handleNewAgent}
-									className="px-2 py-1 bg-void-accent-1 hover:bg-opacity-80 text-white rounded text-xs font-medium transition-colors flex items-center gap-1"
+									className="group px-3 py-1 bg-void-accent-1/20 hover:bg-void-accent-1/40 border border-void-accent-1/30 hover:border-void-accent-1/60 rounded text-xs text-void-accent-1 transition-all flex items-center gap-1.5 glass-button"
 								>
-									<span>+</span> Novo Agente
+									<span className="group-hover:scale-110 transition-transform text-void-accent-1">+</span>
+									<span className="font-medium text-void-accent-1">Novo</span>
 								</button>
-							</div>
-							<div className="relative">
-								<input
-									type="text"
-									placeholder="Buscar conversas..."
-									className="w-full bg-void-bg-1 border border-void-border-1 rounded px-3 py-1.5 text-xs focus:outline-none focus:border-void-accent-1 text-void-fg-1"
-									value={searchQuery}
-									onChange={(e) => setSearchQuery(e.target.value)}
-								/>
 							</div>
 						</div>
 
 						{/* Content */}
 						<div className="flex-1 overflow-y-auto p-3 custom-scrollbar">
 							{pinnedThreads.length > 0 && (
-								<div className="mb-6">
-									<h3 className="text-[10px] font-bold text-void-fg-3 uppercase tracking-widest mb-2 px-1">Fixados</h3>
-									{pinnedThreads.map(thread => (
-										<ThreadItem key={thread.id} thread={thread} isPinned />
-									))}
+								<div className="mb-4">
+									<div className="flex items-center gap-2 mb-2 px-1">
+										<span className="w-1.5 h-1.5 rounded-full bg-void-accent-1/70"></span>
+										<span className="text-[10px] font-medium text-void-fg-3/70 uppercase tracking-wider">Fixados</span>
+										<span className="text-[10px] text-void-fg-3/40">{pinnedThreads.length}</span>
+									</div>
+									<div className="flex flex-col gap-0.5">
+										{pinnedThreads.map(thread => (
+											<ThreadItem key={thread.id} thread={thread} isPinned />
+										))}
+									</div>
 								</div>
 							)}
 
-							<div className="mb-6">
-								<h3 className="text-[10px] font-bold text-void-fg-3 uppercase tracking-widest mb-2 px-1">Conversas Ativas</h3>
+							<div className="mb-4">
+								<div className="flex items-center gap-2 mb-2 px-1">
+									<span className="w-1.5 h-1.5 rounded-full bg-void-fg-2/50"></span>
+									<span className="text-[10px] font-medium text-void-fg-3/70 uppercase tracking-wider">Ativos</span>
+									<span className="text-[10px] text-void-fg-3/40">{activeThreads.length}</span>
+								</div>
 								{activeThreads.length > 0 ? (
-									activeThreads.map(thread => (
-										<ThreadItem key={thread.id} thread={thread} />
-									))
+									<div className="flex flex-col gap-0.5">
+										{activeThreads.map(thread => (
+											<ThreadItem key={thread.id} thread={thread} />
+										))}
+									</div>
 								) : (
-									<div className="text-xs text-void-fg-3 px-1 italic">Nenhuma conversa ativa</div>
+									<div className="text-[10px] text-void-fg-3/40 px-3 italic">Nenhum agente ativo</div>
 								)}
 							</div>
 
 							{archivedThreads.length > 0 && (
-								<div className="mb-4 opacity-70 hover:opacity-100 transition-opacity">
-									<h3 className="text-[10px] font-bold text-void-fg-3 uppercase tracking-widest mb-2 px-1">Arquivados</h3>
-									{archivedThreads.map(thread => (
-										<ThreadItem key={thread.id} thread={thread} isArchived />
-									))}
+								<div className="mb-4 opacity-60 hover:opacity-100 transition-opacity">
+									<div className="flex items-center gap-2 mb-2 px-1">
+										<span className="w-1.5 h-1.5 rounded-full bg-void-fg-3/30"></span>
+										<span className="text-[10px] font-medium text-void-fg-3/50 uppercase tracking-wider">Arquivados</span>
+										<span className="text-[10px] text-void-fg-3/30">{archivedThreads.length}</span>
+									</div>
+									<div className="flex flex-col gap-0.5">
+										{archivedThreads.map(thread => (
+											<ThreadItem key={thread.id} thread={thread} isArchived />
+										))}
+									</div>
 								</div>
 							)}
 						</div>
@@ -200,4 +196,3 @@ export const AgentManager = () => {
 		</div>
 	);
 };
-

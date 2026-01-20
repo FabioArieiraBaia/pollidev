@@ -1,256 +1,87 @@
-/*--------------------------------------------------------------------------------------
- *  Copyright 2025 Glass Devtools, Inc. All rights reserved.
- *  Licensed under the Apache License, Version 2.0. See LICENSE.txt for more information.
- *--------------------------------------------------------------------------------------*/
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-& {
-	--void-bg-1: var(--vscode-input-background);
-	--void-bg-1-alt: var(--vscode-badge-background);
-	--void-bg-2: var(--vscode-sideBar-background);
-	--void-bg-2-alt: color-mix(in srgb, var(--vscode-editor-background) 30%, var(--vscode-sideBar-background) 70%);
-	--void-bg-2-hover: color-mix(in srgb, var(--vscode-editor-foreground) 2%, var(--vscode-sideBar-background) 98%);
-	--void-bg-3: var(--vscode-editor-background);
-
-	--void-fg-0: color-mix(in srgb, var(--vscode-tab-activeForeground) 90%, black 10%);
-	--void-fg-1: var(--vscode-editor-foreground);
-	--void-fg-2: var(--vscode-input-foreground);
-	--void-fg-3: var(--vscode-input-placeholderForeground);
-	/* --void-fg-4: var(--vscode-tab-inactiveForeground); */
-	--void-fg-4: var(--vscode-list-deemphasizedForeground);
-
-	--void-warning: var(--vscode-charts-yellow);
-
-	--void-border-1: var(--vscode-commandCenter-activeBorder);
-	--void-border-2: var(--vscode-commandCenter-border);
-	--void-border-3: var(--vscode-commandCenter-inactiveBorder);
-	--void-border-4: var(--vscode-editorGroup-border);
-
-	--void-ring-color: #007FD4;
-	--void-link-color: #007FD4;
-	--void-accent-1: #007FD4;
-
-	/* PolliDev Brand Colors (extracted from logo) */
-	--polly-accent: #007FD4;
-	--polly-accent-dark: #005FA3;
-	--polly-accent-light: #00A3D4;
-	--polly-glow-blue: rgba(0, 127, 212, 0.6);
-	--polly-glow-green: rgba(0, 200, 83, 0.6);
-	--polly-glow-yellow: rgba(255, 193, 7, 0.6);
-	--polly-border-neon: rgba(255, 255, 255, 0.1);
+/* --- Neon Button Animations --- */
+@keyframes neon-green-pulse {
+	0%, 100% { 
+		box-shadow: 0 0 5px #10B981, 0 0 10px #10B981, 0 0 20px rgba(16, 185, 129, 0.3); 
+	}
+	50% { 
+		box-shadow: 0 0 10px #10B981, 0 0 25px #10B981, 0 0 40px rgba(16, 185, 129, 0.5), 0 0 60px rgba(16, 185, 129, 0.3); 
+	}
 }
 
-.select-child-restyle select {
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	padding-right: 24px;
+@keyframes neon-red-pulse {
+	0%, 100% { 
+		box-shadow: 0 0 5px #EF4444, 0 0 10px #EF4444, 0 0 20px rgba(239, 68, 68, 0.3); 
+	}
+	50% { 
+		box-shadow: 0 0 10px #EF4444, 0 0 25px #EF4444, 0 0 40px rgba(239, 68, 68, 0.5), 0 0 60px rgba(239, 68, 68, 0.3); 
+	}
 }
 
-.void-force-child-placeholder-void-fg-1 ::placeholder {
-	color: var(--void-fg-3);
+.void-neon-green {
+	animation: neon-green-pulse 2s ease-in-out infinite;
 }
 
-* {
-	outline: none !important;
+.void-neon-red {
+	animation: neon-red-pulse 2s ease-in-out infinite;
 }
 
-/* --- PolliDev Modern Designer --- */
-
-/* Glassmorphism Panels */
-.void-glass-panel {
-	background: rgba(var(--void-bg-1), 0.4) !important;
-	backdrop-filter: blur(8px) !important;
-	border: 1px solid var(--void-border-3) !important;
-	border-radius: 8px;
+.void-glass-button {
+	position: relative;
+	overflow: hidden;
 }
 
-/* PolliDev Logo Glow */
-.void-logo-glow {
-	filter: drop-shadow(0 0 8px rgba(0, 127, 212, 0.4));
+.void-glass-button::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+	transition: left 0.5s ease;
+}
+
+.void-glass-button:hover::before {
+	left: 100%;
+}
+
+.void-glass-button:hover {
+	background: linear-gradient(135deg, rgba(16, 185, 129, 0.6) 0%, rgba(16, 185, 129, 0.4) 100%) !important;
+	color: #FFFFFF !important;
+	text-shadow: 0 0 15px rgba(16, 185, 129, 0.8) !important;
+	border-color: rgba(16, 185, 129, 0.8) !important;
+}
+
+.void-neon-red.void-glass-button:hover {
+	background: linear-gradient(135deg, rgba(239, 68, 68, 0.6) 0%, rgba(239, 68, 68, 0.4) 100%) !important;
+	color: #FFFFFF !important;
+	text-shadow: 0 0 15px rgba(239, 68, 68, 0.8) !important;
+	border-color: rgba(239, 68, 68, 0.8) !important;
+}
+
+.void-glass-icon-button {
+	background: rgba(255, 255, 255, 0.05) !important;
+	border: 1px solid rgba(255, 255, 255, 0.1) !important;
+	backdrop-filter: blur(4px);
 	transition: all 0.3s ease;
 }
-.void-logo-glow:hover {
-	filter: drop-shadow(0 0 15px rgba(0, 127, 212, 0.7));
+
+.void-glass-icon-button:hover:not(:disabled) {
+	background: rgba(255, 255, 255, 0.15) !important;
+	border-color: rgba(255, 255, 255, 0.25) !important;
 	transform: scale(1.05);
 }
 
-/* PolliDev Logo */
-.void-pollidev-logo {
-	background-image: url('../../../../workbench/browser/parts/editor/media/pollydev-logo-3d.png');
-	background-size: contain;
-	background-position: center;
-	background-repeat: no-repeat;
+.void-glass-icon-button:hover:not(:disabled) svg {
+	color: #FFFFFF !important;
+	filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
 }
 
-/* Agent Reasoning Indicator */
-@keyframes void-pulse-reasoning {
-	0% { opacity: 0.3; transform: scale(0.95); }
-	50% { opacity: 1; transform: scale(1); }
-	100% { opacity: 0.3; transform: scale(0.95); }
+.void-glass-icon-button:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
 }
-
-.void-reasoning-active {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	padding: 4px 12px;
-	border-radius: 20px;
-	background: color-mix(in srgb, var(--void-ring-color) 15%, transparent);
-	color: var(--void-ring-color);
-	font-weight: 500;
-	font-size: 0.85rem;
-	animation: void-pulse-reasoning 2s infinite ease-in-out;
-}
-
-/* Modern Scrollbars */
-.custom-scrollbar::-webkit-scrollbar {
-	width: 4px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-	background: transparent;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-	background: var(--void-border-2);
-	border-radius: 10px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-	background: var(--void-accent-1, var(--polly-accent));
-}
-
-.void-sidebar-container ::-webkit-scrollbar {
-	width: 6px;
-}
-.void-sidebar-container ::-webkit-scrollbar-thumb {
-	background: var(--void-bg-1-alt);
-	border-radius: 10px;
-}
-.void-sidebar-container ::-webkit-scrollbar-thumb:hover {
-	background: var(--void-ring-color);
-}
-
-/* PolliDev Gradient Text */
-.pollidev-gradient {
-	background: linear-gradient(135deg, var(--polly-accent) 0%, var(--polly-accent-dark) 50%, var(--polly-accent-light) 100%);
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-	background-clip: text;
-}
-
-/* Glow States */
-.void-logo-glow-blue {
-	filter: drop-shadow(0 0 12px var(--polly-glow-blue));
-	transition: filter 0.3s ease;
-}
-.void-logo-glow-green {
-	filter: drop-shadow(0 0 12px var(--polly-glow-green));
-	transition: filter 0.3s ease;
-}
-.void-logo-glow-yellow {
-	filter: drop-shadow(0 0 12px var(--polly-glow-yellow));
-	transition: filter 0.3s ease;
-}
-
-/* Pulse Animation for Thinking */
-@keyframes void-pulse-thinking {
-	0%, 100% { transform: scale(1); opacity: 1; }
-	50% { transform: scale(1.05); opacity: 0.8; }
-}
-.void-logo-pulse {
-	animation: void-pulse-thinking 2s infinite ease-in-out;
-}
-
-/* Glassmorphic Panels (Enhanced) */
-.void-glass-panel-advanced {
-	background: rgba(var(--void-bg-1), 0.3) !important;
-	backdrop-filter: blur(10px) !important;
-	-webkit-backdrop-filter: blur(10px) !important;
-	border: 1px solid var(--polly-border-neon) !important;
-	border-radius: 8px;
-}
-
-/* Agent Message Gradient Background */
-.void-agent-message-gradient {
-	background: linear-gradient(135deg, rgba(0, 127, 212, 0.1) 0%, rgba(0, 163, 212, 0.05) 100%);
-	border-left: 3px solid var(--polly-accent);
-}
-
-/* User Message Style (minimal) */
-.void-user-message-clean {
-	background: rgba(var(--void-bg-2), 0.5);
-}
-
-/* Thinking Terminal Feed */
-.void-thinking-terminal {
-	font-size: 0.75rem;
-	color: var(--void-fg-3);
-	opacity: 0.6;
-	font-family: 'Courier New', monospace;
-	padding: 4px 8px;
-	border-top: 1px solid var(--polly-border-neon);
-	max-height: 60px;
-	overflow-y: auto;
-}
-
-/* Interactive Card */
-.void-agent-card {
-	background: var(--void-glass-panel-advanced);
-	border: 1px solid var(--polly-border-neon);
-	border-radius: 12px;
-	padding: 12px;
-	margin: 8px 0;
-	box-shadow: 0 4px 12px rgba(0, 127, 212, 0.1);
-}
-
-.inherit-bg-all-restyle > * {
-	background-color: inherit !important;
-}
-
-
-.bg-editor-style-override {
-	--vscode-sideBar-background: var(--vscode-editor-background);
-}
-
-
-
-/* html {
-	font-size: var(--vscode-font-size);
-}
-
-.btn {
-	@apply cursor-pointer transition-colors;
-
-	&.btn-primary {
-		@apply bg-vscode-button-bg text-vscode-button-fg;
-
-		&:not(:disabled) {
-			@apply hover:bg-vscode-button-hoverBg;
-		}
-	}
-
-	&.btn-sm {
-		@apply px-3 py-1 text-sm;
-	}
-
-	&.btn-secondary {
-		@apply bg-vscode-button-secondary-bg text-vscode-button-secondary-fg;
-
-		&:not(:disabled) {
-			@apply hover:bg-vscode-button-secondary-hoverBg;
-		}
-	}
-
-	&:disabled {
-		@apply opacity-75 cursor-not-allowed;
-	}
-}
-
-.input {
-	@apply bg-vscode-input-bg text-vscode-input-fg border-vscode-input-border focus:outline-vscode-focus-border;
-}
-
-.dropdown {
-	@apply bg-vscode-dropdown-bg text-vscode-dropdown-foreground border-vscode-dropdown-border focus:outline-vscode-focus-border;
-} */

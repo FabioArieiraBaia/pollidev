@@ -4,7 +4,29 @@
  *--------------------------------------------------------------------------------------*/
 
 import React from 'react';
-import { VoidChatArea, VoidChatAreaProps } from './SidebarChat.js';
+import { VoidChatArea } from './SidebarChat.js';
+
+// Define the props type locally since we're importing from a .js file
+interface VoidChatAreaProps {
+	children: React.ReactNode;
+	onSubmit: () => void;
+	onAbort: () => void;
+	isStreaming: boolean;
+	isDisabled?: boolean;
+	divRef?: React.RefObject<HTMLDivElement | null>;
+	className?: string;
+	showModelDropdown?: boolean;
+	showSelections?: boolean;
+	showProspectiveSelections?: boolean;
+	loadingIcon?: React.ReactNode;
+	selections?: any[];
+	setSelections?: (s: any[]) => void;
+	onClickAnywhere?: () => void;
+	onClose?: () => void;
+	featureName: any;
+	attachments?: any[];
+	setAttachments?: React.Dispatch<React.SetStateAction<any[]>>;
+}
 
 /**
  * Modern chat area wrapper with improved design, animations, and visual feedback.
@@ -71,11 +93,4 @@ export const ModernChatArea: React.FC<VoidChatAreaProps> = (props) => {
 			)}
 		</div>
 	);
-};
-
-
-
-
-
-
-
+}

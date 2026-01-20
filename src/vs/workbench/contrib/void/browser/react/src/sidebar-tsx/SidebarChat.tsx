@@ -373,7 +373,7 @@ const SharedBrowserToggle = ({ className }: { className: string }) => {
 
 
 
-interface VoidChatAreaProps {
+export interface VoidChatAreaProps {
 	// Required
 	children: React.ReactNode; // This will be the input component
 
@@ -525,10 +525,11 @@ export const ButtonSubmit = ({ className, disabled, agentMode, ...props }: Butto
 
 	return <button
 		type='button'
-		className={`w-7 h-7 rounded-full flex-shrink-0 flex-grow-0 flex items-center justify-center transition-all
+		className={`w-7 h-7 rounded-full flex-shrink-0 flex-grow-0 flex items-center justify-center transition-all neon-green glass-button
 			${getModeColor()}
 			${className}
 		`}
+		disabled={disabled}
 		{...props}
 	>
 		<IconArrowUp size={16} className={`${disabled ? 'opacity-50' : 'opacity-100'}`} />
@@ -537,8 +538,9 @@ export const ButtonSubmit = ({ className, disabled, agentMode, ...props }: Butto
 
 export const ButtonStop = ({ className, ...props }: ButtonHTMLAttributes<HTMLButtonElement>) => {
 	return <button
-		className={`w-7 h-7 rounded-full flex-shrink-0 flex-grow-0 cursor-pointer flex items-center justify-center
-			bg-white text-black hover:bg-opacity-90 transition-all
+		className={`w-7 h-7 rounded-full flex-shrink-0 flex-grow-0 cursor-pointer flex items-center justify-center transition-all neon-red glass-button
+			bg-red-500/30 hover:bg-red-500/50 text-red-400 border border-red-500/40
+			backdrop-blur-sm
 			${className}
 		`}
 		type='button'

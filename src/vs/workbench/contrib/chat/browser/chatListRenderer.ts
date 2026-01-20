@@ -3,6 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+
+import './media/chat.css';
 import * as dom from '../../../../base/browser/dom.js';
 import { renderFormattedText } from '../../../../base/browser/formattedTextRenderer.js';
 import { StandardKeyboardEvent } from '../../../../base/browser/keyboardEvent.js';
@@ -472,7 +474,7 @@ export class ChatListItemRenderer extends Disposable implements ITreeRenderer<Ch
 				inline: true,
 				actionHandler: {
 					disposables: templateData.elementDisposables,
-					callback: (content) => {
+					callback: (content: string) => {
 						this._onDidClickRerunWithAgentOrCommandDetection.fire(element);
 					},
 				}

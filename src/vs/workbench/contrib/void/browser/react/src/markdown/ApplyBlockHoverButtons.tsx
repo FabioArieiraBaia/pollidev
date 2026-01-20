@@ -33,19 +33,21 @@ export const IconShell1 = ({ onClick, Icon, disabled, className, ...props }: Ico
 			e.stopPropagation();
 			onClick?.(e);
 		}}
-		// border border-void-border-1 rounded
 		className={`
-		size-[18px]
-		p-[2px]
+		size-[20px]
+		p-1
 		flex items-center justify-center
-		text-sm text-void-fg-3
-		hover:brightness-110
+		text-xs text-void-fg-3
+		rounded
+		hover:bg-void-bg-2/50
 		disabled:opacity-50 disabled:cursor-not-allowed
+		transition-all duration-200
+		glass-icon-button
 		${className}
         `}
 		{...props}
 	>
-		<Icon />
+		<Icon size={12} />
 	</button>
 }
 
