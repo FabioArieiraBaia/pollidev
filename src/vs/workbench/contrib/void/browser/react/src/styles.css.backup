@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- Neon Button Animations --- */
+@keyframes neon-green-pulse {
+	0%, 100% { 
+		box-shadow: 0 0 5px #10B981, 0 0 10px #10B981, 0 0 20px rgba(16, 185, 129, 0.3); 
+	}
+	50% { 
+		box-shadow: 0 0 10px #10B981, 0 0 25px #10B981, 0 0 40px rgba(16, 185, 129, 0.5), 0 0 60px rgba(16, 185, 129, 0.3); 
+	}
+}
+
+@keyframes neon-red-pulse {
+	0%, 100% { 
+		box-shadow: 0 0 5px #EF4444, 0 0 10px #EF4444, 0 0 20px rgba(239, 68, 68, 0.3); 
+	}
+	50% { 
+		box-shadow: 0 0 10px #EF4444, 0 0 25px #EF4444, 0 0 40px rgba(239, 68, 68, 0.5), 0 0 60px rgba(239, 68, 68, 0.3); 
+	}
+}
+
+.void-neon-green {
+	animation: neon-green-pulse 2s ease-in-out infinite;
+}
+
+.void-neon-red {
+	animation: neon-red-pulse 2s ease-in-out infinite;
+}
+
+.void-glass-button {
+	position: relative;
+	overflow: hidden;
+}
+
+.void-glass-button::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+	transition: left 0.5s ease;
+}
+
+.void-glass-button:hover::before {
+	left: 100%;
+}
+
+.void-glass-button:hover {
+	background: linear-gradient(135deg, rgba(16, 185, 129, 0.6) 0%, rgba(16, 185, 129, 0.4) 100%) !important;
+	color: #FFFFFF !important;
+	text-shadow: 0 0 15px rgba(16, 185, 129, 0.8) !important;
+	border-color: rgba(16, 185, 129, 0.8) !important;
+}
+
+.void-neon-red.void-glass-button:hover {
+	background: linear-gradient(135deg, rgba(239, 68, 68, 0.6) 0%, rgba(239, 68, 68, 0.4) 100%) !important;
+	color: #FFFFFF !important;
+	text-shadow: 0 0 15px rgba(239, 68, 68, 0.8) !important;
+	border-color: rgba(239, 68, 68, 0.8) !important;
+}
+
+.void-glass-icon-button {
+	background: rgba(255, 255, 255, 0.05) !important;
+	border: 1px solid rgba(255, 255, 255, 0.1) !important;
+	backdrop-filter: blur(4px);
+	transition: all 0.3s ease;
+}
+
+.void-glass-icon-button:hover:not(:disabled) {
+	background: rgba(255, 255, 255, 0.15) !important;
+	border-color: rgba(255, 255, 255, 0.25) !important;
+	transform: scale(1.05);
+}
+
+.void-glass-icon-button:hover:not(:disabled) svg {
+	color: #FFFFFF !important;
+	filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
+}
+
+.void-glass-icon-button:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}

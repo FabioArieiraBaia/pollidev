@@ -1,0 +1,59 @@
+{
+	"nameShort": "PolliDev",
+	"nameLong": "PolliDev",
+	"voidVersion": "1.4.9",
+	"voidRelease": "0044",
+	"applicationName": "pollidev",
+	"dataFolderName": ".pollidev-editor",
+	"win32MutexName": "pollidev",
+	"licenseName": "MIT",
+	"licenseUrl": "https://github.com/FabioArieiraBaia/pollidev/blob/main/void/LICENSE.txt",
+	"serverLicenseUrl": "https://github.com/FabioArieiraBaia/pollidev/blob/main/void/LICENSE.txt",
+	"serverGreeting": [],
+	"serverLicense": [],
+	"serverLicensePrompt": "",
+	"serverApplicationName": "pollidev-server",
+	"serverDataFolderName": ".pollidev-server",
+	"tunnelApplicationName": "pollidev-tunnel",
+	"win32DirName": "PolliDev",
+	"win32NameVersion": "PolliDev",
+	"win32RegValueName": "PolliDev",
+	"win32x64AppId": "{{9D394D01-1728-45A7-B997-A6C82C5452C3}",
+	"win32arm64AppId": "{{0668DD58-2BDE-4101-8CDA-40252DF8875D}",
+	"win32x64UserAppId": "{{8BED5DC1-6C55-46E6-9FE6-18F7E6F7C7F1}",
+	"win32arm64UserAppId": "{{F6C87466-BC82-4A8F-B0FF-18CA366BA4D8}",
+	"win32AppUserModelId": "PolliDev.Editor",
+	"win32ShellNameShort": "P&olliDev",
+	"win32TunnelServiceMutex": "pollidev-tunnelservice",
+	"win32TunnelMutex": "pollidev-tunnel",
+	"darwinBundleIdentifier": "com.pollidev.code",
+	"linuxIconName": "pollidev-editor",
+	"licenseFileName": "LICENSE.txt",
+	"reportIssueUrl": "https://github.com/FabioArieiraBaia/pollidev/issues/new",
+	"nodejsRepository": "https://nodejs.org",
+	"urlProtocol": "pollidev",
+	"extensionsGallery": {
+		"serviceUrl": "https://marketplace.visualstudio.com/_apis/public/gallery",
+		"itemUrl": "https://marketplace.visualstudio.com/items"
+	},
+	"builtInExtensions": [],
+	"linkProtectionTrustedDomains": [
+		"https://fabioarieira.com",
+		"https://github.com/FabioArieiraBaia/pollidev",
+		"https://pollinations.ai",
+		"https://enter.pollinations.ai",
+		"https://ollama.com",
+		"https://voideditor.com",
+		"https://voideditor.dev"
+	],
+	"voidBrowserConfig": {
+		"enabled": true,
+		"approvalMode": "auto",
+		"allowedLocalPorts": [7243, 8000, 8080, 8888, 9000],
+		"cspPolicy": {
+			"connectSrc": ["'self'", "https:", "ws:", "wss:", "http://127.0.0.1:*", "http://localhost:*"],
+			"frameSrc": ["'self'", "http://127.0.0.1:*", "http://localhost:*"],
+			"scriptSrc": ["'self'", "'unsafe-inline'", "http://127.0.0.1:*", "http://localhost:*"]
+		}
+	}
+}
