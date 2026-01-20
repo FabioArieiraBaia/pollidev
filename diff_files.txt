@@ -1,0 +1,1577 @@
+CRIAR_PR_AGORA.md
+MANUAL_PR_STEPS.md
+POLLINATIONS_PR_ENTRY.md
+POLLINATIONS_SUBMISSION_SUMMARY.md
+PolliDev-Instaladores
+README_POLLINATIONS_ALIGNED.md
+VSCode-darwin-arm64/PolliDev.app.zip
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Electron Framework
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Helpers
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Libraries
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Resources
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Helpers/chrome_crashpad_handler
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libEGL.dylib
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libGLESv2.dylib
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libffmpeg.dylib
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libvk_swiftshader.dylib
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/vk_swiftshader_icd.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/Info.plist
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/MainMenu.nib
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/af.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/am.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ar.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/bg.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/bn.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ca.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/chrome_100_percent.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/chrome_200_percent.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/cs.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/da.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/de.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/el.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/en.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/en_GB.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/es.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/es_419.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/et.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fa.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fi.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fil.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fr.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/gu.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/he.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/hi.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/hr.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/hu.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/icudtl.dat
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/id.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/it.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ja.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/kn.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ko.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/lt.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/lv.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ml.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/mr.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ms.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/nb.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/nl.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/pl.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/pt_BR.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/pt_PT.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/resources.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ro.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ru.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sk.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sl.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sr.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sv.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sw.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ta.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/te.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/th.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/tr.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/uk.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ur.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/v8_context_snapshot.arm64.bin
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/vi.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/zh_CN.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/zh_TW.lproj/locale.pak
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/Current
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Helper (GPU).app/Contents/Info.plist
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Helper (GPU).app/Contents/MacOS/Electron Helper (GPU)
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Helper (GPU).app/Contents/PkgInfo
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Helper (Plugin).app/Contents/Info.plist
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Helper (Plugin).app/Contents/MacOS/Electron Helper (Plugin)
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Helper (Plugin).app/Contents/PkgInfo
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Helper (Renderer).app/Contents/Info.plist
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Helper (Renderer).app/Contents/MacOS/Electron Helper (Renderer)
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Helper (Renderer).app/Contents/PkgInfo
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Helper.app/Contents/Info.plist
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Helper.app/Contents/MacOS/Electron Helper
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Electron Helper.app/Contents/PkgInfo
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Mantle.framework/Mantle
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Mantle.framework/Resources
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Mantle.framework/Versions/A/Mantle
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Mantle.framework/Versions/A/Resources/Info.plist
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Mantle.framework/Versions/Current
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/ReactiveObjC.framework/ReactiveObjC
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/ReactiveObjC.framework/Resources
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/ReactiveObjC.framework/Versions/A/ReactiveObjC
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/ReactiveObjC.framework/Versions/A/Resources/Info.plist
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/ReactiveObjC.framework/Versions/Current
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Squirrel.framework/Resources
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Squirrel.framework/Squirrel
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/Info.plist
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Squirrel.framework/Versions/A/Squirrel
+VSCode-darwin-arm64/PolliDev.app/Contents/Frameworks/Squirrel.framework/Versions/Current
+VSCode-darwin-arm64/PolliDev.app/Contents/Info.plist
+VSCode-darwin-arm64/PolliDev.app/Contents/MacOS/Electron
+VSCode-darwin-arm64/PolliDev.app/Contents/PkgInfo
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/LICENSES.chromium.html
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/PolliDev.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/LICENSE.txt
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/ThirdPartyNotices.txt
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/bin/code
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/bat/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/bat/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/bat/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/bat/snippets/batchfile.code-snippets
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/bat/syntaxes/batchfile.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/clojure/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/clojure/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/clojure/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/clojure/syntaxes/clojure.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/coffeescript/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/coffeescript/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/coffeescript/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/coffeescript/snippets/coffeescript.code-snippets
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/coffeescript/syntaxes/coffeescript.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/configuration-editing/dist/configurationEditingMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/configuration-editing/images/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/configuration-editing/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/configuration-editing/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/configuration-editing/schemas/attachContainer.schema.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/cpp/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/cpp/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/cpp/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/cpp/snippets/c.code-snippets
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/cpp/snippets/cpp.code-snippets
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/cpp/syntaxes/c.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/cpp/syntaxes/cpp.embedded.macro.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/cpp/syntaxes/cpp.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/cpp/syntaxes/cuda-cpp.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/cpp/syntaxes/platform.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/csharp/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/csharp/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/csharp/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/csharp/snippets/csharp.code-snippets
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/csharp/syntaxes/csharp.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/client/dist/node/cssClientMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/icons/css.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/schemas/package.schema.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/server/.npmrc
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/server/dist/node/85.cssServerMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/server/dist/node/920.cssServerMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/server/dist/node/cssServerMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/server/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/css/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/css/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/css/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/css/syntaxes/css.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/dart/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/dart/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/dart/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/dart/syntaxes/dart.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/debug-auto-launch/dist/extension.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/debug-auto-launch/media/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/debug-auto-launch/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/debug-auto-launch/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/debug-server-ready/dist/extension.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/debug-server-ready/media/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/debug-server-ready/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/debug-server-ready/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/diff/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/diff/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/diff/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/diff/syntaxes/diff.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/docker/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/docker/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/docker/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/docker/syntaxes/docker.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/emmet/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/emmet/dist/node/emmetNodeMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/emmet/images/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/emmet/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/emmet/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/extension-editing/dist/extensionEditingMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/extension-editing/images/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/extension-editing/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/extension-editing/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/fsharp/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/fsharp/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/fsharp/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/fsharp/snippets/fsharp.code-snippets
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/fsharp/syntaxes/fsharp.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git-base/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git-base/dist/extension.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git-base/languages/git-commit.language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git-base/languages/git-rebase.language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git-base/languages/ignore.language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git-base/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git-base/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git-base/resources/icons/git.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git-base/syntaxes/git-commit.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git-base/syntaxes/git-rebase.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git-base/syntaxes/ignore.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/dist/askpass-empty.sh
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/dist/askpass-main.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/dist/askpass.sh
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/dist/git-editor-empty.sh
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/dist/git-editor-main.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/dist/git-editor.sh
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/dist/main.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/dist/main.js.LICENSE.txt
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/dist/ssh-askpass-empty.sh
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/dist/ssh-askpass.sh
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/resources/emojis.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/dark/status-added.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/dark/status-conflict.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/dark/status-copied.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/dark/status-deleted.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/dark/status-ignored.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/dark/status-modified.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/dark/status-renamed.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/dark/status-type-changed.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/dark/status-untracked.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/git.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/light/status-added.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/light/status-conflict.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/light/status-copied.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/light/status-deleted.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/light/status-ignored.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/light/status-modified.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/light/status-renamed.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/light/status-type-changed.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/light/status-untracked.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github-authentication/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github-authentication/dist/extension.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github-authentication/dist/extension.js.LICENSE.txt
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github-authentication/images/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github-authentication/media/auth.css
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github-authentication/media/favicon.ico
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github-authentication/media/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github-authentication/media/index.html
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github-authentication/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github-authentication/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github/dist/extension.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github/dist/extension.js.LICENSE.txt
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github/images/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github/markdown.css
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github/testWorkspace/PULL_REQUEST_TEMPLATE.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github/testWorkspace/PULL_REQUEST_TEMPLATE/a.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github/testWorkspace/PULL_REQUEST_TEMPLATE/b.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github/testWorkspace/PULL_REQUEST_TEMPLATE/x.txt
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github/testWorkspace/docs/PULL_REQUEST_TEMPLATE.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github/testWorkspace/docs/PULL_REQUEST_TEMPLATE/a.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github/testWorkspace/docs/PULL_REQUEST_TEMPLATE/b.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github/testWorkspace/docs/PULL_REQUEST_TEMPLATE/x.txt
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github/testWorkspace/some-markdown.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/github/testWorkspace/x.txt
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/go/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/go/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/go/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/go/syntaxes/go.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/groovy/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/groovy/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/groovy/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/groovy/snippets/groovy.code-snippets
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/groovy/syntaxes/groovy.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/grunt/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/grunt/dist/main.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/grunt/images/grunt.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/grunt/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/grunt/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/gulp/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/gulp/dist/main.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/gulp/images/gulp.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/gulp/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/gulp/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/handlebars/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/handlebars/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/handlebars/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/handlebars/syntaxes/Handlebars.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/hlsl/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/hlsl/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/hlsl/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/hlsl/syntaxes/hlsl.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/client/dist/node/htmlClientMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/client/dist/node/htmlClientMain.js.LICENSE.txt
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/icons/html.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/schemas/package.schema.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/server/.npmrc
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/server/dist/node/421.htmlServerMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/server/dist/node/490.htmlServerMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/server/dist/node/769.htmlServerMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/server/dist/node/htmlServerMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/server/lib/jquery.d.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/server/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/html/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/html/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/html/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/html/snippets/html.code-snippets
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/html/syntaxes/html-derivative.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/html/syntaxes/html.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/ini/ini.language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/ini/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/ini/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/ini/properties.language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/ini/syntaxes/ini.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/ipynb/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/ipynb/dist/ipynbMain.node.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/ipynb/dist/notebookSerializerWorker.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/ipynb/media/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/ipynb/notebook-out/cellAttachmentRenderer.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/ipynb/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/ipynb/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/jake/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/jake/dist/main.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/jake/images/cowboy_hat.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/jake/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/jake/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/java/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/java/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/java/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/java/snippets/java.code-snippets
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/java/syntaxes/java.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/javascript/javascript-language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/javascript/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/javascript/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/javascript/snippets/javascript.code-snippets
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/javascript/syntaxes/JavaScript.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/javascript/syntaxes/JavaScriptReact.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/javascript/syntaxes/Regular Expressions (JavaScript).tmLanguage
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/javascript/tags-language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/client/dist/node/jsonClientMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/client/dist/node/jsonClientMain.js.LICENSE.txt
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/icons/json.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/server/.npmrc
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/server/dist/node/774.jsonServerMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/server/dist/node/875.jsonServerMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/server/dist/node/jsonServerMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/server/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/json/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/json/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/json/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/json/syntaxes/JSON.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/json/syntaxes/JSONC.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/json/syntaxes/JSONL.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/json/syntaxes/snippets.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/julia/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/julia/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/julia/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/julia/syntaxes/julia.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/latex/cpp-bailout-license.txt
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/latex/latex-cpp-embedded-language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/latex/latex-language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/latex/markdown-latex-combined-language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/latex/markdown-latex-combined-license.txt
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/latex/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/latex/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/latex/syntaxes/Bibtex.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/latex/syntaxes/LaTeX.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/latex/syntaxes/TeX.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/latex/syntaxes/cpp-grammar-bailout.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/latex/syntaxes/markdown-latex-combined.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/less/build/update-grammar.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/less/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/less/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/less/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/less/syntaxes/less.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/log/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/log/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/log/syntaxes/log.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/lua/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/lua/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/lua/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/lua/syntaxes/lua.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/make/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/make/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/make/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/make/syntaxes/make.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-basics/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-basics/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-basics/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-basics/snippets/markdown.code-snippets
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-basics/syntaxes/markdown.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/dist/extension.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/dist/extension.js.LICENSE.txt
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/dist/serverWorkerMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/dist/serverWorkerMain.js.LICENSE.txt
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/media/highlight.css
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/media/index.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/media/markdown.css
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/media/pre.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/media/preview-dark.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/media/preview-light.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/notebook-out/index.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/schemas/package.schema.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/dist/extension.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_AMS-Regular.woff2
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Caligraphic-Bold.woff2
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Caligraphic-Regular.woff2
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Fraktur-Bold.woff2
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Fraktur-Regular.woff2
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Main-Bold.woff2
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Main-BoldItalic.woff2
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Main-Italic.woff2
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Main-Regular.woff2
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Math-BoldItalic.woff2
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Math-Italic.woff2
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_SansSerif-Bold.woff2
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_SansSerif-Italic.woff2
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_SansSerif-Regular.woff2
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Script-Regular.woff2
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Size1-Regular.woff2
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Size2-Regular.woff2
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Size3-Regular.woff2
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Size4-Regular.woff2
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Typewriter-Regular.woff2
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/katex.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/katex.min.css
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/preview-styles/index.css
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/syntaxes/md-math-block.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/syntaxes/md-math-fence.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/syntaxes/md-math-inline.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/syntaxes/md-math.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/media-preview/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/media-preview/dist/extension.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/media-preview/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/media-preview/media/audioPreview.css
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/media-preview/media/audioPreview.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/media-preview/media/imagePreview.css
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/media-preview/media/imagePreview.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/media-preview/media/loading-dark.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/media-preview/media/loading-hc.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/media-preview/media/loading.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/media-preview/media/videoPreview.css
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/media-preview/media/videoPreview.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/media-preview/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/media-preview/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/merge-conflict/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/merge-conflict/dist/mergeConflictMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/merge-conflict/dist/mergeConflictMain.js.LICENSE.txt
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/merge-conflict/media/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/merge-conflict/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/merge-conflict/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/dist/extension.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/dist/extension.js.LICENSE.txt
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/dist/msal-node-runtime.node
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/dist/msalruntime.dll
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/media/auth.css
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/media/favicon.ico
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/media/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/media/index.html
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/notebook-renderers/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/notebook-renderers/media/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/notebook-renderers/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/notebook-renderers/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/notebook-renderers/renderer-out/index.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/npm/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/npm/dist/npmMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/npm/dist/npmMain.js.LICENSE.txt
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/npm/images/code.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/npm/images/npm_icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/npm/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/npm/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/objective-c/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/objective-c/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/objective-c/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/objective-c/syntaxes/objective-c++.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/objective-c/syntaxes/objective-c.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/CHANGELOG.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/dist/extension.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/extension-browser.webpack.config.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/extension.webpack.config.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/resources/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/authResolver.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/commands.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/common/disposable.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/common/files.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/common/logger.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/common/platform.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/common/ports.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/extension.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/hostTreeView.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/remoteLocationHistory.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/serverConfig.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/serverSetup.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/ssh/hostfile.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/ssh/identityFiles.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/ssh/sshConfig.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/ssh/sshConnection.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/ssh/sshDestination.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/tsconfig.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/dist/extension.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/extension-browser.webpack.config.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/extension.webpack.config.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/authResolver.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/commands.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/common/async.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/common/disposable.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/common/event.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/common/files.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/common/logger.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/common/platform.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/common/ports.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/distroTreeView.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/extension.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/remoteLocationHistory.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/serverConfig.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/serverSetup.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/wsl/wslManager.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/wsl/wslTerminal.ts
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/tsconfig.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/perl/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/perl/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/perl/perl.language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/perl/perl6.language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/perl/syntaxes/perl.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/perl/syntaxes/perl6.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/php-language-features/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/php-language-features/dist/phpMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/php-language-features/icons/logo.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/php-language-features/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/php-language-features/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/php/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/php/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/php/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/php/snippets/php.code-snippets
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/php/syntaxes/html.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/php/syntaxes/php.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/powershell/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/powershell/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/powershell/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/powershell/syntaxes/powershell.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/pug/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/pug/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/pug/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/pug/syntaxes/pug.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/python/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/python/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/python/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/python/syntaxes/MagicPython.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/python/syntaxes/MagicRegExp.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/r/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/r/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/r/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/r/syntaxes/r.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/razor/build/update-grammar.mjs
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/razor/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/razor/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/razor/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/razor/syntaxes/cshtml.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/references-view/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/references-view/dist/extension.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/references-view/media/demo.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/references-view/media/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/references-view/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/references-view/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/restructuredtext/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/restructuredtext/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/restructuredtext/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/restructuredtext/syntaxes/rst.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/ruby/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/ruby/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/ruby/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/ruby/syntaxes/ruby.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/rust/build/update-grammar.mjs
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/rust/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/rust/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/rust/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/rust/syntaxes/rust.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/scss/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/scss/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/scss/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/scss/syntaxes/sassdoc.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/scss/syntaxes/scss.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/search-result/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/search-result/dist/extension.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/search-result/dist/media/refresh-dark.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/search-result/dist/media/refresh-light.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/search-result/images/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/search-result/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/search-result/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/search-result/syntaxes/searchResult.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/shaderlab/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/shaderlab/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/shaderlab/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/shaderlab/syntaxes/shaderlab.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/shellscript/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/shellscript/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/shellscript/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/shellscript/syntaxes/shell-unix-bash.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/simple-browser/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/simple-browser/dist/extension.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/simple-browser/media/codicon.css
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/simple-browser/media/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/simple-browser/media/index.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/simple-browser/media/main.css
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/simple-browser/media/preview-dark.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/simple-browser/media/preview-light.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/simple-browser/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/simple-browser/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/sql/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/sql/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/sql/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/sql/syntaxes/sql.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/swift/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/swift/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/swift/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/swift/snippets/swift.code-snippets
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/swift/syntaxes/swift.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/terminal-suggest/.gitignore
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/terminal-suggest/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/terminal-suggest/ThirdPartyNotices.txt
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/terminal-suggest/cgmanifest.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/terminal-suggest/dist/fig/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/terminal-suggest/dist/media/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/terminal-suggest/dist/terminalSuggestMain.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/terminal-suggest/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/terminal-suggest/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-abyss/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-abyss/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-abyss/themes/abyss-color-theme.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/images/document-dark.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/images/document-light.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/images/folder-dark.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/images/folder-light.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/images/folder-open-dark.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/images/folder-open-light.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/images/root-folder-dark.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/images/root-folder-light.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/images/root-folder-open-dark.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/images/root-folder-open-light.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/vs_minimal-icon-theme.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/themes/dark_modern.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/themes/dark_plus.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/themes/dark_vs.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/themes/hc_black.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/themes/hc_light.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/themes/light_modern.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/themes/light_plus.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/themes/light_vs.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-kimbie-dark/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-kimbie-dark/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-kimbie-dark/themes/kimbie-dark-color-theme.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-monokai-dimmed/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-monokai-dimmed/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-monokai-dimmed/themes/dimmed-monokai-color-theme.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-monokai/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-monokai/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-monokai/themes/monokai-color-theme.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-quietlight/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-quietlight/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-quietlight/themes/quietlight-color-theme.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-red/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-red/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-red/themes/Red-color-theme.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-seti/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-seti/ThirdPartyNotices.txt
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-seti/icons/seti-circular-128x128.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-seti/icons/seti.woff
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-seti/icons/vs-seti-icon-theme.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-seti/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-seti/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-solarized-dark/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-solarized-dark/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-solarized-dark/themes/solarized-dark-color-theme.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-solarized-light/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-solarized-light/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-solarized-light/themes/solarized-light-color-theme.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-tomorrow-night-blue/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-tomorrow-night-blue/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/theme-tomorrow-night-blue/themes/tomorrow-night-blue-color-theme.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/tunnel-forwarding/dist/extension.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/tunnel-forwarding/media/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/tunnel-forwarding/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/tunnel-forwarding/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-basics/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-basics/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-basics/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-basics/snippets/typescript.code-snippets
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-basics/syntaxes/TypeScript.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-basics/syntaxes/TypeScriptReact.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-basics/syntaxes/jsdoc.js.injection.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-basics/syntaxes/jsdoc.ts.injection.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/README.md
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/dist/extension.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/dist/extension.js.LICENSE.txt
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/media/icon.png
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/resources/walkthroughs/create-a-js-file.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/resources/walkthroughs/debug-and-run.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/resources/walkthroughs/install-node-js.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/resources/walkthroughs/learn-more.svg
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/schemas/jsconfig.schema.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/schemas/package.schema.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/schemas/tsconfig.schema.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/vb/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/vb/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/vb/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/vb/snippets/vb.code-snippets
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/vb/syntaxes/asp-vb-net.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/xml/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/xml/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/xml/syntaxes/xml.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/xml/syntaxes/xsl.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/xml/xml.language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/xml/xsl.language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/yaml/build/update-grammar.js
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/yaml/language-configuration.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/yaml/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/yaml/package.nls.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/yaml/syntaxes/yaml-1.0.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/yaml/syntaxes/yaml-1.1.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/yaml/syntaxes/yaml-1.2.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/yaml/syntaxes/yaml-1.3.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/yaml/syntaxes/yaml-embedded.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/extensions/yaml/syntaxes/yaml.tmLanguage.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/node_modules.asar
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/package.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/app/product.json
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/bat.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/bower.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/c.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/config.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/cpp.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/csharp.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/css.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/default.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/go.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/html.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/jade.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/java.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/javascript.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/json.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/less.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/markdown.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/php.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/powershell.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/python.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/react.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/ruby.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/sass.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/shell.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/sql.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/typescript.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/vue.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/xml.icns
+VSCode-darwin-arm64/PolliDev.app/Contents/Resources/yaml.icns
+VSCode-darwin-x64/PolliDev.app.zip
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Electron Framework
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Helpers
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Libraries
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Resources
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Helpers/chrome_crashpad_handler
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libEGL.dylib
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libGLESv2.dylib
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libffmpeg.dylib
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libvk_swiftshader.dylib
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/vk_swiftshader_icd.json
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/Info.plist
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/MainMenu.nib
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/af.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/am.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ar.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/bg.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/bn.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ca.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/chrome_100_percent.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/chrome_200_percent.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/cs.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/da.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/de.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/el.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/en.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/en_GB.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/es.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/es_419.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/et.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fa.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fi.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fil.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fr.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/gu.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/he.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/hi.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/hr.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/hu.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/icudtl.dat
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/id.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/it.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ja.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/kn.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ko.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/lt.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/lv.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ml.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/mr.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ms.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/nb.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/nl.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/pl.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/pt_BR.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/pt_PT.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/resources.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ro.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ru.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sk.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sl.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sr.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sv.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sw.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ta.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/te.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/th.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/tr.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/uk.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ur.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/v8_context_snapshot.x86_64.bin
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/vi.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/zh_CN.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/zh_TW.lproj/locale.pak
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Framework.framework/Versions/Current
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Helper (GPU).app/Contents/Info.plist
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Helper (GPU).app/Contents/MacOS/Electron Helper (GPU)
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Helper (GPU).app/Contents/PkgInfo
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Helper (Plugin).app/Contents/Info.plist
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Helper (Plugin).app/Contents/MacOS/Electron Helper (Plugin)
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Helper (Plugin).app/Contents/PkgInfo
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Helper (Renderer).app/Contents/Info.plist
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Helper (Renderer).app/Contents/MacOS/Electron Helper (Renderer)
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Helper (Renderer).app/Contents/PkgInfo
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Helper.app/Contents/Info.plist
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Helper.app/Contents/MacOS/Electron Helper
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Electron Helper.app/Contents/PkgInfo
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Mantle.framework/Mantle
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Mantle.framework/Resources
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Mantle.framework/Versions/A/Mantle
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Mantle.framework/Versions/A/Resources/Info.plist
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Mantle.framework/Versions/Current
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/ReactiveObjC.framework/ReactiveObjC
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/ReactiveObjC.framework/Resources
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/ReactiveObjC.framework/Versions/A/ReactiveObjC
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/ReactiveObjC.framework/Versions/A/Resources/Info.plist
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/ReactiveObjC.framework/Versions/Current
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Squirrel.framework/Resources
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Squirrel.framework/Squirrel
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/Info.plist
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Squirrel.framework/Versions/A/Squirrel
+VSCode-darwin-x64/PolliDev.app/Contents/Frameworks/Squirrel.framework/Versions/Current
+VSCode-darwin-x64/PolliDev.app/Contents/Info.plist
+VSCode-darwin-x64/PolliDev.app/Contents/MacOS/Electron
+VSCode-darwin-x64/PolliDev.app/Contents/PkgInfo
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/LICENSES.chromium.html
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/PolliDev.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/LICENSE.txt
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/ThirdPartyNotices.txt
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/bin/code
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/bat/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/bat/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/bat/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/bat/snippets/batchfile.code-snippets
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/bat/syntaxes/batchfile.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/clojure/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/clojure/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/clojure/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/clojure/syntaxes/clojure.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/coffeescript/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/coffeescript/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/coffeescript/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/coffeescript/snippets/coffeescript.code-snippets
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/coffeescript/syntaxes/coffeescript.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/configuration-editing/dist/configurationEditingMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/configuration-editing/images/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/configuration-editing/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/configuration-editing/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/configuration-editing/schemas/attachContainer.schema.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/cpp/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/cpp/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/cpp/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/cpp/snippets/c.code-snippets
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/cpp/snippets/cpp.code-snippets
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/cpp/syntaxes/c.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/cpp/syntaxes/cpp.embedded.macro.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/cpp/syntaxes/cpp.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/cpp/syntaxes/cuda-cpp.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/cpp/syntaxes/platform.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/csharp/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/csharp/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/csharp/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/csharp/snippets/csharp.code-snippets
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/csharp/syntaxes/csharp.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/client/dist/node/cssClientMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/icons/css.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/schemas/package.schema.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/server/.npmrc
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/server/dist/node/85.cssServerMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/server/dist/node/920.cssServerMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/server/dist/node/cssServerMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/css-language-features/server/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/css/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/css/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/css/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/css/syntaxes/css.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/dart/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/dart/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/dart/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/dart/syntaxes/dart.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/debug-auto-launch/dist/extension.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/debug-auto-launch/media/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/debug-auto-launch/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/debug-auto-launch/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/debug-server-ready/dist/extension.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/debug-server-ready/media/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/debug-server-ready/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/debug-server-ready/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/diff/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/diff/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/diff/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/diff/syntaxes/diff.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/docker/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/docker/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/docker/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/docker/syntaxes/docker.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/emmet/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/emmet/dist/node/emmetNodeMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/emmet/images/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/emmet/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/emmet/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/extension-editing/dist/extensionEditingMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/extension-editing/images/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/extension-editing/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/extension-editing/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/fsharp/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/fsharp/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/fsharp/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/fsharp/snippets/fsharp.code-snippets
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/fsharp/syntaxes/fsharp.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git-base/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git-base/dist/extension.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git-base/languages/git-commit.language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git-base/languages/git-rebase.language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git-base/languages/ignore.language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git-base/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git-base/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git-base/resources/icons/git.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git-base/syntaxes/git-commit.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git-base/syntaxes/git-rebase.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git-base/syntaxes/ignore.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/dist/askpass-empty.sh
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/dist/askpass-main.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/dist/askpass.sh
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/dist/git-editor-empty.sh
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/dist/git-editor-main.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/dist/git-editor.sh
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/dist/main.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/dist/main.js.LICENSE.txt
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/dist/ssh-askpass-empty.sh
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/dist/ssh-askpass.sh
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/resources/emojis.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/dark/status-added.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/dark/status-conflict.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/dark/status-copied.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/dark/status-deleted.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/dark/status-ignored.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/dark/status-modified.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/dark/status-renamed.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/dark/status-type-changed.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/dark/status-untracked.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/git.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/light/status-added.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/light/status-conflict.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/light/status-copied.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/light/status-deleted.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/light/status-ignored.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/light/status-modified.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/light/status-renamed.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/light/status-type-changed.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/git/resources/icons/light/status-untracked.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github-authentication/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github-authentication/dist/extension.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github-authentication/dist/extension.js.LICENSE.txt
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github-authentication/images/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github-authentication/media/auth.css
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github-authentication/media/favicon.ico
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github-authentication/media/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github-authentication/media/index.html
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github-authentication/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github-authentication/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github/dist/extension.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github/dist/extension.js.LICENSE.txt
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github/images/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github/markdown.css
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github/testWorkspace/PULL_REQUEST_TEMPLATE.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github/testWorkspace/PULL_REQUEST_TEMPLATE/a.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github/testWorkspace/PULL_REQUEST_TEMPLATE/b.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github/testWorkspace/PULL_REQUEST_TEMPLATE/x.txt
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github/testWorkspace/docs/PULL_REQUEST_TEMPLATE.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github/testWorkspace/docs/PULL_REQUEST_TEMPLATE/a.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github/testWorkspace/docs/PULL_REQUEST_TEMPLATE/b.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github/testWorkspace/docs/PULL_REQUEST_TEMPLATE/x.txt
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github/testWorkspace/some-markdown.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/github/testWorkspace/x.txt
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/go/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/go/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/go/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/go/syntaxes/go.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/groovy/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/groovy/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/groovy/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/groovy/snippets/groovy.code-snippets
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/groovy/syntaxes/groovy.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/grunt/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/grunt/dist/main.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/grunt/images/grunt.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/grunt/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/grunt/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/gulp/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/gulp/dist/main.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/gulp/images/gulp.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/gulp/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/gulp/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/handlebars/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/handlebars/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/handlebars/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/handlebars/syntaxes/Handlebars.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/hlsl/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/hlsl/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/hlsl/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/hlsl/syntaxes/hlsl.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/client/dist/node/htmlClientMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/client/dist/node/htmlClientMain.js.LICENSE.txt
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/icons/html.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/schemas/package.schema.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/server/.npmrc
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/server/dist/node/421.htmlServerMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/server/dist/node/490.htmlServerMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/server/dist/node/769.htmlServerMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/server/dist/node/htmlServerMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/server/lib/jquery.d.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/html-language-features/server/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/html/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/html/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/html/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/html/snippets/html.code-snippets
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/html/syntaxes/html-derivative.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/html/syntaxes/html.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/ini/ini.language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/ini/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/ini/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/ini/properties.language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/ini/syntaxes/ini.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/ipynb/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/ipynb/dist/ipynbMain.node.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/ipynb/dist/notebookSerializerWorker.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/ipynb/media/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/ipynb/notebook-out/cellAttachmentRenderer.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/ipynb/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/ipynb/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/jake/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/jake/dist/main.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/jake/images/cowboy_hat.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/jake/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/jake/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/java/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/java/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/java/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/java/snippets/java.code-snippets
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/java/syntaxes/java.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/javascript/javascript-language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/javascript/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/javascript/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/javascript/snippets/javascript.code-snippets
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/javascript/syntaxes/JavaScript.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/javascript/syntaxes/JavaScriptReact.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/javascript/syntaxes/Regular Expressions (JavaScript).tmLanguage
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/javascript/tags-language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/client/dist/node/jsonClientMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/client/dist/node/jsonClientMain.js.LICENSE.txt
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/icons/json.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/server/.npmrc
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/server/dist/node/774.jsonServerMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/server/dist/node/875.jsonServerMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/server/dist/node/jsonServerMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/json-language-features/server/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/json/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/json/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/json/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/json/syntaxes/JSON.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/json/syntaxes/JSONC.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/json/syntaxes/JSONL.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/json/syntaxes/snippets.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/julia/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/julia/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/julia/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/julia/syntaxes/julia.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/latex/cpp-bailout-license.txt
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/latex/latex-cpp-embedded-language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/latex/latex-language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/latex/markdown-latex-combined-language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/latex/markdown-latex-combined-license.txt
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/latex/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/latex/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/latex/syntaxes/Bibtex.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/latex/syntaxes/LaTeX.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/latex/syntaxes/TeX.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/latex/syntaxes/cpp-grammar-bailout.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/latex/syntaxes/markdown-latex-combined.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/less/build/update-grammar.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/less/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/less/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/less/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/less/syntaxes/less.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/log/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/log/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/log/syntaxes/log.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/lua/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/lua/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/lua/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/lua/syntaxes/lua.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/make/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/make/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/make/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/make/syntaxes/make.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-basics/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-basics/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-basics/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-basics/snippets/markdown.code-snippets
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-basics/syntaxes/markdown.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/dist/extension.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/dist/extension.js.LICENSE.txt
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/dist/serverWorkerMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/dist/serverWorkerMain.js.LICENSE.txt
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/media/highlight.css
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/media/index.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/media/markdown.css
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/media/pre.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/media/preview-dark.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/media/preview-light.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/notebook-out/index.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-language-features/schemas/package.schema.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/dist/extension.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_AMS-Regular.woff2
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Caligraphic-Bold.woff2
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Caligraphic-Regular.woff2
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Fraktur-Bold.woff2
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Fraktur-Regular.woff2
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Main-Bold.woff2
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Main-BoldItalic.woff2
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Main-Italic.woff2
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Main-Regular.woff2
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Math-BoldItalic.woff2
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Math-Italic.woff2
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_SansSerif-Bold.woff2
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_SansSerif-Italic.woff2
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_SansSerif-Regular.woff2
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Script-Regular.woff2
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Size1-Regular.woff2
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Size2-Regular.woff2
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Size3-Regular.woff2
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Size4-Regular.woff2
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/fonts/KaTeX_Typewriter-Regular.woff2
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/katex.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/notebook-out/katex.min.css
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/preview-styles/index.css
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/syntaxes/md-math-block.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/syntaxes/md-math-fence.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/syntaxes/md-math-inline.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/markdown-math/syntaxes/md-math.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/media-preview/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/media-preview/dist/extension.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/media-preview/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/media-preview/media/audioPreview.css
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/media-preview/media/audioPreview.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/media-preview/media/imagePreview.css
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/media-preview/media/imagePreview.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/media-preview/media/loading-dark.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/media-preview/media/loading-hc.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/media-preview/media/loading.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/media-preview/media/videoPreview.css
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/media-preview/media/videoPreview.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/media-preview/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/media-preview/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/merge-conflict/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/merge-conflict/dist/mergeConflictMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/merge-conflict/dist/mergeConflictMain.js.LICENSE.txt
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/merge-conflict/media/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/merge-conflict/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/merge-conflict/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/dist/extension.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/dist/extension.js.LICENSE.txt
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/dist/msal-node-runtime.node
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/dist/msalruntime.dll
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/media/auth.css
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/media/favicon.ico
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/media/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/media/index.html
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/microsoft-authentication/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/notebook-renderers/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/notebook-renderers/media/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/notebook-renderers/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/notebook-renderers/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/notebook-renderers/renderer-out/index.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/npm/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/npm/dist/npmMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/npm/dist/npmMain.js.LICENSE.txt
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/npm/images/code.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/npm/images/npm_icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/npm/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/npm/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/objective-c/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/objective-c/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/objective-c/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/objective-c/syntaxes/objective-c++.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/objective-c/syntaxes/objective-c.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/CHANGELOG.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/dist/extension.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/extension-browser.webpack.config.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/extension.webpack.config.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/resources/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/authResolver.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/commands.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/common/disposable.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/common/files.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/common/logger.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/common/platform.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/common/ports.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/extension.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/hostTreeView.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/remoteLocationHistory.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/serverConfig.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/serverSetup.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/ssh/hostfile.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/ssh/identityFiles.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/ssh/sshConfig.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/ssh/sshConnection.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/src/ssh/sshDestination.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-ssh/tsconfig.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/dist/extension.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/extension-browser.webpack.config.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/extension.webpack.config.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/authResolver.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/commands.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/common/async.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/common/disposable.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/common/event.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/common/files.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/common/logger.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/common/platform.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/common/ports.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/distroTreeView.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/extension.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/remoteLocationHistory.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/serverConfig.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/serverSetup.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/wsl/wslManager.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/src/wsl/wslTerminal.ts
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/open-remote-wsl/tsconfig.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/perl/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/perl/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/perl/perl.language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/perl/perl6.language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/perl/syntaxes/perl.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/perl/syntaxes/perl6.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/php-language-features/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/php-language-features/dist/phpMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/php-language-features/icons/logo.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/php-language-features/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/php-language-features/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/php/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/php/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/php/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/php/snippets/php.code-snippets
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/php/syntaxes/html.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/php/syntaxes/php.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/powershell/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/powershell/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/powershell/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/powershell/syntaxes/powershell.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/pug/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/pug/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/pug/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/pug/syntaxes/pug.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/python/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/python/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/python/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/python/syntaxes/MagicPython.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/python/syntaxes/MagicRegExp.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/r/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/r/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/r/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/r/syntaxes/r.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/razor/build/update-grammar.mjs
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/razor/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/razor/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/razor/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/razor/syntaxes/cshtml.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/references-view/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/references-view/dist/extension.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/references-view/media/demo.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/references-view/media/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/references-view/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/references-view/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/restructuredtext/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/restructuredtext/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/restructuredtext/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/restructuredtext/syntaxes/rst.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/ruby/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/ruby/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/ruby/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/ruby/syntaxes/ruby.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/rust/build/update-grammar.mjs
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/rust/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/rust/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/rust/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/rust/syntaxes/rust.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/scss/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/scss/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/scss/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/scss/syntaxes/sassdoc.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/scss/syntaxes/scss.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/search-result/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/search-result/dist/extension.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/search-result/dist/media/refresh-dark.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/search-result/dist/media/refresh-light.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/search-result/images/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/search-result/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/search-result/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/search-result/syntaxes/searchResult.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/shaderlab/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/shaderlab/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/shaderlab/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/shaderlab/syntaxes/shaderlab.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/shellscript/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/shellscript/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/shellscript/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/shellscript/syntaxes/shell-unix-bash.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/simple-browser/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/simple-browser/dist/extension.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/simple-browser/media/codicon.css
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/simple-browser/media/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/simple-browser/media/index.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/simple-browser/media/main.css
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/simple-browser/media/preview-dark.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/simple-browser/media/preview-light.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/simple-browser/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/simple-browser/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/sql/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/sql/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/sql/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/sql/syntaxes/sql.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/swift/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/swift/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/swift/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/swift/snippets/swift.code-snippets
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/swift/syntaxes/swift.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/terminal-suggest/.gitignore
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/terminal-suggest/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/terminal-suggest/ThirdPartyNotices.txt
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/terminal-suggest/cgmanifest.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/terminal-suggest/dist/fig/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/terminal-suggest/dist/media/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/terminal-suggest/dist/terminalSuggestMain.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/terminal-suggest/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/terminal-suggest/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-abyss/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-abyss/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-abyss/themes/abyss-color-theme.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/images/document-dark.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/images/document-light.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/images/folder-dark.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/images/folder-light.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/images/folder-open-dark.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/images/folder-open-light.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/images/root-folder-dark.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/images/root-folder-light.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/images/root-folder-open-dark.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/images/root-folder-open-light.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/fileicons/vs_minimal-icon-theme.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/themes/dark_modern.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/themes/dark_plus.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/themes/dark_vs.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/themes/hc_black.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/themes/hc_light.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/themes/light_modern.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/themes/light_plus.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-defaults/themes/light_vs.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-kimbie-dark/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-kimbie-dark/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-kimbie-dark/themes/kimbie-dark-color-theme.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-monokai-dimmed/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-monokai-dimmed/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-monokai-dimmed/themes/dimmed-monokai-color-theme.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-monokai/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-monokai/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-monokai/themes/monokai-color-theme.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-quietlight/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-quietlight/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-quietlight/themes/quietlight-color-theme.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-red/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-red/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-red/themes/Red-color-theme.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-seti/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-seti/ThirdPartyNotices.txt
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-seti/icons/seti-circular-128x128.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-seti/icons/seti.woff
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-seti/icons/vs-seti-icon-theme.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-seti/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-seti/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-solarized-dark/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-solarized-dark/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-solarized-dark/themes/solarized-dark-color-theme.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-solarized-light/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-solarized-light/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-solarized-light/themes/solarized-light-color-theme.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-tomorrow-night-blue/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-tomorrow-night-blue/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/theme-tomorrow-night-blue/themes/tomorrow-night-blue-color-theme.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/tunnel-forwarding/dist/extension.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/tunnel-forwarding/media/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/tunnel-forwarding/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/tunnel-forwarding/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-basics/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-basics/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-basics/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-basics/snippets/typescript.code-snippets
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-basics/syntaxes/TypeScript.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-basics/syntaxes/TypeScriptReact.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-basics/syntaxes/jsdoc.js.injection.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-basics/syntaxes/jsdoc.ts.injection.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/README.md
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/dist/extension.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/dist/extension.js.LICENSE.txt
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/media/icon.png
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/resources/walkthroughs/create-a-js-file.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/resources/walkthroughs/debug-and-run.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/resources/walkthroughs/install-node-js.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/resources/walkthroughs/learn-more.svg
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/schemas/jsconfig.schema.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/schemas/package.schema.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/typescript-language-features/schemas/tsconfig.schema.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/vb/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/vb/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/vb/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/vb/snippets/vb.code-snippets
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/vb/syntaxes/asp-vb-net.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/xml/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/xml/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/xml/syntaxes/xml.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/xml/syntaxes/xsl.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/xml/xml.language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/xml/xsl.language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/yaml/build/update-grammar.js
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/yaml/language-configuration.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/yaml/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/yaml/package.nls.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/yaml/syntaxes/yaml-1.0.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/yaml/syntaxes/yaml-1.1.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/yaml/syntaxes/yaml-1.2.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/yaml/syntaxes/yaml-1.3.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/yaml/syntaxes/yaml-embedded.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/extensions/yaml/syntaxes/yaml.tmLanguage.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/node_modules.asar
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/package.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/app/product.json
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/bat.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/bower.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/c.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/config.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/cpp.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/csharp.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/css.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/default.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/go.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/html.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/jade.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/java.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/javascript.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/json.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/less.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/markdown.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/php.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/powershell.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/python.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/react.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/ruby.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/sass.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/shell.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/sql.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/typescript.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/vue.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/xml.icns
+VSCode-darwin-x64/PolliDev.app/Contents/Resources/yaml.icns
+build/npm/postinstall.js
+find_missing_types.ps1
+fix_missing_types.ps1
+resources/server/package.json
+snap1.png
+snap2.png
+src/vs/workbench/contrib/void/browser/actionIDs.ts
+src/vs/workbench/contrib/void/browser/browserActions.ts
+src/vs/workbench/contrib/void/browser/browserStatusBar.ts
+src/vs/workbench/contrib/void/browser/toolsService.ts
+src/vs/workbench/contrib/void/browser/void.contribution.ts
+submit_to_pollinations.ps1
+void
