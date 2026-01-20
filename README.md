@@ -1,4 +1,4 @@
-# PolliDev
+# Ⓐ PolliDev Ⓐ
 
 <div align="center">
 	<img
@@ -112,7 +112,6 @@ npm run watchreact
 - Você **NÃO pode** copiar o código para criar projetos derivados
 - Você **NÃO pode** usar o código em produtos concorrentes
 - Você **só pode** contribuir com melhorias para este projeto
-- Todas as contribuições tornam-se propriedade do autor
 
 **Leia o [Acordo de Contribuidor](CONTRIBUTOR_AGREEMENT.md) e [Copyright](COPYRIGHT.txt) para mais detalhes.**
 
@@ -183,6 +182,6 @@ pollidev/
 ---
 
 <div align="center">
-	<p>Desenvolvido com ❤️ por <a href="https://fabioarieira.com">Fabio Arieira Baia</a></p>
+	<p>Desenvolvido com ❤️ por <a href="https://fabioarieira.com">Ⓐ Fabio ArieirA Baia Ⓐ</a></p>
 	<p>Full Stack Developer</p>
 </div>
