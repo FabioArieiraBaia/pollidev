@@ -1,0 +1,59 @@
+COPYRIGHT E DIREITOS RESERVADOS
+================================
+
+Copyright (c) 2025 Fabio Arieira Baia
+Todos os direitos reservados.
+
+Este software e sua documentação associada (o "Software") são propriedade 
+exclusiva de Fabio Arieira Baia.
+
+TERMOS E CONDIÇÕES DE USO:
+
+1. PROPRIEDADE INTELECTUAL
+   Todo o código-fonte, documentação, design, marcas, logotipos e outros 
+   materiais relacionados ao PolliDev são propriedade exclusiva de 
+   Fabio Arieira Baia e estão protegidos por leis de direitos autorais 
+   e outras leis de propriedade intelectual.
+
+2. RESTRIÇÕES PARA COLABORADORES
+   Ao contribuir para este projeto, você concorda que:
+   
+   a) Todas as contribuições tornam-se propriedade de Fabio Arieira Baia
+   b) Você NÃO pode copiar, modificar, distribuir ou criar obras derivadas 
+      baseadas no código deste projeto para uso em outros projetos
+   c) Você NÃO pode usar o código deste projeto para criar produtos 
+      concorrentes ou similares
+   d) Você NÃO pode remover ou alterar avisos de direitos autorais
+   e) Você só pode contribuir com melhorias e correções para este projeto
+
+3. USO PERMITIDO
+   Você pode:
+   - Usar o software para fins pessoais ou comerciais
+   - Contribuir com melhorias através de Pull Requests
+   - Reportar bugs e sugerir features
+   - Fazer fork do repositório apenas para contribuir com o projeto principal
+
+4. PROIBIÇÕES
+   É expressamente proibido:
+   - Copiar o código para criar projetos derivados
+   - Usar o código em produtos concorrentes
+   - Remover avisos de direitos autorais
+   - Vender ou licenciar o código a terceiros
+   - Usar o código de forma que viole os direitos do proprietário
+
+5. VIOLAÇÃO
+   Qualquer violação destes termos resultará em ação legal imediata.
+
+Para questões sobre licenciamento ou uso comercial, entre em contato:
+- Email: contact@fabioarieira.com
+- Website: https://fabioarieira.com
+
+---
+
+© 2025 Fabio Arieira Baia. Todos os direitos reservados.
+
+
+
+
+
+

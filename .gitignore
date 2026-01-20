@@ -1,14 +1,21 @@
+# --- Default & System ---
 .DS_Store
 .cache
 npm-debug.log
 Thumbs.db
 node_modules/
 .build/
-.vscode/extensions/**/out/
-extensions/**/dist/
+.vscode-test
+.vscode-test.js
+.vscode/
+.config/
+.devcontainer/
+.idx/
+
+# --- Build & Output (General) ---
 /out*/
-/extensions/**/out/
-build/node_modules
+build/
+dist/
 coverage/
 test_data/
 test-results/
@@ -20,38 +27,41 @@ vscode.db
 /cli/openssl
 product.overrides.json
 *.snap.actual
-.vscode-test
 
-# Void added these:
+# --- VS Code Extensions Build ---
+.vscode/extensions/**/out/
+extensions/**/dist/
+/extensions/**/out/
+build/node_modules
+
+# --- Void Specifics ---
 .tmp/
 .tmp2/
 .tool-versions
 src/vs/workbench/contrib/void/browser/react/out/**
 src/vs/workbench/contrib/void/browser/react/src2/**
 
-# PolliDev added these:
+# --- PolliDev Custom Fixes ---
+# Bloqueia a pasta 'void' que está vazando 5k arquivos
+void/build/
+void/out/
+void/node_modules/
+void/dist/
+
+# Logs e Backups
 backup_*/
-VSCode-win32-x64/
-out-build/
-out-vscode/
-out/
 *.log
 compile_errors.txt
 compile_output.txt
 installer_build.log
+
+# Outros
+VSCode-win32-x64/
 src2/
-.vscode-test.js
-.vscode/
-.config/
-.devcontainer/
-.idx/
 .eslint-ignore
+.eslint-plugin-local/
 .git-blame-ignore-revs
 .lsifrc.json
 .mailmap
 .mention-bot
 .voidrules
-.eslint-plugin-local/
-test-results/
-coverage/
-*.snap.actual
