@@ -1692,8 +1692,8 @@ const pollinationsModelOptions = {
 		downloadable: false,
 	},
 	'grok': {
-		contextWindow: 9_300,
-		reservedOutputTokenSpace: 1_860,
+		contextWindow: 131_072, // xAI Grok tem ~131K tokens
+		reservedOutputTokenSpace: 8_192,
 		supportsFIM: false,
 		supportsSystemMessage: 'system-role',
 		specialToolFormat: 'openai-style',
@@ -1705,8 +1705,8 @@ const pollinationsModelOptions = {
 
 	// === Vision models (text + image) ===
 	'gemini-fast': {
-		contextWindow: 12_000,
-		reservedOutputTokenSpace: 2_400,
+		contextWindow: 1_000_000, // Gemini tem ~1M tokens via Pollinations
+		reservedOutputTokenSpace: 8_192,
 		supportsFIM: false,
 		supportsSystemMessage: 'system-role',
 		specialToolFormat: 'openai-style',
@@ -1717,8 +1717,8 @@ const pollinationsModelOptions = {
 		downloadable: false,
 	},
 	'openai-fast': {
-		contextWindow: 11_000,
-		reservedOutputTokenSpace: 2_200,
+		contextWindow: 128_000, // OpenAI-compatible tem ~128K
+		reservedOutputTokenSpace: 8_192,
 		supportsFIM: false,
 		supportsSystemMessage: 'system-role',
 		specialToolFormat: 'openai-style',
@@ -1729,8 +1729,8 @@ const pollinationsModelOptions = {
 		downloadable: false,
 	},
 	'openai': {
-		contextWindow: 8_000,
-		reservedOutputTokenSpace: 1_600,
+		contextWindow: 128_000, // OpenAI-compatible tem ~128K
+		reservedOutputTokenSpace: 8_192,
 		supportsFIM: false,
 		supportsSystemMessage: 'system-role',
 		specialToolFormat: 'openai-style',
@@ -1741,8 +1741,8 @@ const pollinationsModelOptions = {
 		downloadable: false,
 	},
 	'gemini-search': {
-		contextWindow: 1_600,
-		reservedOutputTokenSpace: 320,
+		contextWindow: 1_000_000, // Gemini tem ~1M tokens
+		reservedOutputTokenSpace: 8_192,
 		supportsFIM: false,
 		supportsSystemMessage: 'system-role',
 		specialToolFormat: 'openai-style',
@@ -1753,8 +1753,8 @@ const pollinationsModelOptions = {
 		downloadable: false,
 	},
 	'claude-fast': {
-		contextWindow: 980,
-		reservedOutputTokenSpace: 196,
+		contextWindow: 200_000, // Claude tem ~200K tokens via Pollinations
+		reservedOutputTokenSpace: 4_096,
 		supportsFIM: false,
 		supportsSystemMessage: 'system-role',
 		specialToolFormat: 'openai-style',
@@ -1765,8 +1765,8 @@ const pollinationsModelOptions = {
 		downloadable: false,
 	},
 	'claude': {
-		contextWindow: 330,
-		reservedOutputTokenSpace: 66,
+		contextWindow: 200_000, // Claude via Pollinations tem contexto grande
+		reservedOutputTokenSpace: 4096,
 		supportsFIM: false,
 		supportsSystemMessage: 'system-role',
 		specialToolFormat: 'openai-style',
@@ -1777,8 +1777,8 @@ const pollinationsModelOptions = {
 		downloadable: false,
 	},
 	'claude-large': {
-		contextWindow: 200,
-		reservedOutputTokenSpace: 40,
+		contextWindow: 200_000,
+		reservedOutputTokenSpace: 4096,
 		supportsFIM: false,
 		supportsSystemMessage: 'system-role',
 		specialToolFormat: 'openai-style',
@@ -1791,8 +1791,8 @@ const pollinationsModelOptions = {
 
 	// === Vision + Reasoning models ===
 	'openai-large': {
-		contextWindow: 100,
-		reservedOutputTokenSpace: 20,
+		contextWindow: 1_000_000, // Grande contexto para reasoning
+		reservedOutputTokenSpace: 32_768,
 		supportsFIM: false,
 		supportsSystemMessage: 'system-role',
 		specialToolFormat: 'openai-style',
@@ -1820,8 +1820,8 @@ const pollinationsModelOptions = {
 
 	// === Multimodal models (text + image + audio + video) ===
 	'gemini': {
-		contextWindow: 1_600,
-		reservedOutputTokenSpace: 320,
+		contextWindow: 1_000_000, // Gemini tem ~1M tokens via Pollinations
+		reservedOutputTokenSpace: 8_192,
 		supportsFIM: false,
 		supportsSystemMessage: 'system-role',
 		specialToolFormat: 'openai-style',
@@ -1834,8 +1834,8 @@ const pollinationsModelOptions = {
 		downloadable: false,
 	},
 	'gemini-large': {
-		contextWindow: 120,
-		reservedOutputTokenSpace: 24,
+		contextWindow: 1_000_000, // Gemini tem ~1M tokens
+		reservedOutputTokenSpace: 8_192,
 		supportsFIM: false,
 		supportsSystemMessage: 'system-role',
 		specialToolFormat: 'openai-style',
@@ -1850,8 +1850,8 @@ const pollinationsModelOptions = {
 
 	// === Reasoning models (text only) ===
 	'deepseek': {
-		contextWindow: 840,
-		reservedOutputTokenSpace: 168,
+		contextWindow: 64_000, // DeepSeek tem 64K tokens
+		reservedOutputTokenSpace: 8_192,
 		supportsFIM: false,
 		supportsSystemMessage: 'system-role',
 		specialToolFormat: 'openai-style',
@@ -1883,8 +1883,8 @@ const pollinationsModelOptions = {
 		downloadable: false,
 	},
 	'kimi-k2-thinking': {
-		contextWindow: 570,
-		reservedOutputTokenSpace: 142,
+		contextWindow: 128_000, // Kimi/Kimi-k2-thinking tem ~128K tokens
+		reservedOutputTokenSpace: 8_192,
 		supportsFIM: false,
 		supportsSystemMessage: 'system-role',
 		specialToolFormat: 'openai-style',
@@ -1907,8 +1907,8 @@ const pollinationsModelOptions = {
 		downloadable: false,
 	},
 	'perplexity-reasoning': {
-		contextWindow: 180,
-		reservedOutputTokenSpace: 45,
+		contextWindow: 128_000, // Perplexity reasoning tem ~128K tokens
+		reservedOutputTokenSpace: 8_192,
 		supportsFIM: false,
 		supportsSystemMessage: 'system-role',
 		specialToolFormat: 'openai-style',
@@ -1920,8 +1920,8 @@ const pollinationsModelOptions = {
 
 	// === Specialized models ===
 	'chickytutor': {
-		contextWindow: 1_200,
-		reservedOutputTokenSpace: 300,
+		contextWindow: 32_000, // Modelo de tutoria, ~32K tokens
+		reservedOutputTokenSpace: 4_096,
 		supportsFIM: false,
 		supportsSystemMessage: 'system-role',
 		specialToolFormat: 'openai-style',
@@ -1931,8 +1931,8 @@ const pollinationsModelOptions = {
 		downloadable: false,
 	},
 	'midijourney': {
-		contextWindow: 550,
-		reservedOutputTokenSpace: 137,
+		contextWindow: 32_000, // Modelo especializado, ~32K tokens
+		reservedOutputTokenSpace: 4_096,
 		supportsFIM: false,
 		supportsSystemMessage: 'system-role',
 		specialToolFormat: 'openai-style',

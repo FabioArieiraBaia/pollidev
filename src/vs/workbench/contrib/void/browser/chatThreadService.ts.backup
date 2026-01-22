@@ -43,7 +43,6 @@ import { ILogService } from '../../../../platform/log/common/log.js';
 import { IRAGVectorService } from '../common/ragVectorService.js';
 import { ISharedBrowserService } from '../common/sharedBrowserService.js';
 import { getModelCapabilities } from '../common/modelCapabilities.js';
-import { IAgentOrchestratorService } from '../common/agentOrchestratorService.js';
 
 
 // related to retrying when LLM message has error
@@ -335,8 +334,6 @@ class ChatThreadService extends Disposable implements IChatThreadService {
 		@IRAGVectorService private readonly _ragVectorService: IRAGVectorService,
 		@ILogService private readonly logService: ILogService,
 		@ISharedBrowserService private readonly _sharedBrowserService: ISharedBrowserService,
-		// IAgentOrchestratorService injected for multi-agent mode
-		@IAgentOrchestratorService private readonly _agentOrchestratorService: IAgentOrchestratorService,
 	) {
 		super()
 		this.state = { allThreads: {}, currentThreadId: null as unknown as string } // default state
@@ -608,164 +605,10 @@ class ChatThreadService extends Disposable implements IChatThreadService {
 	}
 
 
-	// ========================================================
-	// MULTI-AGENT ORCHESTRATOR METHODS
-	// ========================================================
-
-	/**
-	 * Executa o fluxo multi-agent usando o orchestrator service
-	 */
-	private _runMultiAgentOrchestrator = async (
-		threadId: string,
-		userRequest: string,
-		settings: any
-	): Promise<void> => {
-		try {
-			this.logService.info(`[MultiAgent] Starting orchestrator for request: "${userRequest.substring(0, 100)}..."`);
-
-			// Usar o serviço injetado via DI
-			if (this._agentOrchestratorService) {
-				this.logService.info('[MultiAgent] Using orchestrator service via DI');
-				
-				// Adicionar mensagem inicial
-				this._addMessageToThread(threadId, {
-					role: 'assistant',
-					displayContent: `🤖 **Multi-Agent Mode Active**\n\nOrquestrador iniciou o processamento da sua solicitação usando múltiplos agentes especializados.\n\nConfiguração:\n- Orchestrator: ${settings.orchestratorModel}\n- Planner: ${settings.plannerModel}\n- Executors: ${settings.executorModels?.join(', ') || 'Default'}\n- Parallel Execution: ${settings.enableParallelExecution ? 'Yes' : 'No'}\n- Max Concurrent Agents: ${settings.maxConcurrentAgents}`,
-					reasoning: '',
-					anthropicReasoning: null,
-				});
-
-				// Executar o orchestrator
-				await this._agentOrchestratorService.processRequest(userRequest, threadId, 'multi-agent');
-
-				// Adicionar mensagem de conclusão
-				this._addMessageToThread(threadId, {
-					role: 'assistant',
-					displayContent: `✅ **Multi-Agent Execution Completed**\n\nO orquestrador concluiu o processamento. Verifique o histórico para detalhes das tarefas executadas pelos agentes especializados.`,
-					reasoning: '',
-					anthropicReasoning: null,
-				});
-
-				// Adicionar checkpoint
-				this._addUserCheckpoint({ threadId });
-
-				// Finalizar estado
-				this._setStreamState(threadId, undefined);
-				
-			} else {
-				// Fallback to simplified mode
-				this.logService.info('[MultiAgent] Orchestrator service not available, using simplified mode');
-				await this._runSimplifiedMultiAgent(threadId, userRequest, settings);
-			}
-
-		} catch (error) {
-			this.logService.error(`[MultiAgent] Orchestrator failed: ${error}`);
-			this._addMessageToThread(threadId, {
-				role: 'assistant',
-				displayContent: `❌ **Multi-Agent Error**\n\nError: ${error instanceof Error ? error.message : String(error)}`,
-				reasoning: '',
-				anthropicReasoning: null,
-			});
-			this._setStreamState(threadId, undefined);
-		}
-	}
-
-	/**
-	 * Execução simplificada multi-agent quando o orchestrator service não está disponível
-	 */
-	private _runSimplifiedMultiAgent = async (
-		threadId: string,
-		userRequest: string,
-		settings: any
-	): Promise<void> => {
-		this.logService.info('[MultiAgent] Running simplified multi-agent mode');
-
-		// Fase 1: Análise simples
-		const needsPlanning = this._analyzeIfNeedsPlanning(userRequest);
-
-		if (needsPlanning) {
-			// Adicionar mensagem de planejamento
-			this._addMessageToThread(threadId, {
-				role: 'assistant',
-				displayContent: `📋 **Planning Phase**\n\nAnalisando a solicitação: "${userRequest.substring(0, 100)}..."\n\nA solicitação parece requerer planejamento. O sistema dividirá em tarefas menores.`,
-				reasoning: '',
-				anthropicReasoning: null,
-			});
-
-			// Gerar tarefas baseadas na análise simples
-			const tasks = this._generateSimpleTasks(userRequest);
-
-			// Mostrar tarefas criadas
-			const taskList = tasks.map((t, i) => `${i + 1}. ${t.description}`).join('\n');
-			this._addMessageToThread(threadId, {
-				role: 'assistant',
-				displayContent: `📝 **Task Plan**\n\n${taskList}\n\n*Nota: Estas tarefas foram geradas automaticamente. Para execução completa, implemente o AgentOrchestratorService.*`,
-				reasoning: '',
-				anthropicReasoning: null,
-			});
-		} else {
-			// Execução direta
-			this._addMessageToThread(threadId, {
-				role: 'assistant',
-				displayContent: `⚡ **Direct Execution**\n\nA solicitação não requer planejamento complexo. Executando diretamente...`,
-				reasoning: '',
-				anthropicReasoning: null,
-			});
-		}
-
-		// Adicionar informações de uso
-		this._addMessageToThread(threadId, {
-			role: 'assistant',
-			displayContent: `ℹ️ **Multi-Agent Mode Information**\n\nO modo multi-agent está configurado com:\n- Orchestrator: ${settings.orchestratorModel}\n- Planner: ${settings.plannerModel}\n- Executors: ${settings.executorModels?.join(', ') || 'Default'}\n\nPara habilitar a execução completa de múltiplos agentes:\n1. Implemente o método \`_plannerCreatePlan\` no AgentOrchestratorService\n2. Implemente o método \`_executeTask\` com chamadas reais ao LLM\n3. Configure os modelos no painel de configurações`,
-			reasoning: '',
-			anthropicReasoning: null,
-		});
-
-		// Finalizar
-		this._addUserCheckpoint({ threadId });
-		this._setStreamState(threadId, undefined);
-	}
-
-	/**
-	 * Analisa se a requisição precisa de planejamento
-	 */
-	private _analyzeIfNeedsPlanning(request: string): boolean {
-		const complexIndicators = [
-			'refatorar', 'refactor', 'criar múltiplos', 'create multiple',
-			'implementar', 'implement', 'sistema', 'system',
-			'arquitetura', 'architecture', 'migrar', 'migrate',
-			'integrar', 'integrate', 'correção', 'fix complete',
-		];
-
-		const wordCount = request.split(/\s+/).length;
-		return complexIndicators.some(ind => request.toLowerCase().includes(ind.toLowerCase())) || wordCount > 15;
-	}
-
-	/**
-	 * Gera tarefas simplificadas para execução
-	 */
-	private _generateSimpleTasks(request: string): Array<{ id: string; description: string; status: string }> {
-		const tasks: Array<{ id: string; description: string; status: string }> = [];
-		const taskCount = Math.min(3, Math.ceil(request.split(/\s+/).length / 10));
-
-		for (let i = 0; i < taskCount; i++) {
-			tasks.push({
-				id: `task-${Date.now()}-${i}`,
-				description: `Tarefa ${i + 1}: ${request.substring(0, 50)}...`,
-				status: 'pending',
-			});
-		}
-
-		return tasks;
-	}
-
-	// ========================================================
-	// END MULTI-AGENT ORCHESTRATOR METHODS
-	// ========================================================
+	// private readonly _currentlyRunningToolInterruptor: { [threadId: string]: (() => void) | undefined } = {}
 
 
-
-	// Helper to notify SharedBrowserService when browser tools are used (via toolsService for centralized monitoring)
+		// Helper to notify SharedBrowserService when browser tools are used (via toolsService for centralized monitoring)
 	private _notifySharedBrowserServiceIfBrowserTool = async (toolName: ToolName, toolMessage: ToolMessage<ToolName>) => {
 		const isBrowserTool = toolName.startsWith('browser_') || toolName.startsWith('mcp_cursor-ide-browser_')
 		
@@ -1005,64 +848,20 @@ class ChatThreadService extends Disposable implements IChatThreadService {
 		// above just defines helpers, below starts the actual function
 		const { chatMode } = this._settingsService.state.globalSettings // should not change as we loop even if user changes it, so it goes here
 
-		// Se o modo for multi-agent, verificar se está habilitado e usar o orchestrator
+		// Se o modo for multi-agent, verificar se está habilitado
 		if (chatMode === 'multi-agent') {
 			const multiAgentSettings = this._settingsService.state.globalSettings.multiAgentSettings
 			
-			// Se multi-agent não está habilitado, usar fluxo normal do agente
+			// Se multi-agent não está habilitado ou não está implementado, usar fluxo normal do agente
 			if (!multiAgentSettings.enabled) {
-				this.logService.info('[ChatThreadService] Multi-agent mode disabled, using normal agent flow');
+				// Fallback para modo 'agent' normal
+				// Continue com o fluxo normal abaixo
 			} else {
-				// Multi-agent está habilitado - usar o orchestrator
-				try {
-					// Obter a última mensagem do usuário
-					const thread = this.state.allThreads[threadId];
-					if (!thread || thread.messages.length === 0) {
-						this.logService.error('[ChatThreadService] No messages in thread for multi-agent execution');
-						return;
-					}
-
-					const lastUserMessage = [...thread.messages].reverse().find(m => m.role === 'user');
-					if (!lastUserMessage) {
-						this.logService.error('[ChatThreadService] No user message found for multi-agent execution');
-						return;
-					}
-
-					const userContent = (lastUserMessage as any).displayContent || (lastUserMessage as any).content;
-
-					this.logService.info(`[ChatThreadService] Starting multi-agent execution for thread ${threadId}`);
-
-					// Chamar o orchestrator service
-					// Nota: preciso injetar o serviço via DI, mas por enquanto vamos usar uma abordagem alternativa
-					// O serviço será chamado de forma assíncrona sem esperar bloquear a thread
-					
-					this._setStreamState(threadId, { isRunning: 'idle', interrupt: 'not_needed' });
-					
-					// Adicionar mensagem do sistema indicando multi-agent
-					this._addMessageToThread(threadId, {
-						role: 'assistant',
-						displayContent: `🤖 **Multi-Agent Mode Active**\n\nOrquestrador iniciou o processamento da sua solicitação usando múltiplos agentes especializados.\n\nConfiguração:\n- Orchestrator: ${multiAgentSettings.orchestratorModel}\n- Planner: ${multiAgentSettings.plannerModel}\n- Executors: ${multiAgentSettings.executorModels.join(', ')}\n- Parallel Execution: ${multiAgentSettings.enableParallelExecution ? 'Yes' : 'No'}\n- Max Concurrent Agents: ${multiAgentSettings.maxConcurrentAgents}`,
-						reasoning: '',
-						anthropicReasoning: null,
-					});
-
-					// Chamar orchestrator de forma assíncrona e atualizar o estado
-					this._runMultiAgentOrchestrator(threadId, userContent, multiAgentSettings).catch(error => {
-						this.logService.error(`[ChatThreadService] Multi-agent execution failed: ${error}`);
-						this._addMessageToThread(threadId, {
-							role: 'assistant',
-							displayContent: `❌ **Multi-Agent Execution Failed**\n\nError: ${error instanceof Error ? error.message : String(error)}\n\nO sistema retornará ao modo agent normal.`,
-							reasoning: '',
-							anthropicReasoning: null,
-						});
-						this._setStreamState(threadId, undefined);
-					});
-
-					return; // Return early - a execução será continuada pelo orchestrator
-				} catch (error) {
-					this.logService.error(`[ChatThreadService] Failed to start multi-agent: ${error}`);
-					// Fallback para modo normal
-				}
+				// Multi-agent está habilitado, mas a implementação está incompleta
+				// Por enquanto, usar o fluxo normal do agente como fallback
+				// TODO: Implementar multi-agent completo quando estiver pronto
+				this.logService.warn('[ChatThreadService] Multi-agent enabled but not fully implemented, using normal agent flow')
+				// Continue com o fluxo normal abaixo
 			}
 		}
 

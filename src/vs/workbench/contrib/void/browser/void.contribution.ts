@@ -46,6 +46,7 @@ import './convertToLLMMessageWorkbenchContrib.js'
 // tools
 import './toolsService.js'
 import './terminalToolService.js'
+import './agentToolsServiceImpl.js'
 
 // register Thread History
 import './chatThreadService.js'
@@ -93,3 +94,7 @@ import '../common/voidUpdateService.js'
 
 // model service
 import '../common/voidModelService.js'
+
+// autonomous agent services (WIP - imports commented for build)
+// import '../common/autoRetry/autoRetryService.js'
+// import './autonomousAgentService.js'

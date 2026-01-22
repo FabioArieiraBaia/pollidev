@@ -473,14 +473,16 @@ const _sendOpenAICompatibleChat = async ({ messages, onText, onFinalMessage, onE
 		// Required to select the model
 		(openai as AzureOpenAI).deploymentName = modelName;
 	}
+	const maxTokens = getReservedOutputTokenSpace(providerName, modelName, { isReasoningEnabled: false, overridesOfModel }) ?? 4096;
+
 	const options: OpenAI.Chat.Completions.ChatCompletionCreateParamsStreaming = {
 		model: modelName,
 		messages: messages as any,
 		stream: true,
 		...nativeToolsObj,
 		...thoughtSignaturePayload,
-		...additionalOpenAIPayload
-		// max_completion_tokens: maxTokens,
+		...additionalOpenAIPayload,
+		max_tokens: maxTokens,
 	}
 	
 	// #region agent log
@@ -559,8 +561,68 @@ const _sendOpenAICompatibleChat = async ({ messages, onText, onFinalMessage, onE
 		})
 		// when error/fail - this catches errors of both .create() and .then(for await)
 		.catch(error => {
-			if (error instanceof OpenAI.APIError && error.status === 401) { onError({ message: invalidApiKeyMessage(providerName), fullError: error }); }
-			else { onError({ message: error + '', fullError: error }); }
+			const errorMessage = error?.message || '';
+			const statusCode = error?.status;
+
+			// Fallback para erros de thought_signature: tenta continuar com message "continue"
+			if (statusCode === 400 && errorMessage.includes('thought_signature')) {
+				console.log('[PolliDev] Erro de thought_signature. Tentando continuar com histórico...');
+				
+				// Cria nova mensagem "continue" que preserva todo o contexto
+				const continueMessages = [
+					...messages,
+					{
+						role: 'user',
+						content: 'continue'
+					}
+				];
+				
+				// Retenta com ferramentas mas SEM thought_signature
+				const retryOptions: OpenAI.Chat.Completions.ChatCompletionCreateParamsStreaming = {
+					model: modelName,
+					messages: continueMessages as any,
+					stream: true,
+					...nativeToolsObj, // Mantém as ferramentas
+					// NÃO inclui thought_signature
+					...additionalOpenAIPayload
+				};
+
+				return openai.chat.completions.create(retryOptions)
+					.then(async response => {
+						_setAborter(() => response.controller.abort());
+						let rFullText = '';
+						let rFullReasoning = '';
+						let rToolName = '';
+						let rToolId = '';
+						let rToolParamsStr = '';
+
+						for await (const chunk of response) {
+							const newText = chunk.choices[0]?.delta?.content ?? '';
+							rFullText += newText;
+							for (const tool of chunk.choices[0]?.delta?.tool_calls ?? []) {
+								if (tool.index === 0) {
+									rToolName += tool.function?.name ?? '';
+									rToolParamsStr += tool.function?.arguments ?? '';
+									rToolId += tool.id ?? '';
+								}
+							}
+							onText({
+								fullText: rFullText,
+								fullReasoning: rFullReasoning,
+								toolCall: !rToolName ? undefined : { name: rToolName, rawParams: {}, isDone: false, doneParams: [], id: rToolId },
+							});
+						}
+						const retryToolCall = rawToolCallObjOfParamsStr(rToolName, rToolParamsStr, rToolId);
+						onFinalMessage({ fullText: rFullText, fullReasoning: rFullReasoning, anthropicReasoning: null, toolCall: retryToolCall || undefined });
+					})
+					.catch(retryError => {
+						onError({ message: retryError + '', fullError: retryError });
+					});
+			}
+
+			// Erro normal
+			if (error instanceof OpenAI.APIError && error.status === 401) { onError({ message: invalidApiKeyMessage(providerName), fullError: error }); return; }
+			else { onError({ message: error + '', fullError: error }); return; }
 		})
 }
 
