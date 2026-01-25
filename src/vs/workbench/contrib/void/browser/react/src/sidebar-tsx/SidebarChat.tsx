@@ -3296,7 +3296,14 @@ export const SidebarChat = () => {
 	// threads state
 	const chatThreadsState = useChatThreadsState()
 
-	const currentThread = chatThreadsService.getCurrentThread()
+	// Defensive check - ensure currentThread exists before accessing it
+	let currentThread;
+	try {
+		currentThread = chatThreadsService.getCurrentThread()
+	} catch (error) {
+		// If thread is not initialized, show loading state
+		return null; // Will prevent render until thread is ready
+	}
 	const previousMessages = currentThread?.messages ?? []
 
 	const selections = currentThread.state.stagingSelections

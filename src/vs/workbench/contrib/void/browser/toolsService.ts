@@ -26,6 +26,8 @@ import { ILogService } from '../../../../platform/log/common/log.js'
 import { IMainProcessService } from '../../../../platform/ipc/common/mainProcessService.js'
 import { ISharedBrowserMainService } from '../electron-main/sharedBrowserMainService.js'
 import { BrowserAction, SharedBrowserChannelClient } from '../electron-main/sharedBrowserChannel.js'
+import { IAgentContextEnhancer } from '../common/agentContextEnhancer.js'
+import { IPagePatternDetector } from '../common/pagePatternDetector.js'
 
 
 // tool use for AI
@@ -166,6 +168,8 @@ export class ToolsService implements IToolsService {
 		@ISharedBrowserService private readonly sharedBrowserService: ISharedBrowserService,
 		@ILogService private readonly logService: ILogService,
 		@IMainProcessService private readonly mainProcessService: IMainProcessService,
+		@IAgentContextEnhancer private readonly agentContextEnhancer: IAgentContextEnhancer,
+		@IPagePatternDetector private readonly pagePatternDetector: IPagePatternDetector,
 	) {
 		const queryBuilder = instantiationService.createInstance(QueryBuilder);
 
@@ -607,7 +611,37 @@ export class ToolsService implements IToolsService {
 						const state = await this.sharedBrowserMainService.getState();
 						return { result: { snapshot: state.currentSnapshot || null } };
 					}
-					return { result: { snapshot } };
+
+					// Enrich snapshot with context
+					let enrichedContext: any = {};
+					try {
+						// Parse snapshot if it's a string (JSON)
+						let snapshotData = typeof snapshot === 'string' ? JSON.parse(snapshot) : snapshot;
+						
+						// Detect page pattern
+						const pattern = this.pagePatternDetector.detectPattern(snapshotData);
+						
+						// Analyze and enrich snapshot with recommendations and suggestions
+						enrichedContext = this.agentContextEnhancer.analyzeSnapshot(
+							snapshotData.url || '',
+							snapshotData.title || '',
+							snapshotData.accessibilityTree || '',
+							undefined
+						);
+						
+						this.logService.debug(`[ToolsService] Snapshot enriched with pattern: ${pattern.type}, confidence: ${pattern.confidence}`);
+					} catch (enrichError) {
+						this.logService.warn(`[ToolsService] Failed to enrich snapshot: ${enrichError}`);
+						// Continue anyway, enrichment is optional
+					}
+
+					return { 
+						result: { 
+							snapshot,
+							enrichedContext: enrichedContext || undefined,
+							pattern: enrichedContext?.pattern
+						} 
+					};
 				} catch (error) {
 					this.logService.error(`[ToolsService] browser_snapshot error: ${error}`);
 					return { result: { snapshot: null } };

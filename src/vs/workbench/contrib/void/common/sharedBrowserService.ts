@@ -16,6 +16,13 @@ import { SharedBrowserChannelClient, BrowserAction as ChannelBrowserAction } fro
 import { timeout } from '../../../../base/common/async.js';
 import { IWebviewWorkbenchService } from '../../webviewPanel/browser/webviewWorkbenchService.js';
 import { ACTIVE_GROUP } from '../../../services/editor/common/editorService.js';
+import { PageAnalysis } from './agentSnapshotEnricher.js';
+import { IDOMAnalysisService, DOMAnalysisService } from './domAnalysisService.js';
+import { IBrowserStateTracker, BrowserStateTracker } from './browserStateTracker.js';
+import { IPagePatternDetector, PagePatternDetector } from './pagePatternDetector.js';
+import { IFailureAnalysisService, FailureAnalysisService } from './failureAnalysisService.js';
+import { IAgentContextEnhancer, AgentContextEnhancerService } from './agentContextEnhancer.js';
+
 
 export const ISharedBrowserService = createDecorator<ISharedBrowserService>('SharedBrowserService');
 
@@ -28,12 +35,26 @@ export interface BrowserAction {
 	text?: string;
 }
 
+export interface BrowserError {
+	type: 'navigation_failed' | 'element_not_found' | 'action_failed' | 'timeout' | 'unknown';
+	message: string;
+	timestamp: number;
+	action?: BrowserAction;
+	context?: any;
+}
+
 export interface SharedBrowserState {
 	currentUrl: string | null;
 	currentSnapshot: string | null; // base64 image
 	actionHistory: BrowserAction[];
 	isActive: boolean;
 	controlMode: 'agent' | 'user';
+	lastError: BrowserError | null;
+	isLoading: boolean;
+	pageLoadTimeout: number;
+	// Agent Context Enhancement
+	lastPageAnalysis?: PageAnalysis; // Análise enriquecida da última página
+	lastAccessibilityContent?: string; // Para análise de mudanças
 }
 
 export interface ISharedBrowserService {
@@ -58,6 +79,9 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 		actionHistory: [],
 		isActive: false,
 		controlMode: 'agent',
+		lastError: null,
+		isLoading: false,
+		pageLoadTimeout: 30000, // 30 segundos
 	};
 
 	private readonly _onDidUpdateState = this._register(new Emitter<void>());
@@ -428,16 +452,63 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 		// Execute action via IPC if we have one
 		if (channelAction) {
 			try {
+				this._state.isLoading = true;
+				this._clearError();
+				this._onDidUpdateState.fire();
+
 				await this._sharedBrowserMainService.executeAction(channelAction);
+				
 				// Capture snapshot and state after action
 				const snapshot = await this._sharedBrowserMainService.captureSnapshot();
 				if (snapshot) {
 					this._state.currentSnapshot = snapshot;
+					
+					// Enrich snapshot with context for agent
+					if (channelAction.type === 'snapshot') {
+						this.logService.info('[SharedBrowserService] Enriching snapshot with context for agent...');
+						// The enrichment happens in AgentSnapshotEnricher which is used by ChatThreadService
+					}
 				}
+				
 				await this._syncStateFromMain();
+				this._state.isLoading = false;
+				
+				this.logService.info(`[SharedBrowserService] Browser action executed successfully: ${channelAction.type}`);
 			} catch (error) {
-				this.logService.error(`[SharedBrowserService] Failed to execute browser action: ${error}`);
-				return { error: `Failed to execute browser action: ${error}` };
+				this._state.isLoading = false;
+				
+				// Determinar tipo de erro
+				let errorType: BrowserError['type'] = 'action_failed';
+				let errorMessage = String(error);
+				
+				if (errorMessage.includes('not found')) {
+					errorType = 'element_not_found';
+				} else if (errorMessage.includes('timeout')) {
+					errorType = 'timeout';
+				} else if (channelAction.type === 'navigate') {
+					errorType = 'navigation_failed';
+				}
+				
+				this._recordError({
+					type: errorType,
+					message: errorMessage,
+					timestamp: Date.now(),
+					action: channelAction as any,
+					context: {
+						url: this._state.currentUrl,
+						toolName: toolName
+					}
+				});
+
+				this.logService.error(`[SharedBrowserService] Failed to execute browser action (${errorType}): ${error}`);
+				
+				return { 
+					error: `Failed to execute browser action: ${error}`,
+					errorType: errorType,
+					action: channelAction.type,
+					url: this._state.currentUrl,
+					recoveryAdvice: this._getRecoveryAdvice(errorType)
+				};
 			}
 		}
 
@@ -448,7 +519,9 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 			url: this._state.currentUrl,
 			snapshot: this._state.currentSnapshot, // This contains the accessibility tree/text
 			success: true,
-			message: `Action ${toolName} executed successfully.`
+			message: `Action ${toolName} executed successfully.`,
+			lastError: this._state.lastError,
+			isLoading: this._state.isLoading
 		};
 	}
 
@@ -457,6 +530,31 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 		// Keep only last 100 actions
 		if (this._state.actionHistory.length > 100) {
 			this._state.actionHistory.shift();
+		}
+	}
+
+	private _recordError(error: BrowserError): void {
+		this._state.lastError = error;
+		this.logService.error(`[SharedBrowserService] Browser Error [${error.type}]: ${error.message}`);
+		this._onDidUpdateState.fire();
+	}
+
+	private _clearError(): void {
+		this._state.lastError = null;
+	}
+
+	private _getRecoveryAdvice(errorType: BrowserError['type']): string {
+		switch (errorType) {
+			case 'element_not_found':
+				return 'Try taking a snapshot to see the current page state, then use a different selector or element reference.';
+			case 'navigation_failed':
+				return 'Check if the URL is valid. Try navigating to a simpler page first to test connectivity.';
+			case 'timeout':
+				return 'The page took too long to load. Try waiting a bit longer or checking your internet connection.';
+			case 'action_failed':
+				return 'The action could not be completed. Try taking a screenshot to see the current state.';
+			default:
+				return 'An unknown error occurred. Try taking a snapshot to diagnose the problem.';
 		}
 	}
 
@@ -997,6 +1095,11 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 }
 
 registerSingleton(ISharedBrowserService, SharedBrowserService, InstantiationType.Eager);
+registerSingleton(IDOMAnalysisService, DOMAnalysisService, InstantiationType.Delayed);
+registerSingleton(IBrowserStateTracker, BrowserStateTracker, InstantiationType.Delayed);
+registerSingleton(IPagePatternDetector, PagePatternDetector, InstantiationType.Delayed);
+registerSingleton(IFailureAnalysisService, FailureAnalysisService, InstantiationType.Delayed);
+registerSingleton(IAgentContextEnhancer, AgentContextEnhancerService, InstantiationType.Delayed);
 
 
 

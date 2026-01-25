@@ -46,6 +46,177 @@ import { getModelCapabilities } from '../common/modelCapabilities.js';
 import { IAgentOrchestratorService } from '../common/agentOrchestratorService.js';
 
 
+
+// ========================================================
+// THREAD MEMORY ARCHIVE SYSTEM (Phase 1)
+// Purpose: Archive old messages when conversation exceeds token budget
+// ========================================================
+
+/**
+ * Configuration for archive behavior
+ */
+export const ARCHIVE_CONFIG = {
+  // When total tokens exceed this, archive begins (default: 150k tokens)
+  TOKEN_THRESHOLD: 150_000,
+  
+  // Minimum tokens to keep in active window (don't archive everything)
+  MIN_ACTIVE_TOKENS: 50_000,
+  
+  // Maximum total archived messages to keep (FIFO eviction)
+  MAX_ARCHIVED_MESSAGES: 500,
+  
+  // How often to regenerate global summary (in messages)
+  SUMMARY_REGEN_INTERVAL: 50,
+  
+  // Minimum messages before first archive
+  MIN_MESSAGES_BEFORE_ARCHIVE: 20,
+};
+
+/**
+ * Estimates token count for a message (rough approximation)
+ * 1 token ≈ 4 characters in average
+ */
+export function estimateMessageTokens(message: SimpleLLMMessage): number {
+  const text = typeof message.content === 'string' 
+    ? message.content 
+    : JSON.stringify(message.content);
+  return Math.ceil(text.length / 4);
+}
+
+/**
+ * Estimates total tokens for an array of messages
+ */
+export function estimateMessagesTokens(messages: SimpleLLMMessage[]): number {
+  return messages.reduce((sum, msg) => sum + estimateMessageTokens(msg), 0);
+}
+
+/**
+ * Extract keywords from a message for retrieval
+ */
+export function extractMessageKeywords(message: SimpleLLMMessage): string[] {
+  const keywords: string[] = [];
+  const content = typeof message.content === 'string' 
+    ? message.content 
+    : JSON.stringify(message.content);
+  
+  // Tool-related keywords
+  if (message.role === 'tool') {
+    keywords.push('tool_result', `tool_${message.name || 'unknown'}`);
+    if (message.name?.includes('file')) {
+      keywords.push('file_operation');
+    }
+    if (message.name?.includes('search')) {
+      keywords.push('search_operation');
+    }
+    if (message.name?.includes('run_command') || message.name?.includes('terminal')) {
+      keywords.push('terminal');
+    }
+  }
+  
+  // Error detection
+  if (content.toLowerCase().includes('error') || 
+      content.toLowerCase().includes('failed') ||
+      content.toLowerCase().includes('exception')) {
+    keywords.push('has_error');
+  }
+  
+  // File extensions
+  const fileExtensions = ['.tsx', '.ts', '.js', '.jsx', '.py', '.java', '.html', '.css', '.json'];
+  fileExtensions.forEach(ext => {
+    if (content.includes(ext)) {
+      keywords.push(`file_${ext.slice(1)}`);
+    }
+  });
+  
+  // Decision/question markers
+  if (content.includes('decided') || content.includes('decision') || content.includes('conclusion')) {
+    keywords.push('has_decision');
+  }
+  if (content.includes('?') || content.toLowerCase().includes('what') || content.toLowerCase().includes('how')) {
+    keywords.push('has_question');
+  }
+  
+  return keywords;
+}
+
+/**
+ * Detects if a user message needs historical context
+ */
+export function detectContextNeed(content: string): string[] {
+  const patterns = [
+    { regex: /remember.*when/i, tag: 'historical_reference' },
+    { regex: /earlier.*we/i, tag: 'past_discussion' },
+    { regex: /the.*error.*was/i, tag: 'error_context' },
+    { regex: /what.*we.*decided/i, tag: 'decision_recall' },
+    { regex: /file.*we.*created/i, tag: 'file_reference' },
+    { regex: /before.*that/i, tag: 'before_context' },
+    { regex: /previously/i, tag: 'previous_context' },
+  ];
+  
+  return patterns
+    .filter(p => p.regex.test(content))
+    .map(p => p.tag);
+}
+
+/**
+ * Simplified message type for archive storage
+ */
+export interface ArchivedMessage {
+  id: string;
+  threadId: string;
+  timestamp: string;
+  role: 'user' | 'assistant' | 'tool';
+  content: string;
+  displayContent?: string;
+  toolName?: string;
+  toolResult?: string;
+  keywords: string[];
+  messageHash: string; // For deduplication
+}
+
+/**
+ * Global summary of the conversation (regenerated periodically)
+ */
+export interface ThreadGlobalSummary {
+  threadId: string;
+  summary: string; // "User asked to create React app, used create_file for package.json, index.html..."
+  keyDecisions: string[];
+  filesModified: string[];
+  toolsUsed: string[];
+  lastRegenAt: string;
+  messageCount: number;
+}
+
+/**
+ * Thread archive storage
+ */
+export interface ThreadArchive {
+  threadId: string;
+  messages: ArchivedMessage[];
+  globalSummary: ThreadGlobalSummary;
+  metadata: {
+    totalTokensArchived: number;
+    totalMessagesArchived: number;
+    firstArchiveDate: string;
+    lastArchiveDate: string;
+  };
+}
+
+// Simple message type for internal use
+type SimpleLLMMessage = {
+  role: string;
+  content: string;
+  id?: string;
+  name?: string;
+  displayContent?: string;
+  rawParams?: RawToolParamsObj;
+};
+
+// ========================================================
+// END THREAD MEMORY ARCHIVE SYSTEM
+// ========================================================
+
+
 // related to retrying when LLM message has error
 const CHAT_RETRIES = 3
 const RETRY_DELAY = 2500
@@ -399,6 +570,10 @@ class ChatThreadService extends Disposable implements IChatThreadService {
 		this.state = { allThreads: {}, currentThreadId: null as unknown as string } // see constructor
 		this.openNewThread()
 		this._onDidChangeCurrentThread.fire()
+		// Ensure a thread exists after reset - critical fix
+		if (!this.state.currentThreadId || !this.state.allThreads[this.state.currentThreadId]) {
+			this.openNewThread()
+		}
 	}
 
 	// !!! this is important for properly restoring URIs from storage
@@ -431,6 +606,335 @@ class ChatThreadService extends Disposable implements IChatThreadService {
 			StorageTarget.USER
 		);
 	}
+
+	// ========================================================
+	// THREAD ARCHIVE METHODS (Phase 1)
+	// ========================================================
+
+	/**
+	 * Storage key prefix for thread archives
+	 */
+	private readonly _archiveStorageKey = 'void_thread_archive_v1';
+
+	/**
+	 * Helper to get content from any ChatMessage variant
+	 */
+	private _getMessageContent(msg: ChatMessage): string {
+		if ('content' in msg && typeof msg.content === 'string') {
+			return msg.content;
+		}
+		if ('displayContent' in msg && typeof msg.displayContent === 'string') {
+			return msg.displayContent;
+		}
+		return JSON.stringify(msg);
+	}
+
+	/**
+	 * Helper to get id from any ChatMessage variant
+	 */
+	private _getMessageId(msg: ChatMessage): string {
+		return (msg as any).id || generateUuid();
+	}
+
+	/**
+	 * Helper to get timestamp from any ChatMessage variant  
+	 */
+	private _getMessageTimestamp(msg: ChatMessage): string {
+		return (msg as any).timestamp || new Date().toISOString();
+	}
+
+	/**
+	 * Helper to get tool name from any ChatMessage variant
+	 */
+	private _getMessageToolName(msg: ChatMessage): string | undefined {
+		if ('name' in msg) return (msg as any).name;
+		return undefined;
+	}
+
+	/**
+	 * Read thread archive from storage
+	 */
+	private _readThreadArchive(threadId: string): ThreadArchive | null {
+		try {
+			const archiveKey = `${this._archiveStorageKey}_${threadId}`;
+			const archiveStr = this._storageService.get(archiveKey, StorageScope.APPLICATION);
+			if (!archiveStr) return null;
+			return JSON.parse(archiveStr) as ThreadArchive;
+		} catch (error) {
+			this.logService.error(`[Archive] Failed to read archive for thread ${threadId}:`, error);
+			return null;
+		}
+	}
+
+	/**
+	 * Store thread archive to storage
+	 */
+	private _storeThreadArchive(archive: ThreadArchive): void {
+		try {
+			const archiveKey = `${this._archiveStorageKey}_${archive.threadId}`;
+			const archiveStr = JSON.stringify(archive);
+			this._storageService.store(
+				archiveKey,
+				archiveStr,
+				StorageScope.APPLICATION,
+				StorageTarget.USER
+			);
+		} catch (error) {
+			this.logService.error(`[Archive] Failed to store archive for thread ${archive.threadId}:`, error);
+		}
+	}
+
+	/**
+	 * Check if conversation exceeds token threshold and needs archiving
+	 */
+	_shouldArchive(threadId: string): { should: boolean; currentTokens: number } {
+		const thread = this.state.allThreads[threadId];
+		if (!thread) return { should: false, currentTokens: 0 };
+
+		const totalTokens = thread.messages.reduce((sum, msg) => {
+			const content = this._getMessageContent(msg);
+			return sum + Math.ceil(content.length / 4);
+		}, 0);
+
+		return {
+			should: totalTokens > ARCHIVE_CONFIG.TOKEN_THRESHOLD && 
+				thread.messages.length > ARCHIVE_CONFIG.MIN_MESSAGES_BEFORE_ARCHIVE,
+			currentTokens: totalTokens
+		};
+	}
+
+	/**
+	 * Archive old messages when conversation exceeds token budget
+	 * Returns: { archivedCount, archivedTokens }
+	 */
+	archiveOldMessagesIfNeeded(threadId: string): { archivedCount: number; archivedTokens: number } {
+		const thread = this.state.allThreads[threadId];
+		if (!thread) return { archivedCount: 0, archivedTokens: 0 };
+
+		const { should, currentTokens } = this._shouldArchive(threadId);
+		if (!should) return { archivedCount: 0, archivedTokens: 0 };
+
+		// Get or create archive for this thread
+		let archive = this._readThreadArchive(threadId);
+		if (!archive) {
+			archive = {
+				threadId,
+				messages: [],
+				globalSummary: {
+					threadId,
+					summary: '',
+					keyDecisions: [],
+					filesModified: [],
+					toolsUsed: [],
+					lastRegenAt: new Date().toISOString(),
+					messageCount: 0,
+				},
+				metadata: {
+					totalTokensArchived: 0,
+					totalMessagesArchived: 0,
+					firstArchiveDate: new Date().toISOString(),
+					lastArchiveDate: new Date().toISOString(),
+				}
+			};
+		}
+
+		// Calculate how much we need to remove
+		const targetTokens = currentTokens - ARCHIVE_CONFIG.MIN_ACTIVE_TOKENS;
+		let tokensToRemove = currentTokens - targetTokens;
+		let archivedCount = 0;
+		let archivedTokens = 0;
+
+		// Messages to archive (from the beginning)
+		const messagesToArchive: { msg: ChatMessage; tokens: number }[] = [];
+		
+		for (let i = 0; i < thread.messages.length && tokensToRemove > 0; i++) {
+			const msg = thread.messages[i];
+			const msgTokens = Math.ceil(this._getMessageContent(msg).length / 4);
+			
+			// Keep at least 10 recent messages
+			if (thread.messages.length - i <= 10) break;
+			
+			// Skip checkpoint messages
+			if (msg.role === 'checkpoint') continue;
+
+			messagesToArchive.push({ msg, tokens: msgTokens });
+			tokensToRemove -= msgTokens;
+			archivedTokens += msgTokens;
+			archivedCount++;
+		}
+
+		// Remove archived messages from thread
+		if (messagesToArchive.length > 0) {
+			const archiveIds = new Set(messagesToArchive.map(({ msg }) => {
+				const content = this._getMessageContent(msg);
+				return `${msg.role}_${this._simpleHash(content)}_${this._getMessageId(msg)}`;
+			}));
+
+			thread.messages = thread.messages.filter(m => {
+				const content = this._getMessageContent(m);
+				const id = `${m.role}_${this._simpleHash(content)}_${this._getMessageId(m)}`;
+				return !archiveIds.has(id);
+			});
+
+			// Add to archive
+			for (const { msg } of messagesToArchive) {
+				const content = this._getMessageContent(msg);
+				const toolName = this._getMessageToolName(msg);
+				const msgId = this._getMessageId(msg);
+				const timestamp = this._getMessageTimestamp(msg);
+				
+				// Determine role for archive
+				const archiveRole: 'user' | 'assistant' | 'tool' = 
+					msg.role === 'tool' ? 'tool' :
+					msg.role === 'assistant' ? 'assistant' : 'user';
+
+				// Extract content safely
+				let archiveContent = content;
+				let archiveDisplayContent: string | undefined;
+				let toolResult: string | undefined;
+
+				if (msg.role === 'tool') {
+					const toolMsg = msg as any;
+					archiveContent = toolMsg.content || '';
+					toolResult = (toolMsg.type === 'success' || toolMsg.type === 'running_now') 
+						? archiveContent 
+						: undefined;
+				} else if (msg.role === 'assistant') {
+					const assistantMsg = msg as any;
+					archiveDisplayContent = assistantMsg.displayContent;
+				}
+
+				archive.messages.push({
+					id: msgId,
+					threadId,
+					timestamp,
+					role: archiveRole,
+					content: archiveContent,
+					displayContent: archiveDisplayContent,
+					toolName,
+					toolResult,
+					keywords: extractMessageKeywords({
+						role: msg.role,
+						content,
+						name: toolName,
+					}),
+					messageHash: this._simpleHash(content + msgId),
+				});
+			}
+
+			// Update archive metadata
+			archive.metadata.totalTokensArchived += archivedTokens;
+			archive.metadata.totalMessagesArchived += archivedCount;
+			archive.metadata.lastArchiveDate = new Date().toISOString();
+
+			// FIFO eviction if over limit
+			while (archive.messages.length > ARCHIVE_CONFIG.MAX_ARCHIVED_MESSAGES) {
+				archive.messages.shift();
+			}
+
+			// Store updated archive
+			this._storeThreadArchive(archive);
+
+			this.logService.info(`[Archive] Archived ${archivedCount} messages (${archivedTokens} tokens) from thread ${threadId}`);
+		}
+
+		return { archivedCount, archivedTokens };
+	}
+
+	/**
+	 * Retrieve relevant context from archive based on current message
+	 */
+	retrieveRelevantContext(threadId: string, currentMessage: string): string {
+		const archive = this._readThreadArchive(threadId);
+		if (!archive || archive.messages.length === 0) {
+			return '';
+		}
+
+		const contextNeedTags = detectContextNeed(currentMessage);
+		const scoredMessages: { msg: ArchivedMessage; score: number }[] = [];
+
+		// Score and filter messages
+		for (const msg of archive.messages) {
+			let score = 0;
+
+			// Keyword match boost
+			const msgKeywords = new Set(msg.keywords);
+			for (const tag of contextNeedTags) {
+				if (msgKeywords.has(tag)) {
+					score += 0.5;
+				}
+			}
+
+			// Time decay (prefer recent)
+			const msgDate = new Date(msg.timestamp);
+			const hoursAgo = (Date.now() - msgDate.getTime()) / (1000 * 60 * 60);
+			const timeScore = Math.max(0, 1 - (hoursAgo / 168)); // 1 week decay
+			score += timeScore * 0.3;
+
+			// Exact content match for key phrases
+			if (currentMessage.toLowerCase().includes('error')) {
+				if (msg.keywords.includes('has_error')) score += 0.4;
+			}
+
+			if (score > 0.3) {
+				scoredMessages.push({ msg, score });
+			}
+		}
+
+		// Sort by score and limit to 5 messages
+		scoredMessages.sort((a, b) => b.score - a.score);
+		const topMessages = scoredMessages.slice(0, 5).map(sm => sm.msg);
+
+		if (topMessages.length === 0) {
+			return '';
+		}
+
+		// Build context string
+		const contextParts = [
+			`--- ARCHIVED CONTEXT (${topMessages.length} relevant messages from past) ---`,
+		];
+
+		for (const msg of topMessages) {
+			const roleTag = msg.role === 'tool' ? `[${msg.toolName || 'tool'}]` : `[${msg.role}]`;
+			contextParts.push(`${roleTag} ${new Date(msg.timestamp).toLocaleString()}: ${msg.content.substring(0, 500)}`);
+		}
+
+		contextParts.push('--- END ARCHIVED CONTEXT ---');
+
+		return contextParts.join('\n');
+	}
+
+	/**
+	 * Simple hash function for deduplication
+	 */
+	private _simpleHash(str: string): string {
+		let hash = 0;
+		for (let i = 0; i < str.length; i++) {
+			const char = str.charCodeAt(i);
+			hash = ((hash << 5) - hash) + char;
+			hash = hash & hash;
+		}
+		return Math.abs(hash).toString(16);
+	}
+
+	/**
+	 * Get archive statistics for a thread
+	 */
+	getArchiveStats(threadId: string): { archivedCount: number; archivedTokens: number; hasSummary: boolean } {
+		const archive = this._readThreadArchive(threadId);
+		if (!archive) {
+			return { archivedCount: 0, archivedTokens: 0, hasSummary: false };
+		}
+		return {
+			archivedCount: archive.messages.length,
+			archivedTokens: archive.metadata.totalTokensArchived,
+			hasSummary: archive.globalSummary.summary.length > 0,
+		};
+	}
+
+	// ========================================================
+	// END THREAD ARCHIVE METHODS
+	// ========================================================
 
 
 	// this should be the only place this.state = ... appears besides constructor
@@ -1098,6 +1602,18 @@ class ChatThreadService extends Disposable implements IChatThreadService {
 			this._setStreamState(threadId, { isRunning: 'idle', interrupt: idleInterruptor })
 
 			const chatMessages = this.state.allThreads[threadId]?.messages ?? []
+			
+			// ========================================================
+			// ARCHIVE INTEGRATION: Check and archive if needed
+			// ========================================================
+			const archiveResult = this.archiveOldMessagesIfNeeded(threadId);
+			if (archiveResult.archivedCount > 0) {
+				this.logService.info(`[Archive] Archived ${archiveResult.archivedCount} messages before sending to LLM`);
+			}
+			// ========================================================
+			// END ARCHIVE INTEGRATION
+			// ========================================================
+
 			const { messages, separateSystemMessage } = await this._convertToLLMMessagesService.prepareLLMChatMessages({
 				chatMessages,
 				modelSelection,
@@ -1571,13 +2087,18 @@ We only need to do it for files that were edited since `from`, ie files between 
 		const instructions = userMessage
 		const currSelns: StagingSelectionItem[] = _chatSelections ?? thread.state.stagingSelections
 
-		// Recuperar contexto relevante do RAG se habilitado
+		// ========================================================
+		// HYBRID CONTEXT RETRIEVAL (RAG + Archive)
+		// ========================================================
 		let ragContext = '';
+		let archiveContext = '';
+
 		try {
 			const ragSettings = this._settingsService.state.globalSettings?.ragSettings;
+			
+			// 1. RAG Search (codebase context)
 			if (ragSettings?.enabled) {
 				try {
-					// Timeout de 2 segundos para não bloquear
 					const searchPromise = this._ragVectorService.search(instructions, ragSettings.maxResults);
 					const timeoutPromise = new Promise<never>((_, reject) => 
 						setTimeout(() => reject(new Error('RAG search timeout')), 2000)
@@ -1594,16 +2115,28 @@ We only need to do it for files that were edited since `from`, ie files between 
 						ragContext += '</relevant_context_from_codebase>\n';
 					}
 				} catch (error) {
-					// RAG falhou ou timeout, continuar sem contexto adicional (silenciosamente)
-					// Não notificar para não incomodar o usuário se RAG não estiver configurado
+					// RAG falhou, continuar sem contexto adicional
 				}
 			}
+
+			// 2. Archive Retrieval (conversation history context)
+			// Verificar se a mensagem precisa de contexto histórico
+			const contextNeedTags = detectContextNeed(userMessage);
+			if (contextNeedTags.length > 0 || this.getArchiveStats(threadId).archivedCount > 10) {
+				archiveContext = this.retrieveRelevantContext(threadId, userMessage);
+			}
 		} catch (error) {
-			// Se houver erro ao acessar settings, continuar normalmente sem RAG
+			// Se houver erro, continuar sem contexto adicional
 		}
 
-		const userMessageContent = await chat_userMessageContent(instructions + ragContext, currSelns, { directoryStrService: this._directoryStringService, fileService: this._fileService }) // user message + names of files (NOT content)
-		// displayContent mostra apenas o texto original do usuário, content inclui contexto RAG
+		// Combinar contextos
+		const combinedContext = [ragContext, archiveContext].filter(c => c.length > 0).join('\n');
+		// ========================================================
+		// END HYBRID CONTEXT RETRIEVAL
+		// ========================================================
+
+		const userMessageContent = await chat_userMessageContent(instructions + combinedContext, currSelns, { directoryStrService: this._directoryStringService, fileService: this._fileService }) // user message + names of files (NOT content)
+		// displayContent mostra apenas o texto original do usuário, content inclui contexto RAG + archive
 		const userHistoryElt: ChatMessage = { role: 'user', content: userMessageContent, displayContent: instructions, selections: currSelns, imageAttachments, state: defaultMessageState }
 		this._addMessageToThread(threadId, userHistoryElt)
 
@@ -1950,7 +2483,23 @@ We only need to do it for files that were edited since `from`, ie files between 
 	getCurrentThread(): ThreadType {
 		const state = this.state
 		const thread = state.allThreads[state.currentThreadId]
-		if (!thread) throw new Error(`Current thread should never be undefined`)
+		if (!thread) {
+			// Defensive: if thread is undefined, try to find or create one
+			// This can happen during initialization or state reset
+			const threadIds = Object.keys(state.allThreads)
+			if (threadIds.length > 0) {
+				// Switch to the first available thread
+				this.state.currentThreadId = threadIds[0]
+				return state.allThreads[threadIds[0]]!
+			}
+			// Create a new thread as fallback
+			this.openNewThread()
+			const newThread = state.allThreads[this.state.currentThreadId]
+			if (!newThread) {
+				throw new Error(`Failed to create or find a current thread`)
+			}
+			return newThread
+		}
 		return thread
 	}
 
@@ -1991,12 +2540,15 @@ We only need to do it for files that were edited since `from`, ie files between 
 		// otherwise, start a new thread
 		const newThread = newThreadObject()
 
-		// update state
+		// update state - ensure synchronous update
 		const newThreads: ChatThreads = {
 			...currentThreads,
 			[newThread.id]: newThread
 		}
 		this._storeAllThreads(newThreads)
+		
+		// Synchronously set currentThreadId immediately
+		this.state.currentThreadId = newThread.id
 		this._setState({ allThreads: newThreads, currentThreadId: newThread.id })
 	}
 

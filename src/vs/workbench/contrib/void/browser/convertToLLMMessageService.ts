@@ -172,9 +172,11 @@ const prepareMessages_openai_tools = (messages: SimpleLLMMessage[], includeThoug
 		// edit previous assistant message to have called the tool
 		const prevMsg = 0 <= i - 1 && i - 1 <= newMessages.length ? newMessages[i - 1] : undefined
 		if (prevMsg?.role === 'assistant') {
+			// Truncate ID to max 40 characters for Azure OpenAI compliance
+			const toolCallId = currMsg.id.substring(0, 40);
 			const toolCall: any = {
 				type: 'function',
-				id: currMsg.id,
+				id: toolCallId,
 				function: {
 					name: currMsg.name,
 					arguments: JSON.stringify(currMsg.rawParams)
@@ -205,9 +207,11 @@ const prepareMessages_openai_tools = (messages: SimpleLLMMessage[], includeThoug
 			];
 		}
 		
+		// Truncate ID to max 40 characters for Azure OpenAI compliance
+		const toolCallId = currMsg.id.substring(0, 40);
 		newMessages.push({
 			role: 'tool',
-			tool_call_id: currMsg.id,
+			tool_call_id: toolCallId,
 			content: toolContent,
 		})
 	}
