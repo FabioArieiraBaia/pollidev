@@ -1,0 +1,43 @@
+{
+  "$schema": "vscode://schemas/color-theme",
+  "name": "PolliDev Light",
+  "type": "light",
+  "colors": {
+    "focusBorder": "#06b6d4",
+
+    "activityBar.background": "#f8fafc",
+    "activityBar.foreground": "#0f172a",
+    "activityBar.inactiveForeground": "#0f172a88",
+    "activityBar.activeBorder": "#7c3aed",
+
+    "sideBar.background": "#ffffff",
+    "sideBar.foreground": "#0f172a",
+    "sideBar.border": "#e2e8f0",
+
+    "editor.background": "#ffffff",
+    "editor.foreground": "#0f172a",
+
+    "editorGroupHeader.tabsBackground": "#f8fafc",
+    "tab.activeBackground": "#ffffff",
+    "tab.inactiveBackground": "#f8fafc",
+    "tab.activeBorderTop": "#ec4899",
+
+    "statusBar.background": "#ffffff",
+    "statusBar.foreground": "#0f172a",
+    "statusBar.border": "#e2e8f0",
+
+    "titleBar.activeBackground": "#ffffff",
+    "titleBar.activeForeground": "#0f172a",
+    "titleBar.inactiveBackground": "#f8fafc",
+    "titleBar.inactiveForeground": "#334155",
+
+    "textLink.foreground": "#06b6d4",
+    "button.background": "#7c3aed",
+    "button.foreground": "#ffffff",
+    "button.hoverBackground": "#6d28d9",
+
+    "badge.background": "#ec4899",
+    "badge.foreground": "#ffffff"
+  },
+  "tokenColors": []
+}

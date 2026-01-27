@@ -55,5 +55,18 @@
 			"frameSrc": ["'self'", "http://127.0.0.1:*", "http://localhost:*"],
 			"scriptSrc": ["'self'", "'unsafe-inline'", "http://127.0.0.1:*", "http://localhost:*"]
 		}
+	},
+	"configurationDefaults": {
+		"workbench.colorTheme": "PolliDev Vibrant",
+		"workbench.preferredDarkColorTheme": "PolliDev Vibrant",
+		"workbench.preferredLightColorTheme": "PolliDev Light",
+		"workbench.preferredHighContrastColorTheme": "PolliDev Vibrant",
+		"workbench.startupEditor": "none",
+		"editor.fontFamily": "'JetBrains Mono', 'Fira Code', Consolas, 'Courier New', monospace",
+		"editor.fontLigatures": true,
+		"editor.fontSize": 14,
+		"editor.lineHeight": 1.6,
+		"terminal.integrated.fontFamily": "'JetBrains Mono', 'Fira Code', monospace",
+		"window.titleBarStyle": "custom"
 	}
 }

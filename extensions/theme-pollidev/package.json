@@ -1,0 +1,33 @@
+{
+  "name": "theme-pollidev",
+  "displayName": "PolliDev Theme",
+  "description": "Official PolliDev theme with AI-inspired colors",
+  "version": "1.0.0",
+  "publisher": "pollidev",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "PolliDev Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/pollidev-dark-color-theme.json"
+      },
+      {
+        "label": "PolliDev Light",
+        "uiTheme": "vs",
+        "path": "./themes/pollidev-light-color-theme.json"
+      },
+      {
+        "label": "PolliDev Vibrant",
+        "uiTheme": "vs-dark",
+        "path": "./themes/pollidev-vibrant-color-theme.json"
+      }
+    ]
+  }
+}

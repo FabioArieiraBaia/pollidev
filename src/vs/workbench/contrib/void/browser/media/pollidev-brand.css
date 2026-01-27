@@ -1,0 +1,342 @@
+/*--------------------------------------------------------------------------------------
+ * PolliDev Brand (Futuristic UI)
+ * Goal: Give PolliDev a unique, futuristic identity (glass + neon + gradients)
+ * Safe: CSS-only, no functional changes.
+ *--------------------------------------------------------------------------------------*/
+
+:root {
+	/* Brand palette */
+	--polli-purple: #9333ea;
+	--polli-pink: #ec4899;
+	--polli-cyan: #06b6d4;
+	--polli-blue: #3b82f6;
+	--polli-orange: #f97316;
+	--polli-lime: #22c55e;
+	--polli-red: #ef4444;
+
+	/* Futuristic gradients */
+	--polli-gradient-primary: linear-gradient(135deg, var(--polli-purple) 0%, var(--polli-pink) 100%);
+	--polli-gradient-secondary: linear-gradient(135deg, var(--polli-cyan) 0%, var(--polli-blue) 100%);
+	--polli-gradient-heat: linear-gradient(135deg, var(--polli-orange) 0%, var(--polli-pink) 100%);
+
+	/* Glass surfaces */
+	--polli-glass-bg: rgba(30, 41, 59, 0.35);
+	--polli-glass-bg-strong: rgba(2, 6, 23, 0.55);
+	--polli-glass-border: rgba(148, 163, 184, 0.18);
+	--polli-glass-border-strong: rgba(236, 72, 153, 0.25);
+
+	/* Glows */
+	--polli-glow-purple: 0 0 18px rgba(147, 51, 234, 0.55);
+	--polli-glow-pink: 0 0 18px rgba(236, 72, 153, 0.55);
+	--polli-glow-cyan: 0 0 18px rgba(6, 182, 212, 0.55);
+	--polli-glow-heat: 0 0 18px rgba(249, 115, 22, 0.55);
+
+	/* Noise overlay (subtle) */
+	--polli-noise-opacity: 0.06;
+}
+
+/* =========================================
+   Shared building blocks
+   ========================================= */
+
+@keyframes polli-gradient-pan {
+	0% { background-position: 0% 50%; }
+	50% { background-position: 100% 50%; }
+	100% { background-position: 0% 50%; }
+}
+
+@keyframes polli-pulse {
+	0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(147, 51, 234, 0)); }
+	50% { transform: scale(1.02); filter: drop-shadow(0 0 18px rgba(147, 51, 234, 0.55)); }
+}
+
+@keyframes polli-scanline {
+	0% { background-position: 0 0; }
+	100% { background-position: 0 120px; }
+}
+
+@keyframes polli-breathe {
+	0%, 100% { box-shadow: 0 0 0 rgba(6, 182, 212, 0); }
+	50% { box-shadow: 0 0 30px rgba(6, 182, 212, 0.22); }
+}
+
+.pollidev-gradient {
+	background-image: var(--polli-gradient-primary);
+	background-size: 200% 200%;
+	animation: polli-gradient-pan 6s ease-in-out infinite;
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+}
+
+.pollidev-surface {
+	background: var(--polli-glass-bg);
+	border: 1px solid var(--polli-glass-border);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border-radius: 14px;
+}
+
+.pollidev-surface-strong {
+	background: var(--polli-glass-bg-strong);
+	border: 1px solid var(--polli-glass-border-strong);
+	backdrop-filter: blur(14px);
+	-webkit-backdrop-filter: blur(14px);
+	border-radius: 16px;
+}
+
+.pollidev-divider-glow {
+	height: 1px;
+	background: linear-gradient(90deg, rgba(147,51,234,0), rgba(147,51,234,0.65), rgba(6,182,212,0.45), rgba(236,72,153,0.65), rgba(147,51,234,0));
+}
+
+/* =========================================
+   PolliDev Chat Panel (Sidebar)
+   ========================================= */
+
+/* Applies to the chat root containers we already use */
+.void-glass-panel-advanced {
+	position: relative;
+	border-radius: 16px;
+	background: radial-gradient(1200px 600px at 20% 0%, rgba(147, 51, 234, 0.18), rgba(2, 6, 23, 0)),
+			radial-gradient(1000px 500px at 80% 0%, rgba(6, 182, 212, 0.14), rgba(2, 6, 23, 0)),
+			linear-gradient(180deg, rgba(2, 6, 23, 0.55), rgba(15, 23, 42, 0.45));
+	border: 1px solid rgba(148, 163, 184, 0.15);
+	box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+	backdrop-filter: blur(14px);
+	-webkit-backdrop-filter: blur(14px);
+}
+
+/* Subtle scanline overlay */
+.void-glass-panel-advanced::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	opacity: 0.10;
+	background-image: linear-gradient(rgba(255,255,255,0.04) 1px, rgba(0,0,0,0) 1px);
+	background-size: 100% 6px;
+	animation: polli-scanline 10s linear infinite;
+	mix-blend-mode: overlay;
+	border-radius: 16px;
+}
+
+/* Noise overlay */
+.void-glass-panel-advanced::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	opacity: var(--polli-noise-opacity);
+	background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="160" height="160" filter="url(%23n)" opacity=".55"/></svg>');
+	border-radius: 16px;
+	mix-blend-mode: overlay;
+}
+
+/* Polli header: give it a strong identity */
+.pollidev-polli-header {
+	position: relative;
+	border-radius: 16px;
+	padding: 14px 14px 10px 14px;
+	background: linear-gradient(180deg, rgba(30,41,59,0.35), rgba(2,6,23,0.25));
+	border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.pollidev-polli-header .pollidev-title {
+	letter-spacing: 0.02em;
+	font-weight: 800;
+}
+
+.pollidev-polli-subtitle {
+	margin-top: 2px;
+	font-size: 11px;
+	color: rgba(226, 232, 240, 0.75);
+}
+
+.pollidev-thinking-terminal {
+	margin-top: 8px;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+	font-size: 11px;
+	padding: 8px 10px;
+	border-radius: 12px;
+	background: rgba(2, 6, 23, 0.55);
+	border: 1px solid rgba(147, 51, 234, 0.25);
+	color: rgba(226, 232, 240, 0.82);
+	box-shadow: var(--polli-glow-purple);
+}
+
+/* Agents dock (separar visualmente do chat sem mexer no layout estrutural do VS Code) */
+.polli-agents-dock {
+	margin: 10px 16px 6px;
+	border-radius: 14px;
+	border: 1px solid rgba(255,255,255,0.08);
+	background: linear-gradient(180deg, rgba(30, 41, 59, 0.35) 0%, rgba(2, 6, 23, 0.35) 100%);
+	box-shadow:
+		0 12px 32px rgba(0,0,0,0.38),
+		0 0 0 1px rgba(147, 51, 234, 0.10),
+		0 0 24px rgba(6, 182, 212, 0.10);
+	backdrop-filter: blur(var(--polli-blur));
+	overflow: hidden;
+}
+
+.polli-agents-dock-header {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	padding: 10px 12px;
+	border-bottom: 1px solid rgba(255,255,255,0.06);
+	background: linear-gradient(90deg, rgba(147, 51, 234, 0.22), rgba(236, 72, 153, 0.12), rgba(6, 182, 212, 0.18));
+}
+
+.polli-agents-dock-title {
+	font-size: 12px;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: rgba(255,255,255,0.92);
+}
+
+.polli-agents-dock-subtitle {
+	font-size: 11px;
+	color: rgba(255,255,255,0.60);
+}
+
+.polli-agents-dock-body {
+	padding: 10px 10px 12px;
+}
+
+/* =========================================
+   Polli (Agent) status glows
+   ========================================= */
+
+.void-logo-glow { filter: drop-shadow(0 0 10px rgba(147, 51, 234, 0.35)); }
+.void-logo-glow-blue { filter: drop-shadow(0 0 14px rgba(6, 182, 212, 0.55)); }
+.void-logo-glow-yellow { filter: drop-shadow(0 0 14px rgba(245, 158, 11, 0.55)); }
+
+.void-logo-pulse { animation: polli-pulse 1.8s ease-in-out infinite; }
+
+/* Header state: add “energy/particles” without JS */
+.pollidev-polli-header.pollidev-polli-state-llm,
+.pollidev-polli-header.pollidev-polli-state-tool {
+	overflow: hidden;
+}
+
+.pollidev-polli-header.pollidev-polli-state-llm::before {
+	content: "";
+	position: absolute;
+	inset: -2px;
+	background: radial-gradient(900px 220px at 30% 0%, rgba(6,182,212,0.20), rgba(2,6,23,0)),
+		radial-gradient(700px 220px at 70% 0%, rgba(236,72,153,0.18), rgba(2,6,23,0));
+	filter: blur(6px);
+	opacity: 0.9;
+	pointer-events: none;
+}
+
+.pollidev-polli-header.pollidev-polli-state-tool::before {
+	content: "";
+	position: absolute;
+	inset: -2px;
+	background: radial-gradient(900px 220px at 30% 0%, rgba(249,115,22,0.18), rgba(2,6,23,0)),
+		radial-gradient(700px 220px at 70% 0%, rgba(6,182,212,0.14), rgba(2,6,23,0));
+	filter: blur(6px);
+	opacity: 0.9;
+	pointer-events: none;
+}
+
+@keyframes polli-particles {
+	0% { transform: translateY(0); opacity: 0.0; }
+	10% { opacity: 0.55; }
+	100% { transform: translateY(22px); opacity: 0.0; }
+}
+
+/* Extra sci‑fi motion: energy sweep + subtle particles */
+.pollidev-polli-header.pollidev-polli-state-llm::after,
+.pollidev-polli-header.pollidev-polli-state-tool::after {
+	content: "";
+	position: absolute;
+	inset: -40px;
+	pointer-events: none;
+	background-image:
+		radial-gradient(circle at 10% 20%, rgba(255,255,255,0.18) 0 1px, transparent 2px),
+		radial-gradient(circle at 70% 30%, rgba(255,255,255,0.12) 0 1px, transparent 2px),
+		radial-gradient(circle at 40% 80%, rgba(255,255,255,0.10) 0 1px, transparent 2px);
+	background-size: 180px 140px;
+	opacity: 0.55;
+	mix-blend-mode: screen;
+	animation: pollidev-particles-float 3.4s ease-in-out infinite;
+}
+
+.pollidev-polli-header.pollidev-polli-state-llm::before,
+.pollidev-polli-header.pollidev-polli-state-tool::before {
+	animation: pollidev-energy-sweep 2.2s linear infinite;
+}
+
+@keyframes pollidev-energy-sweep {
+	0% { transform: translateX(-6%) translateY(-2%); }
+	50% { transform: translateX(6%) translateY(2%); }
+	100% { transform: translateX(-6%) translateY(-2%); }
+}
+
+@keyframes pollidev-particles-float {
+	0% { transform: translateY(0px) translateX(0px); }
+	50% { transform: translateY(10px) translateX(-8px); }
+	100% { transform: translateY(0px) translateX(0px); }
+}
+
+/* Tiny “particles” layer (SVG noise dots) */
+.pollidev-polli-header.pollidev-polli-state-llm::after,
+.pollidev-polli-header.pollidev-polli-state-tool::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	opacity: 0.35;
+	background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="120"><g fill="white" opacity=".55"><circle cx="12" cy="18" r="1"/><circle cx="52" cy="44" r="1"/><circle cx="88" cy="26" r="1"/><circle cx="120" cy="52" r="1"/><circle cx="150" cy="20" r="1"/><circle cx="26" cy="72" r="1"/><circle cx="66" cy="88" r="1"/><circle cx="108" cy="82" r="1"/><circle cx="156" cy="94" r="1"/></g></svg>');
+	background-size: 180px 120px;
+	animation: polli-particles 1.9s linear infinite;
+	mix-blend-mode: overlay;
+}
+
+/* =========================================
+   Chat bubbles: User vs Polli
+   ========================================= */
+
+/* User bubble: clean, minimal, slightly glowing border */
+.void-user-message-clean {
+	background: rgba(15, 23, 42, 0.65);
+	border: 1px solid rgba(148, 163, 184, 0.16);
+	box-shadow: 0 0 0 rgba(147,51,234,0);
+}
+
+/* Polli bubble: signature AI gradient frame */
+.void-agent-message-gradient {
+	position: relative;
+	background: rgba(2, 6, 23, 0.45);
+	border: 1px solid rgba(147, 51, 234, 0.20);
+	box-shadow: var(--polli-glow-pink);
+	overflow: hidden;
+}
+
+.void-agent-message-gradient::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	padding: 1px;
+	border-radius: 12px;
+	background: linear-gradient(135deg, rgba(147,51,234,0.7), rgba(236,72,153,0.55), rgba(6,182,212,0.45));
+	-webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+	-webkit-mask-composite: xor;
+	mask-composite: exclude;
+	pointer-events: none;
+	opacity: 0.9;
+}
+
+/* Make tool cards feel like modules */
+.void-scope .void-agent-card {
+	background: rgba(15, 23, 42, 0.55);
+	border: 1px solid rgba(6, 182, 212, 0.22);
+	border-radius: 14px;
+	box-shadow: var(--polli-glow-cyan);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	animation: polli-breathe 6s ease-in-out infinite;
+}

@@ -221,6 +221,15 @@ type SimpleLLMMessage = {
 const CHAT_RETRIES = 3
 const RETRY_DELAY = 2500
 
+// Retry inteligente para ferramentas (Polli mais inteligente) - Reserved for future use
+// const TOOL_ERROR_RETRIES = 2
+// const TOOL_RETRY_DELAY = 800
+
+// Compressão inteligente de conversas
+const MAX_MESSAGES_BEFORE_COMPRESSION = 30
+const MESSAGES_TO_KEEP_INTACT = 10
+const COMPRESSION_TOKEN_THRESHOLD = 50000
+
 
 const findStagingSelectionIndex = (currentSelections: StagingSelectionItem[] | undefined, newSelection: StagingSelectionItem): number | null => {
 	if (!currentSelections) return null
@@ -2582,6 +2591,175 @@ We only need to do it for files that were edited since `from`, ie files between 
 	}
 
 
+	// ========== SISTEMA DE COMPRESSÃO INTELIGENTE DE CONVERSAS (Polli Inteligente) ==========
+
+	/**
+	 * Estima tokens de uma string (heurística: ~4 chars = 1 token)
+	 */
+	private _estimateTokens(text: string): number {
+		return Math.ceil(text.length / 4)
+	}
+
+	/**
+	 * Estima tokens totais de uma thread
+	 */
+	private _estimateThreadTokens(thread: ThreadType): number {
+		let total = 0
+		for (const msg of thread.messages) {
+			if (msg.role === 'user' && typeof msg.content === 'string') {
+				total += this._estimateTokens(msg.content)
+			} else if (msg.role === 'assistant') {
+				if (msg.displayContent) total += this._estimateTokens(msg.displayContent)
+			}
+		}
+		return total
+	}
+
+	/**
+	 * Verifica se a thread precisa de compressão
+	 */
+	private _needsCompression(thread: ThreadType): boolean {
+		const msgCount = thread.messages.length
+		const tokenEstimate = this._estimateThreadTokens(thread)
+		return msgCount > MAX_MESSAGES_BEFORE_COMPRESSION || tokenEstimate > COMPRESSION_TOKEN_THRESHOLD
+	}
+
+	/**
+	 * Gera um resumo compacto das mensagens antigas
+	 */
+	private _generateConversationSummary(messages: ChatMessage[]): string {
+		const summaryParts: string[] = []
+		let filesMentioned = new Set<string>()
+		let toolsUsed = new Set<string>()
+
+		for (const msg of messages) {
+			// Extrair arquivos mencionados
+			if (msg.role === 'user' && typeof msg.content === 'string') {
+				const fileMatches = msg.content.match(/[\w\/\\]+\.(ts|tsx|js|jsx|css|json|md|py|rs|go|java|c|cpp|h|hpp)/g)
+				if (fileMatches) fileMatches.forEach(f => filesMentioned.add(f))
+			}
+
+			// Extrair ferramentas usadas (tool messages têm name property)
+			if (msg.role === 'tool') {
+				const toolName = (msg as any).name
+				if (toolName) toolsUsed.add(toolName)
+			}
+		}
+
+		// Construir resumo
+		if (filesMentioned.size > 0) {
+			summaryParts.push(`📁 Arquivos trabalhados: ${[...filesMentioned].slice(0, 15).join(', ')}`)
+		}
+		if (toolsUsed.size > 0) {
+			summaryParts.push(`🔧 Ferramentas usadas: ${[...toolsUsed].join(', ')}`)
+		}
+		summaryParts.push(`💬 ${messages.length} mensagens comprimidas`)
+
+		return `[RESUMO DO HISTÓRICO ANTERIOR]\n${summaryParts.join('\n')}\n[FIM DO RESUMO]`
+	}
+
+	/**
+	 * Comprime a thread se necessário, mantendo mensagens recentes intactas
+	 */
+	compressThreadIfNeeded(threadId: string): void {
+		const thread = this.state.allThreads[threadId]
+		if (!thread || !this._needsCompression(thread)) return
+
+		const messages = thread.messages
+		const totalMessages = messages.length
+
+		// Manter as últimas N mensagens intactas
+		const messagesToCompress = messages.slice(0, totalMessages - MESSAGES_TO_KEEP_INTACT)
+		const messagesToKeep = messages.slice(totalMessages - MESSAGES_TO_KEEP_INTACT)
+
+		if (messagesToCompress.length < 5) return // Não vale comprimir pouco
+
+		// Gerar resumo
+		const summary = this._generateConversationSummary(messagesToCompress)
+
+		// Criar mensagem de sistema com o resumo
+		const summaryMessage: ChatMessage = {
+			role: 'user',
+			content: summary,
+			displayContent: `📝 Resumo da conversa anterior:\n\n${summary}`,
+			selections: null,
+			state: { stagingSelections: [], isBeingEdited: false },
+		}
+
+		// Atualizar thread com mensagens comprimidas
+		const newMessages = [summaryMessage, ...messagesToKeep]
+
+		const newThreads = {
+			...this.state.allThreads,
+			[threadId]: {
+				...thread,
+				messages: newMessages,
+				lastModified: new Date().toISOString(),
+			}
+		}
+
+		this._storeAllThreads(newThreads)
+		this._setState({ allThreads: newThreads })
+
+		console.log(`[Polli] Thread ${threadId} comprimida: ${totalMessages} → ${newMessages.length} mensagens`)
+	}
+
+
+	// ========== RETRY INTELIGENTE PARA FERRAMENTAS (Polli Inteligente) ==========
+
+	/**
+	 * Analisa erro de ferramenta e sugere correção
+	 */
+	analyzeToolError(toolName: string, error: string, params: Record<string, unknown>): { canRetry: boolean; suggestion: string; correctedParams?: Record<string, unknown> } {
+		const errorLower = error.toLowerCase()
+
+		// Erros de parâmetros inválidos
+		if (errorLower.includes('invalid') || errorLower.includes('parameter')) {
+			// Tentar corrigir URIs com barras invertidas/normais
+			if (params['uri'] && typeof params['uri'] === 'string') {
+				const uri = params['uri'] as string
+				const correctedUri = uri.replace(/\//g, '\\')
+				if (correctedUri !== uri) {
+					return {
+						canRetry: true,
+						suggestion: 'Corrigindo formato do caminho do arquivo',
+						correctedParams: { ...params, uri: correctedUri }
+					}
+				}
+			}
+			return { canRetry: false, suggestion: 'Verifique os parâmetros da ferramenta' }
+		}
+
+		// Erros de arquivo não encontrado
+		if (errorLower.includes('not found') || errorLower.includes('enoent')) {
+			return { canRetry: false, suggestion: 'O arquivo/pasta não existe. Use search_pathnames_only para encontrar o caminho correto.' }
+		}
+
+		// Erros de permissão
+		if (errorLower.includes('permission') || errorLower.includes('access denied')) {
+			return { canRetry: false, suggestion: 'Sem permissão para acessar este recurso.' }
+		}
+
+		// Erros de timeout
+		if (errorLower.includes('timeout') || errorLower.includes('timed out')) {
+			return { canRetry: true, suggestion: 'Timeout - tentando novamente...' }
+		}
+
+		// Erros de rede/conexão
+		if (errorLower.includes('network') || errorLower.includes('connection')) {
+			return { canRetry: true, suggestion: 'Erro de conexão - tentando novamente...' }
+		}
+
+		// Erros de SEARCH/REPLACE não encontrado
+		if (errorLower.includes('search') && errorLower.includes('not found')) {
+			return { canRetry: false, suggestion: 'O bloco SEARCH não foi encontrado no arquivo. Leia o arquivo novamente para ver o conteúdo atual.' }
+		}
+
+		// Default: pode tentar retry
+		return { canRetry: true, suggestion: 'Erro inesperado - tentando novamente...' }
+	}
+
+
 	private _addMessageToThread(threadId: string, message: ChatMessage) {
 		const { allThreads } = this.state
 		const oldThread = allThreads[threadId]
@@ -2600,6 +2778,12 @@ We only need to do it for files that were edited since `from`, ie files between 
 		}
 		this._storeAllThreads(newThreads)
 		this._setState({ allThreads: newThreads }) // the current thread just changed (it had a message added to it)
+
+		// [Polli Inteligente] Verificar se precisa comprimir a thread
+		// (a cada 10 mensagens para não impactar performance)
+		if (oldThread.messages.length % 10 === 0) {
+			this.compressThreadIfNeeded(threadId)
+		}
 	}
 
 	// sets the currently selected message (must be undefined if no message is selected)

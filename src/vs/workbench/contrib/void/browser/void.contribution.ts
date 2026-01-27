@@ -10,6 +10,7 @@ import './editCodeService.js'
 // register Sidebar pane, state, actions (keybinds, menus) (Ctrl+L)
 import './sidebarActions.js'
 import './sidebarPane.js'
+import './agentsPane.js'
 import './agentManager.contribution.js'
 
 // register Browser actions
@@ -37,6 +38,7 @@ import './featureFlagsRegistration.js'
 
 // register css
 import './media/void.css'
+import './media/pollidev-brand.css'
 
 // update (frontend part, also see platform/)
 import './voidUpdateActions.js'
@@ -65,6 +67,9 @@ import './tooltipService.js'
 
 // register onboarding service
 import './voidOnboardingService.js'
+
+// PolliDev theme migration (ensures Vibrant theme on first run)
+import './pollidevThemeMigration.js'
 
 // register misc service
 import './miscWokrbenchContrib.js'

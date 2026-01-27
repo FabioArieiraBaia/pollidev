@@ -3264,17 +3264,27 @@ const PollyHeader = ({ isRunning, streamState }: PollyHeaderProps) => {
 
 	// Use CSS class void-pollidev-logo which has background-image: url('./pollydev-logo-3d.png')
 	// The CSS file editorgroupview.css will inline this as base64 during build
+	const polliStateClass = isRunning === 'LLM'
+		? 'pollidev-polli-state-llm'
+		: isRunning === 'tool'
+			? 'pollidev-polli-state-tool'
+			: 'pollidev-polli-state-idle'
+
 	return (
-		<div className="void-py-4 void-px-4 void-select-none">
-			<div className="void-flex void-items-center void-gap-2 void-mb-2">
-				<div 
+		<div className={`void-py-4 void-px-4 void-select-none pollidev-polli-header ${polliStateClass}`}>
+			<div className="void-flex void-items-center void-gap-2">
+				<div
 					className={`void-h-8 void-w-8 void-pollidev-logo ${glowClass} ${isPulsing ? 'void-logo-pulse' : ''}`}
 					title="PolliDev Logo 3D"
 				/>
-				<span className="void-text-xl void-font-bold pollidev-gradient">PolliDev</span>
+				<div className="void-flex void-flex-col">
+					<span className="void-text-xl pollidev-gradient pollidev-title">PolliDev</span>
+					<span className="pollidev-polli-subtitle">Polli • agente de programação</span>
+				</div>
 			</div>
+			<div className="pollidev-divider-glow void-mt-3" />
 			{thinkingText && (
-				<div className="void-thinking-terminal">
+				<div className="pollidev-thinking-terminal">
 					{thinkingText}
 				</div>
 			)}
@@ -3671,7 +3681,15 @@ export const SidebarChat = () => {
 		{/* Active Agents View - show when agents are running */}
 		{chatMode === 'multi-agent' && (
 			<ErrorBoundary>
-				<ActiveAgentsView activeAgents={[]} />
+				<div className="polli-agents-dock">
+					<div className="polli-agents-dock-header">
+						<span className="polli-agents-dock-title">Agents</span>
+						<span className="polli-agents-dock-subtitle">execução paralela</span>
+					</div>
+					<div className="polli-agents-dock-body">
+						<ActiveAgentsView activeAgents={[]} />
+					</div>
+				</div>
 			</ErrorBoundary>
 		)}
 

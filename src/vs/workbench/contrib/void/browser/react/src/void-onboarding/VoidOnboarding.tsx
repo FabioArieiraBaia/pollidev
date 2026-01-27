@@ -112,10 +112,10 @@ const providerNamesOfTab: Record<TabName, ProviderName[]> = {
 };
 
 const descriptionOfTab: Record<TabName, string> = {
-	Free: `Providers with a 100% free tier. Add as many as you'd like!`,
-	Paid: `Connect directly with any provider (bring your own key).`,
-	Local: `Active providers should appear automatically. Add as many as you'd like! `,
-	'Cloud/Other': `Add as many as you'd like! Reach out for custom configuration requests.`,
+	Free: `Provedores com camada 100% gratuita. Adicione quantos quiser!`,
+	Paid: `Conecte-se diretamente com qualquer provedor (traga sua própria chave).`,
+	Local: `Provedores locais ativos devem aparecer automaticamente. Adicione quantos quiser!`,
+	'Cloud/Other': `Adicione quantos quiser! Entre em contato para solicitações de configuração personalizada.`,
 };
 
 
@@ -194,10 +194,10 @@ const AddProvidersPage = ({ pageIndex, setPageIndex }: { pageIndex: number, setP
 
 		{/* Right Column */}
 		<div className="flex-1 flex flex-col items-center justify-start p-6 h-full overflow-y-auto">
-			<div className="text-5xl mb-2 text-center w-full">Add a Provider</div>
+			<div className="text-5xl mb-2 text-center w-full">Adicionar um Provedor</div>
 
 			<div className="w-full max-w-xl mt-4 mb-10">
-				<div className="text-4xl font-light my-4 w-full">{currentTab}</div>
+				<div className="text-4xl font-light my-4 w-full">{currentTab === 'Paid' ? 'Pago' : currentTab === 'Local' ? 'Local' : currentTab === 'Free' ? 'Grátis' : 'Nuvem/Outros'}</div>
 				<div className="text-sm opacity-80 text-void-fg-3 my-4 w-full">{descriptionOfTab[currentTab]}</div>
 			</div>
 
@@ -571,9 +571,9 @@ const VoidOnboardingContent = () => {
 
 	// can be md
 	const detailedDescOfWantToUseOption: { [wantToUseOption in WantToUseOption]: string } = {
-		smart: "Most intelligent and best for agent mode.",
-		private: "Private-hosted so your data never leaves your computer or network. [Email us](mailto:founders@voideditor.com) for help setting up at your company.",
-		cheap: "Use great deals like Gemini 2.5 Pro, or self-host a model with Ollama or vLLM for free.",
+		smart: "Mais inteligente e melhor para o modo agente.",
+		private: "Hospedagem privada para que seus dados nunca saiam do seu computador ou rede. [Contate-nos](mailto:suporte@pollidev.com) para ajuda na configuração em sua empresa.",
+		cheap: "Use ótimas ofertas como Gemini 1.5 Pro, ou hospede você mesmo um modelo com Ollama ou vLLM gratuitamente.",
 		all: "",
 	}
 
@@ -605,7 +605,7 @@ const VoidOnboardingContent = () => {
 		0: <OnboardingPageShell
 			content={
 				<div className='flex flex-col items-center gap-8'>
-					<div className="text-5xl font-light text-center">Welcome to PolliDev</div>
+					<div className="text-5xl font-light text-center">Bem-vindo ao PolliDev</div>
 
 					{/* PolliDev Logo 3D */}
 					<div className='max-w-md w-full h-[30vh] mx-auto flex items-center justify-center'>
@@ -643,10 +643,10 @@ const VoidOnboardingContent = () => {
 
 			content={
 				<div>
-					<div className="text-5xl font-light text-center">Settings and Themes</div>
+					<div className="text-5xl font-light text-center">Configurações e Temas</div>
 
 					<div className="mt-8 text-center flex flex-col items-center gap-4 w-full max-w-md mx-auto">
-						<h4 className="text-void-fg-3 mb-4">Transfer your settings from an existing editor?</h4>
+						<h4 className="text-void-fg-3 mb-4">Transferir suas configurações de um editor existente?</h4>
 						<OneClickSwitchButton className='w-full px-4 py-2' fromEditor="VS Code" />
 						<OneClickSwitchButton className='w-full px-4 py-2' fromEditor="Cursor" />
 						<OneClickSwitchButton className='w-full px-4 py-2' fromEditor="Windsurf" />
