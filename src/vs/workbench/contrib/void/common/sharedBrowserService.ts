@@ -465,6 +465,16 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 		} else if (toolName === 'browser_show' || toolName === 'mcp_cursor-ide-browser_browser_show') {
 			await this.show();
 			return { success: true, message: 'Browser window is now visible and focused.' };
+		} else if (toolName === 'browser_scroll' || toolName === 'mcp_cursor-ide-browser_browser_scroll') {
+			const element = toolCall.rawParams?.element as string | undefined;
+			const ref = toolCall.rawParams?.ref as string | undefined;
+			channelAction = { type: 'scroll', element: element || ref, ref };
+			this._addAction({
+				timestamp,
+				type: 'scroll',
+				description: element ? `Scrolled to element: ${element}` : 'Scrolled page down',
+				element: element || ref,
+			});
 		}
 
 		// Execute action via IPC if we have one

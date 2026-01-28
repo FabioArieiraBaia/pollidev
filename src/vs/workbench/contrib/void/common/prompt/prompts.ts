@@ -117,7 +117,7 @@ ${searchReplaceBlockTemplate}
 
 2. The ORIGINAL code in each SEARCH/REPLACE block must EXACTLY match lines in the original file. Do not add or remove any whitespace or comments from the original code.
 
-3. Each ORIGINAL text must be large enough to uniquely identify the change. However, bias towards writing as little as possible.
+3. Each ORIGINAL text must be large enough to uniquely identify the change in the file. However, bias towards writing as little as possible.
 
 4. Each ORIGINAL text must be DISJOINT from all other ORIGINAL text.
 
@@ -413,6 +413,14 @@ export const builtinTools: {
 		name: 'browser_show',
 		description: `Show the browser window and bring it to the front. Use this when you need the user to see the browser (e.g., for login or QR code).`,
 		params: {}
+	},
+	browser_scroll: {
+		name: 'browser_scroll',
+		description: `Scroll the page or a specific element.`,
+		params: {
+			element: { description: 'Human-readable description of the element to scroll' },
+			ref: { description: 'Element reference from the page snapshot' }
+		}
 	}
 
 	// go_to_definition
@@ -762,36 +770,30 @@ Here's an example of a good code block:\n${chatSuggestionDiffExample}`)
 	})()
 	
 	if (hasBrowserTools && (mode === 'agent' || mode === 'multi-agent')) {
-		details.push(`**BROWSER AUTOMATION AVAILABLE**: You HAVE ACCESS to browser automation tools via MCP (cursor-ide-browser). You CAN navigate, interact with web pages, and gather information using these tools. When the user asks you to navigate, browse, or interact with a website, you MUST use these browser tools.`)
-		details.push(`Available browser tools:
-- \`mcp_cursor-ide-browser_browser_navigate\`: Navigate to a URL
-- \`mcp_cursor-ide-browser_browser_click\`: Click on an element (use element reference from snapshot)
-- \`mcp_cursor-ide-browser_browser_type\`: Type text into an editable element
-- \`mcp_cursor-ide-browser_browser_snapshot\`: Take an accessibility snapshot of the current page (fast, recommended)
-- \`mcp_cursor-ide-browser_browser_take_screenshot\`: Take a full screenshot of the page
-- \`mcp_cursor-ide-browser_browser_hover\`: Hover over an element
-- \`mcp_cursor-ide-browser_browser_wait_for\`: Wait for text to appear or disappear
-- \`mcp_cursor-ide-browser_browser_select_option\`: Select an option in a dropdown
-- \`mcp_cursor-ide-browser_browser_press_key\`: Press a key on the keyboard
+		details.push(`**ADVANCED BROWSER AUTOMATION (POLLIBOT MODE)**: You are an elite web automation agent. You have a PERSISTENT browser (logins for Facebook, WhatsApp, and Gmail are saved). You must use it to perform tasks with maximum autonomy.`)
+		details.push(`**CORE BROWSER TOOLS**:
+- \`browser_navigate\`: Go to a URL.
+- \`browser_snapshot\`: RETURNS YOUR VISION. It gives you an **Accessibility Tree** with unique references like \`[ref=e12]\`. This is much better than raw HTML.
+- \`browser_click\`: Click an element using its \`ref\` (e.g., "e12").
+- \`browser_type\`: Type text into an element using its \`ref\`.
+- \`browser_show\`: BRING WINDOW TO FRONT. Use this when you need the user to scan a WhatsApp QR Code or solve a Captcha.
+- \`browser_wait_for\`: Wait for text or page state.
+- \`browser_scroll\`: Scroll the page or an element if you can't find what you're looking for.
 
-**CRITICAL RULES FOR USING THE BROWSER:**
-1. Always take a snapshot BEFORE any action to see the current state: \`mcp_cursor-ide-browser_browser_snapshot\`
-2. Use the snapshot to find element references (\`ref\`) for clicks and types
-3. After each action (click, type, navigate), wait a moment and take another snapshot to verify the result
-4. The user can see ALL your browser actions in real-time in the Shared Browser panel - be descriptive about what you're doing and why
-5. If an action fails, take a snapshot to see the error state
-6. Use screenshots for full page captures when needed for context
-7. Always explain your browser actions clearly - describe what you're clicking, typing, or navigating to
+**THE MASTER WORKFLOW:**
+1. **NAVIGATE**: Go to the website.
+2. **SNAPSHOT**: Take a snapshot immediately. Read the tree to find interactive elements.
+3. **IDENTIFY**: Look for roles like \`textbox\`, \`button\`, or \`link\`. 
+   - *Example*: For Facebook, look for a textbox named "No que você está pensando?".
+   - *Example*: For WhatsApp, look for a textbox named "Mensagem".
+4. **ACT**: Use the \`ref\` from the tree (e.g., \`browser_click(ref="e5")\`).
+5. **VERIFY**: Always take a new snapshot after an action to confirm success.
 
-**BROWSER WORKFLOW:**
-1. User asks you to do something on a website
-2. Navigate to the URL (if not already there): \`mcp_cursor-ide-browser_browser_navigate\`
-3. Take a snapshot to see the page: \`mcp_cursor-ide-browser_browser_snapshot\`
-4. Analyze the snapshot to find the element you need (look for the \`ref\` field)
-5. Perform the action (click/type) using the element's \`ref\`
-6. Take another snapshot to verify the result
-7. Continue until task is complete
-8. Report what you accomplished with the browser`)
+**CRITICAL RULES:**
+- **WhatsApp**: If you see "QR Code" in the snapshot tree, call \`browser_show()\` and ask the user to scan it.
+- **Facebook**: If fields are missing, the page might still be loading. Wait or Scroll.
+- **Persistence**: Sessions are saved. If you see a "Log Out" button, you are already logged in! Do not try to login again.
+- **Smart Clicking**: If a click fails, try to hover first or wait.`)
 	}
 
 	details.push(`Do not make things up or use information not provided in the system information, tools, or user queries.`)

@@ -38,6 +38,7 @@ export const approvalTypeOfBuiltinToolName: Partial<{ [T in BuiltinToolName]?: '
 	'browser_select_option': 'browser',
 	'browser_wait_for': 'browser',
 	'browser_show': 'browser',
+	'browser_scroll': 'browser',
 }
 
 
@@ -83,6 +84,7 @@ export type BuiltinToolCallParams = {
 	'browser_select_option': { element: string, ref: string, values: string[] },
 	'browser_wait_for': { text?: string, textGone?: string, time?: number },
 	'browser_show': {},
+	'browser_scroll': { element?: string, ref?: string },
 }
 
 // RESULT OF TOOL CALL
@@ -120,6 +122,7 @@ export type BuiltinToolResultType = {
 	'browser_select_option': { success: boolean },
 	'browser_wait_for': { success: boolean },
 	'browser_show': { success: boolean },
+	'browser_scroll': { success: boolean },
 }
 
 

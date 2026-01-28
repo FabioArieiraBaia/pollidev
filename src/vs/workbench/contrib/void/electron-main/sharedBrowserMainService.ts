@@ -60,11 +60,15 @@ export class SharedBrowserMainService extends Disposable implements ISharedBrows
 			show: true, // Sempre visível
 			title: 'PolliBot - Navegador de Automação',
 			webPreferences: {
+				partition: 'persist:pollidev-automation', // Mantém logins e senhas salvos
 				nodeIntegration: false,
 				contextIsolation: true,
 				sandbox: false // Necessário para algumas automações avançadas
 			},
 		});
+
+		// Identidade de Chrome moderno para evitar bloqueios (WhatsApp, Facebook, etc)
+		this.browserWindow.webContents.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36');
 
 		// Marcar para permitir navegação no app.ts
 		(this.browserWindow.webContents as any).isAgentAutomation = true;
@@ -111,8 +115,13 @@ export class SharedBrowserMainService extends Disposable implements ISharedBrows
 
 	async show(): Promise<void> {
 		if (this.browserWindow) {
+			if (this.browserWindow.isMinimized()) this.browserWindow.restore();
 			this.browserWindow.show();
 			this.browserWindow.focus();
+			// Forçar para a frente com prioridade máxima temporária
+			this.browserWindow.setAlwaysOnTop(true, 'screen-saver');
+			this.browserWindow.setAlwaysOnTop(false);
+			this.browserWindow.moveTop();
 		}
 	}
 
@@ -124,8 +133,11 @@ export class SharedBrowserMainService extends Disposable implements ISharedBrows
 		const webContents = this.browserWindow!.webContents;
 		
 		// SEMPRE focar e mostrar a janela antes de qualquer ação
+		if (this.browserWindow!.isMinimized()) this.browserWindow!.restore();
 		this.browserWindow!.show();
 		this.browserWindow!.focus();
+		this.browserWindow!.setAlwaysOnTop(true);
+		this.browserWindow!.setAlwaysOnTop(false);
 
 		switch (action.type) {
 			case 'navigate':
@@ -138,39 +150,55 @@ export class SharedBrowserMainService extends Disposable implements ISharedBrows
 				if (clickTarget) {
 					return await webContents.executeJavaScript(`
 						(async function() {
-							const target = "${clickTarget}";
+							const target = ${JSON.stringify(clickTarget)};
 							const element = document.querySelector('[data-void-ref="' + target + '"]') || 
 											document.querySelector('[data-ref="' + target + '"]') || 
 											document.querySelector(target);
 							if (element) {
 								element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-								await new Promise(r => setTimeout(r, 300)); // Esperar scroll
+								await new Promise(r => setTimeout(r, 300));
 								
 								element.focus();
 								
-								// Simular clique real ultra-robusto
 								const rect = element.getBoundingClientRect();
 								const x = rect.left + rect.width / 2;
 								const y = rect.top + rect.height / 2;
 
-								const mouseEvents = ['mouseenter', 'mouseover', 'mousedown', 'mouseup', 'click'];
-								mouseEvents.forEach(name => {
-									const event = new MouseEvent(name, {
+								// Sequência completa de interação humana
+								const events = [
+									{ type: 'mousemove', params: { clientX: x, clientY: y } },
+									{ type: 'mouseenter', params: { clientX: x, clientY: y } },
+									{ type: 'mouseover', params: { clientX: x, clientY: y } },
+									{ type: 'mousedown', params: { clientX: x, clientY: y, buttons: 1 } },
+									{ type: 'mouseup', params: { clientX: x, clientY: y, buttons: 1 } },
+									{ type: 'click', params: { clientX: x, clientY: y, buttons: 1 } }
+								];
+
+								events.forEach(e => {
+									const ev = new MouseEvent(e.type, {
 										bubbles: true,
 										cancelable: true,
 										view: window,
-										clientX: x,
-										clientY: y,
-										buttons: 1
+										...e.params
 									});
-									element.dispatchEvent(event);
+									element.dispatchEvent(ev);
 								});
 								
-								// Alguns sites (FB) precisam de focus específico
-								element.dispatchEvent(new Event('focus', { bubbles: true }));
+								// Trigger native click just in case
+								if (typeof element.click === 'function') element.click();
 								
 								return { success: true, message: 'Clicked on ' + target };
 							}
+							
+							// Fallback: Tentar encontrar por texto se falhar o seletor/ref
+							const allElements = document.querySelectorAll('button, a, div, span');
+							for (const el of allElements) {
+								if (el.innerText === target || el.getAttribute('aria-label') === target) {
+									el.click();
+									return { success: true, message: 'Clicked by text match: ' + target };
+								}
+							}
+
 							return { success: false, message: 'Element not found: ' + target };
 						})()
 					`);
@@ -181,7 +209,7 @@ export class SharedBrowserMainService extends Disposable implements ISharedBrows
 				if (typeTarget && action.text !== undefined) {
 					return await webContents.executeJavaScript(`
 						(async function() {
-							const target = "${typeTarget}";
+							const target = ${JSON.stringify(typeTarget)};
 							const text = ${JSON.stringify(action.text)};
 							const element = document.querySelector('[data-void-ref="' + target + '"]') || 
 											document.querySelector('[data-ref="' + target + '"]') || 
@@ -255,8 +283,12 @@ export class SharedBrowserMainService extends Disposable implements ISharedBrows
 				break;
 			case 'press_key':
 				if (action.key) {
-					await webContents.sendInputEvent({ type: 'keyDown', viewModel: action.key } as any);
-					await webContents.sendInputEvent({ type: 'keyUp', viewModel: action.key } as any);
+					// Electron usa keyCode para teclas como 'Enter', 'Tab', etc.
+					await webContents.sendInputEvent({ type: 'keyDown', keyCode: action.key } as any);
+					if (action.key.length === 1) {
+						await webContents.sendInputEvent({ type: 'char', keyCode: action.key } as any);
+					}
+					await webContents.sendInputEvent({ type: 'keyUp', keyCode: action.key } as any);
 				}
 				break;
 			case 'select_option':
@@ -300,6 +332,27 @@ export class SharedBrowserMainService extends Disposable implements ISharedBrows
 				break;
 			case 'screenshot':
 				return await this.captureSnapshot();
+			case 'scroll':
+				const scrollTarget = action.ref || action.element;
+				if (scrollTarget) {
+					await webContents.executeJavaScript(`
+						(function() {
+							const target = "${scrollTarget}";
+							const element = document.querySelector('[data-void-ref="' + target + '"]') || 
+											document.querySelector('[data-ref="' + target + '"]') || 
+											document.querySelector(target);
+							if (element) {
+								element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+								return true;
+							}
+							return false;
+						})()
+					`);
+				} else {
+					// Scroll da página se não houver alvo
+					await webContents.executeJavaScript(`window.scrollBy({ top: 500, behavior: 'smooth' });`);
+				}
+				break;
 			case 'snapshot':
 				return await this.getSnapshot();
 			default:
@@ -387,74 +440,103 @@ export class SharedBrowserMainService extends Disposable implements ISharedBrows
 
 	async getSnapshot(): Promise<any> {
 		if (!this.browserWindow || this.browserWindow.isDestroyed()) {
-			throw new Error('Browser window is not open');
+			return { error: 'Browser window is not open' };
 		}
 
-		// Implementação inspirada no Clawdbot: extração de árvore de acessibilidade simplificada com refs
-		const snapshot = await this.browserWindow.webContents.executeJavaScript(`
-			(function() {
-				const INTERACTIVE_ROLES = new Set([
-					'button', 'link', 'textbox', 'checkbox', 'radio', 'combobox', 
-					'listbox', 'menuitem', 'option', 'searchbox', 'slider', 'spinbutton', 
-					'switch', 'tab', 'treeitem', 'input', 'select', 'textarea'
-				]);
+		try {
+			// Implementação aprimorada: extração de árvore de acessibilidade simplificada com refs
+			const snapshot = await this.browserWindow.webContents.executeJavaScript(`
+				(function() {
+					try {
+						const INTERACTIVE_ROLES = new Set([
+							'button', 'link', 'textbox', 'checkbox', 'radio', 'combobox', 
+							'listbox', 'menuitem', 'option', 'searchbox', 'slider', 'spinbutton', 
+							'switch', 'tab', 'treeitem', 'input', 'select', 'textarea', 'gridcell'
+						]);
 
-				let refCounter = 0;
-				const elementMap = new Map();
+						let refCounter = 0;
 
-				function simplifyNode(node, depth = 0) {
-					if (!node || depth > 10) return null;
+						function simplifyNode(node, depth = 0) {
+							if (!node || depth > 20) return null; // Aumentada a profundidade
 
-					const role = node.getAttribute?.('role') || node.tagName?.toLowerCase();
-					if (!role) return null;
+							let role = (node.getAttribute ? node.getAttribute('role') : null) || node.tagName?.toLowerCase();
+							if (!role && node.nodeType === 3) role = 'text';
+							if (!role) return null;
 
-					// Pular elementos de script/style
-					if (role === 'script' || role === 'style' || role === 'meta' || role === 'head') return null;
+							// Pular elementos inúteis e invisíveis rapidamente
+							if (['script', 'style', 'meta', 'head', 'noscript', 'link'].includes(role)) return null;
+							
+							// Verificar visibilidade se não for nó de texto
+							if (node.nodeType !== 3) {
+								const style = window.getComputedStyle(node);
+								if (style.display === 'none' || style.visibility === 'hidden') return null;
+							}
 
-					const name = node.getAttribute?.('aria-label') || 
-								 node.getAttribute?.('name') || 
-								 node.getAttribute?.('placeholder') ||
-								 (node.innerText || '').trim().substring(0, 100);
+							let name = '';
+							if (node.nodeType === 3) {
+								name = node.textContent.trim();
+							} else {
+								name = node.getAttribute?.('aria-label') || 
+									   node.getAttribute?.('placeholder') ||
+									   node.getAttribute?.('title') ||
+									   node.getAttribute?.('name') ||
+									   node.getAttribute?.('alt') ||
+									   (node.innerText ? node.innerText.split('\\n')[0] : '');
+							}
+							name = (name || '').trim().substring(0, 200);
 
-					const isInteractive = INTERACTIVE_ROLES.has(role) || 
-										 (node.tagName === 'INPUT' || node.tagName === 'BUTTON' || node.tagName === 'A' || node.tagName === 'SELECT');
+							const isContentEditable = node.contentEditable === 'true' || node.getAttribute?.('contenteditable') === 'true';
+							const style = node.nodeType !== 3 ? window.getComputedStyle(node) : {};
+							const hasPointer = style.cursor === 'pointer';
+							
+							const isInteractive = INTERACTIVE_ROLES.has(role) || 
+												 (['INPUT', 'BUTTON', 'A', 'SELECT', 'TEXTAREA'].includes(node.tagName)) ||
+												 (node.onclick != null || hasPointer || isContentEditable);
 
-					const ref = isInteractive ? 'e' + (++refCounter) : null;
-					
-					if (ref) {
-						node.setAttribute('data-void-ref', ref);
-					}
+							let ref = null;
+							if (isInteractive || role === 'img' || role === 'image') {
+								ref = 'e' + (++refCounter);
+								node.setAttribute('data-void-ref', ref);
+							}
 
-					const children = [];
-					for (const child of node.children || []) {
-						const simplifiedChild = simplifyNode(child, depth + 1);
-						if (simplifiedChild) {
-							children.push(simplifiedChild);
+							const children = [];
+							// Usar childNodes para capturar nós de texto
+							const nodesToProcess = node.childNodes || [];
+							for (let i = 0; i < nodesToProcess.length; i++) {
+								const simplifiedChild = simplifyNode(nodesToProcess[i], depth + 1);
+								if (simplifiedChild) children.push(simplifiedChild);
+							}
+
+							// Se for um nó de texto útil, ou tiver ref, ou tiver filhos úteis, retorna
+							if (ref || (node.nodeType === 3 && name.length > 0) || children.length > 0) {
+								return {
+									role,
+									name: name || undefined,
+									ref: ref || undefined,
+									isInteractive: isInteractive || undefined,
+									children: children.length > 0 ? children : undefined
+								};
+							}
+
+							return null;
 						}
+
+						return {
+							url: window.location.href,
+							title: document.title,
+							tree: simplifyNode(document.body),
+							timestamp: Date.now()
+						};
+					} catch (e) {
+						return { error: e.message };
 					}
+				})();
+			`);
 
-					// Se não for interativo e não tiver filhos úteis, e não tiver texto, ignorar (compactação)
-					if (!isInteractive && children.length === 0 && !name) return null;
-
-					return {
-						role,
-						name,
-						ref,
-						isInteractive,
-						children: children.length > 0 ? children : undefined
-					};
-				}
-
-				const tree = simplifyNode(document.body);
-				return {
-					url: window.location.href,
-					title: document.title,
-					tree,
-					timestamp: Date.now()
-				};
-			})();
-		`);
-
-		return snapshot;
+			return snapshot;
+		} catch (error) {
+			console.error('[SharedBrowserMainService] getSnapshot error:', error);
+			return { error: String(error) };
+		}
 	}
 }

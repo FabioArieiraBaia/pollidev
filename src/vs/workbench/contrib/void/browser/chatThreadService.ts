@@ -1076,37 +1076,55 @@ class ChatThreadService extends Disposable implements IChatThreadService {
 
 	async abortRunning(threadId: string) {
 		const thread = this.state.allThreads[threadId]
-		if (!thread) return // should never happen
+		if (!thread) return;
 
-		// add assistant message
-		if (this.streamState[threadId]?.isRunning === 'LLM') {
-			const { displayContentSoFar, reasoningSoFar, toolCallSoFar } = this.streamState[threadId].llmInfo
-			this._addMessageToThread(threadId, { role: 'assistant', displayContent: displayContentSoFar, reasoning: reasoningSoFar, anthropicReasoning: null })
-			if (toolCallSoFar) this._addMessageToThread(threadId, { role: 'interrupted_streaming_tool', name: toolCallSoFar.name, mcpServerName: this._computeMCPServerOfToolName(toolCallSoFar.name) })
+		const currentStreamState = this.streamState[threadId];
+		if (!currentStreamState) return;
+
+		this.logService.info(`[ChatThreadService] Aborting thread ${threadId}. Current status: ${currentStreamState.isRunning}`);
+
+		// Capturar o interruptor antes de limpar o estado
+		const interruptPromise = currentStreamState.interrupt;
+
+		// 1. Limpar o estado de stream IMEDIATAMENTE para liberar a UI
+		this._setStreamState(threadId, undefined);
+
+		// 2. Processar mensagens de interrupção em background
+		try {
+			if (currentStreamState.isRunning === 'LLM') {
+				const { displayContentSoFar, reasoningSoFar, toolCallSoFar } = currentStreamState.llmInfo;
+				this._addMessageToThread(threadId, { role: 'assistant', displayContent: displayContentSoFar, reasoning: reasoningSoFar, anthropicReasoning: null });
+				if (toolCallSoFar) this._addMessageToThread(threadId, { role: 'interrupted_streaming_tool', name: toolCallSoFar.name, mcpServerName: this._computeMCPServerOfToolName(toolCallSoFar.name) });
+			}
+			else if (currentStreamState.isRunning === 'tool') {
+				const { toolName, toolParams, id, content: content_, rawParams, mcpServerName } = currentStreamState.toolInfo;
+				const content = content_ || this.toolErrMsgs.interrupted;
+				this._updateLatestTool(threadId, { role: 'tool', name: toolName, params: toolParams, id, content, rawParams, type: 'rejected', result: null, mcpServerName });
+			}
+			else if (currentStreamState.isRunning === 'awaiting_user') {
+				this.rejectLatestToolRequest(threadId);
+			}
+
+			this._addUserCheckpoint({ threadId });
+		} catch (e) {
+			this.logService.error(`[ChatThreadService] Error while cleaning up aborted thread: ${e}`);
 		}
-		// add tool that's running
-		else if (this.streamState[threadId]?.isRunning === 'tool') {
-			const { toolName, toolParams, id, content: content_, rawParams, mcpServerName } = this.streamState[threadId].toolInfo
-			const content = content_ || this.toolErrMsgs.interrupted
-			this._updateLatestTool(threadId, { role: 'tool', name: toolName, params: toolParams, id, content, rawParams, type: 'rejected', result: null, mcpServerName })
+
+		// 3. Executar interrupção real sem bloquear a thread do VS Code
+		if (interruptPromise && interruptPromise !== 'not_needed') {
+			// Não damos await aqui para evitar que um travamento na interrupção bloqueie a UI
+			Promise.race([
+				interruptPromise,
+				new Promise<null>(res => setTimeout(() => res(null), 3000)) // Timeout de 3s para desistir da interrupção
+			]).then(interrupt => {
+				if (typeof interrupt === 'function') {
+					this.logService.info(`[ChatThreadService] Calling interrupt function for thread ${threadId}`);
+					interrupt();
+				}
+			}).catch(err => {
+				this.logService.error(`[ChatThreadService] Failed to execute interrupt for thread ${threadId}: ${err}`);
+			});
 		}
-		// reject the tool for the user if relevant
-		else if (this.streamState[threadId]?.isRunning === 'awaiting_user') {
-			this.rejectLatestToolRequest(threadId)
-		}
-		else if (this.streamState[threadId]?.isRunning === 'idle') {
-			// do nothing
-		}
-
-		this._addUserCheckpoint({ threadId })
-
-		// interrupt any effects
-		const interrupt = await this.streamState[threadId]?.interrupt
-		if (typeof interrupt === 'function')
-			interrupt()
-
-
-		this._setStreamState(threadId, undefined)
 	}
 
 
@@ -1600,6 +1618,9 @@ class ChatThreadService extends Disposable implements IChatThreadService {
 
 		// tool use loop
 		while (shouldSendAnotherMessage) {
+			// Verificação de aborto no início do loop
+			if (!this.streamState[threadId]) return;
+
 			// false by default each iteration
 			shouldSendAnotherMessage = false
 			isRunningWhenEnd = undefined
@@ -1626,7 +1647,7 @@ class ChatThreadService extends Disposable implements IChatThreadService {
 				chatMode
 			})
 
-			if (interruptedWhenIdle) {
+			if (interruptedWhenIdle || !this.streamState[threadId]) {
 				this._setStreamState(threadId, undefined)
 				return
 			}
@@ -1634,6 +1655,9 @@ class ChatThreadService extends Disposable implements IChatThreadService {
 			let shouldRetryLLM = true
 			let nAttempts = 0
 			while (shouldRetryLLM) {
+				// Verificação de aborto antes de cada tentativa
+				if (!this.streamState[threadId]) return;
+
 				shouldRetryLLM = false
 				nAttempts += 1
 
@@ -1679,9 +1703,8 @@ class ChatThreadService extends Disposable implements IChatThreadService {
 				this._setStreamState(threadId, { isRunning: 'LLM', llmInfo: { displayContentSoFar: '', reasoningSoFar: '', toolCallSoFar: null }, interrupt: Promise.resolve(() => this._llmMessageService.abort(llmCancelToken)) })
 				const llmRes = await messageIsDonePromise // wait for message to complete
 
-				// if something else started running in the meantime
-				if (this.streamState[threadId]?.isRunning !== 'LLM') {
-					// console.log('Chat thread interrupted by a newer chat thread', this.streamState[threadId]?.isRunning)
+				// if something else started running in the meantime or thread aborted
+				if (!this.streamState[threadId] || this.streamState[threadId]?.isRunning !== 'LLM') {
 					return
 				}
 
@@ -1724,20 +1747,21 @@ class ChatThreadService extends Disposable implements IChatThreadService {
 
 				this._setStreamState(threadId, { isRunning: 'idle', interrupt: 'not_needed' }) // just decorative for clarity
 
-				// call tool if there is one
-				if (toolCall) {
+				// call tool if there is one and not aborted
+				if (toolCall && this.streamState[threadId]) {
 					const mcpTools = this._mcpService.getMCPTools()
 					const mcpTool = mcpTools?.find(t => t.name === toolCall.name)
 
 					const { awaitingUserApproval, interrupted } = await this._runToolCall(threadId, toolCall.name, toolCall.id, mcpTool?.mcpServerName, { preapproved: false, unvalidatedToolParams: toolCall.rawParams })
-					if (interrupted) {
+					if (interrupted || !this.streamState[threadId]) {
 						this._setStreamState(threadId, undefined)
 						return
 					}
 					if (awaitingUserApproval) { isRunningWhenEnd = 'awaiting_user' }
 					else { shouldSendAnotherMessage = true }
 
-					this._setStreamState(threadId, { isRunning: 'idle', interrupt: 'not_needed' }) // just decorative, for clarity
+					if (this.streamState[threadId])
+						this._setStreamState(threadId, { isRunning: 'idle', interrupt: 'not_needed' }) // just decorative, for clarity
 				}
 
 			} // end while (attempts)

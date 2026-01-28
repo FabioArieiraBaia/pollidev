@@ -27,6 +27,7 @@ suite('Shared Browser Service Test', () => {
 		error: () => {},
 		trace: () => {},
 		warn: () => {},
+		debug: () => {},
 	};
 
 	// Mock do serviço de main process (IPC)
@@ -44,8 +45,11 @@ suite('Shared Browser Service Test', () => {
 				html: '',
 				cspSource: 'vscode-webview://',
 				onDidReceiveMessage: () => ({ dispose: () => {} }),
+				onMessage: () => ({ dispose: () => {} }),
+				postMessage: () => {},
 			},
 			isDisposed: false,
+			onWillDispose: () => ({ dispose: () => {} }),
 		}),
 		revealWebview: () => {},
 		iconManager: {} as any,
@@ -68,11 +72,9 @@ suite('Shared Browser Service Test', () => {
 		detectPatterns: () => [{ type: 'unknown' }],
 	};
 
-	test('service opens automatically when browser tool is called', async () => {
-		// Import dinâmico para evitar problemas de inicialização
+	const createService = async () => {
 		const { SharedBrowserService } = await import('../../common/sharedBrowserService.js');
-		
-		const service = new SharedBrowserService(
+		return new SharedBrowserService(
 			mockLogService as any,
 			mockSettingsService as any,
 			mockMainProcessService as any,
@@ -80,6 +82,10 @@ suite('Shared Browser Service Test', () => {
 			mockDomAnalysisService as any,
 			mockPagePatternDetector as any
 		);
+	};
+
+	test('service opens automatically when browser tool is called', async () => {
+		const service = await createService();
 		testDisposables.add(service);
 
 		// Verifica que o serviço inicia fechado
@@ -105,16 +111,7 @@ suite('Shared Browser Service Test', () => {
 	});
 
 	test('service registers navigate action correctly', async () => {
-		const { SharedBrowserService } = await import('../../common/sharedBrowserService.js');
-		
-		const service = new SharedBrowserService(
-			mockLogService as any,
-			mockSettingsService as any,
-			mockMainProcessService as any,
-			mockWebviewWorkbenchService as any,
-			mockDomAnalysisService as any,
-			mockPagePatternDetector as any
-		);
+		const service = await createService();
 		testDisposables.add(service);
 
 		service.open();
@@ -141,16 +138,7 @@ suite('Shared Browser Service Test', () => {
 	});
 
 	test('service registers click action correctly', async () => {
-		const { SharedBrowserService } = await import('../../common/sharedBrowserService.js');
-		
-		const service = new SharedBrowserService(
-			mockLogService as any,
-			mockSettingsService as any,
-			mockMainProcessService as any,
-			mockWebviewWorkbenchService as any,
-			mockDomAnalysisService as any,
-			mockPagePatternDetector as any
-		);
+		const service = await createService();
 		testDisposables.add(service);
 
 		service.open();
@@ -180,16 +168,7 @@ suite('Shared Browser Service Test', () => {
 	});
 
 	test('service registers type action correctly', async () => {
-		const { SharedBrowserService } = await import('../../common/sharedBrowserService.js');
-		
-		const service = new SharedBrowserService(
-			mockLogService as any,
-			mockSettingsService as any,
-			mockMainProcessService as any,
-			mockWebviewWorkbenchService as any,
-			mockDomAnalysisService as any,
-			mockPagePatternDetector as any
-		);
+		const service = await createService();
 		testDisposables.add(service);
 
 		service.open();
@@ -219,16 +198,7 @@ suite('Shared Browser Service Test', () => {
 	});
 
 	test('service updates snapshot when result contains image data', async () => {
-		const { SharedBrowserService } = await import('../../common/sharedBrowserService.js');
-		
-		const service = new SharedBrowserService(
-			mockLogService as any,
-			mockSettingsService as any,
-			mockMainProcessService as any,
-			mockWebviewWorkbenchService as any,
-			mockDomAnalysisService as any,
-			mockPagePatternDetector as any
-		);
+		const service = await createService();
 		testDisposables.add(service);
 
 		service.open();
@@ -250,7 +220,6 @@ suite('Shared Browser Service Test', () => {
 		await service.handleBrowserToolCall(toolCall);
 
 		const state = service.state;
-		// O resultado pode estar em result.content[0].image.data
 		const snapshotValue = (toolCall.result as any)?.content?.[0]?.image?.data || mockImageData;
 		assert.strictEqual(state.currentSnapshot, snapshotValue, 'Snapshot should be updated with image data');
 		assert.strictEqual(state.actionHistory.length, 1, 'Action history should have one action');
@@ -258,16 +227,7 @@ suite('Shared Browser Service Test', () => {
 	});
 
 	test('service fires update events when state changes', async () => {
-		const { SharedBrowserService } = await import('../../common/sharedBrowserService.js');
-		
-		const service = new SharedBrowserService(
-			mockLogService as any,
-			mockSettingsService as any,
-			mockMainProcessService as any,
-			mockWebviewWorkbenchService as any,
-			mockDomAnalysisService as any,
-			mockPagePatternDetector as any
-		);
+		const service = await createService();
 		testDisposables.add(service);
 
 		let updateCount = 0;
@@ -277,7 +237,7 @@ suite('Shared Browser Service Test', () => {
 		testDisposables.add(disposable);
 
 		// Abrir deve disparar evento
-		service.open();
+		await service.open();
 		assert.strictEqual(updateCount, 1, 'Should fire event when opening');
 
 		// Adicionar ação deve disparar evento
@@ -296,21 +256,12 @@ suite('Shared Browser Service Test', () => {
 		assert.strictEqual(updateCount, 2, 'Should fire event when handling tool call');
 
 		// Fechar deve disparar evento
-		service.close();
+		await service.close();
 		assert.strictEqual(updateCount, 3, 'Should fire event when closing');
 	});
 
 	test('service limits action history to 100 actions', async () => {
-		const { SharedBrowserService } = await import('../../common/sharedBrowserService.js');
-		
-		const service = new SharedBrowserService(
-			mockLogService as any,
-			mockSettingsService as any,
-			mockMainProcessService as any,
-			mockWebviewWorkbenchService as any,
-			mockDomAnalysisService as any,
-			mockPagePatternDetector as any
-		);
+		const service = await createService();
 		testDisposables.add(service);
 
 		service.open();
@@ -333,12 +284,10 @@ suite('Shared Browser Service Test', () => {
 
 		const state = service.state;
 		assert.strictEqual(state.actionHistory.length, 100, 'Action history should be limited to 100 actions');
-		// A primeira ação (índice 0) deve ser removida
 		assert.ok(
 			!state.actionHistory[0].element?.includes('button-0'),
 			'First action should be removed'
 		);
-		// A última ação deve ser a mais recente
 		assert.ok(
 			state.actionHistory[state.actionHistory.length - 1].element?.includes('button-100'),
 			'Last action should be the most recent'
@@ -346,16 +295,7 @@ suite('Shared Browser Service Test', () => {
 	});
 
 	test('service handles all browser tool types', async () => {
-		const { SharedBrowserService } = await import('../../common/sharedBrowserService.js');
-		
-		const service = new SharedBrowserService(
-			mockLogService as any,
-			mockSettingsService as any,
-			mockMainProcessService as any,
-			mockWebviewWorkbenchService as any,
-			mockDomAnalysisService as any,
-			mockPagePatternDetector as any
-		);
+		const service = await createService();
 		testDisposables.add(service);
 
 		service.open();
@@ -377,8 +317,8 @@ suite('Shared Browser Service Test', () => {
 				id: 'test-id',
 				content: '',
 				params: {},
-			result: { content: [{ type: 'text', text: '' }] } as any,
-			rawParams: toolType.expectedType === 'navigate' ? { url: 'https://example.com' } : {},
+				result: { content: [{ type: 'text', text: '' }] } as any,
+				rawParams: toolType.expectedType === 'navigate' ? { url: 'https://example.com' } : {},
 				mcpServerName: 'cursor-ide-browser',
 			};
 			await service.handleBrowserToolCall(toolCall);
@@ -387,7 +327,6 @@ suite('Shared Browser Service Test', () => {
 		const state = service.state;
 		assert.strictEqual(state.actionHistory.length, toolTypes.length, 'All tool types should be registered');
 		
-		// Verifica que todos os tipos estão presentes
 		const registeredTypes = state.actionHistory.map((a: any) => a.type);
 		for (const toolType of toolTypes) {
 			assert.ok(
@@ -398,21 +337,11 @@ suite('Shared Browser Service Test', () => {
 	});
 
 	test('service clears state when closed', async () => {
-		const { SharedBrowserService } = await import('../../common/sharedBrowserService.js');
-		
-		const service = new SharedBrowserService(
-			mockLogService as any,
-			mockSettingsService as any,
-			mockMainProcessService as any,
-			mockWebviewWorkbenchService as any,
-			mockDomAnalysisService as any,
-			mockPagePatternDetector as any
-		);
+		const service = await createService();
 		testDisposables.add(service);
 
 		service.open();
 
-		// Adiciona algumas ações
 		const toolCall: ToolMessage<'mcp_cursor-ide-browser_browser_navigate'> = {
 			role: 'tool',
 			type: 'success',
@@ -426,8 +355,7 @@ suite('Shared Browser Service Test', () => {
 		};
 		await service.handleBrowserToolCall(toolCall);
 
-		// Fecha o serviço
-		service.close();
+		await service.close();
 
 		const state = service.state;
 		assert.strictEqual(state.isActive, false, 'Service should be inactive after closing');
@@ -437,24 +365,14 @@ suite('Shared Browser Service Test', () => {
 	});
 
 	test('service state is immutable (defensive copy)', async () => {
-		const { SharedBrowserService } = await import('../../common/sharedBrowserService.js');
-		
-		const service = new SharedBrowserService(
-			mockLogService as any,
-			mockSettingsService as any,
-			mockMainProcessService as any,
-			mockWebviewWorkbenchService as any,
-			mockDomAnalysisService as any,
-			mockPagePatternDetector as any
-		);
+		const service = await createService();
 		testDisposables.add(service);
 
-		service.open();
+		await service.open();
 
 		const state1 = service.state;
 		const state2 = service.state;
 
-		// Modificar state1 não deve afetar state2 (são cópias diferentes)
 		state1.actionHistory.push({} as any);
 
 		assert.strictEqual(
@@ -464,4 +382,3 @@ suite('Shared Browser Service Test', () => {
 		);
 	});
 });
-

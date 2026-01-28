@@ -376,6 +376,12 @@ export class ToolsService implements IToolsService {
 			browser_show: (_params: RawToolParamsObj) => {
 				return {};
 			},
+			browser_scroll: (params: RawToolParamsObj) => {
+				const { element: elementUnknown, ref: refUnknown } = params;
+				const element = validateOptionalStr('element', elementUnknown) ?? undefined;
+				const ref = validateOptionalStr('ref', refUnknown) ?? undefined;
+				return { element, ref };
+			},
 
 		}
 
@@ -738,6 +744,20 @@ export class ToolsService implements IToolsService {
 				}
 				return { result: { success: false } };
 			},
+			browser_scroll: async ({ element, ref }) => {
+				await this.sharedBrowserService.open();
+				if (this.sharedBrowserMainService) {
+					await this.sharedBrowserMainService.executeAction({
+						type: 'scroll',
+						element,
+						ref,
+						timestamp: Date.now(),
+						description: element ? `Scroll to ${element}` : 'Scroll down',
+					});
+					return { result: { success: true } };
+				}
+				return { result: { success: false } };
+			},
 		}
 
 
@@ -894,6 +914,9 @@ export class ToolsService implements IToolsService {
 			},
 			browser_show: (_params, result) => {
 				return result.success ? `Successfully showed the browser window to the user.` : `Failed to show the browser window.`;
+			},
+			browser_scroll: (params, result) => {
+				return result.success ? (params.element ? `Successfully scrolled to "${params.element}"` : `Successfully scrolled the page.`) : `Failed to scroll.`;
 			},
 		}
 
