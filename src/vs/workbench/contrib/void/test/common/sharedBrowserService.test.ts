@@ -56,6 +56,18 @@ suite('Shared Browser Service Test', () => {
 		openRevivedWebview: () => ({ webview: { html: '', cspSource: '', onDidReceiveMessage: () => ({ dispose: () => {} }) }, isDisposed: false }),
 	};
 
+	// Mock do serviço de análise de DOM
+	const mockDomAnalysisService = {
+		processBrowserSnapshot: () => ({ elements: [], buttons: [], links: [], inputs: [] }),
+		flattenSnapshot: () => [],
+	};
+
+	// Mock do detector de padrões
+	const mockPagePatternDetector = {
+		detectPattern: () => ({ type: 'unknown' }),
+		detectPatterns: () => [{ type: 'unknown' }],
+	};
+
 	test('service opens automatically when browser tool is called', async () => {
 		// Import dinâmico para evitar problemas de inicialização
 		const { SharedBrowserService } = await import('../../common/sharedBrowserService.js');
@@ -64,7 +76,9 @@ suite('Shared Browser Service Test', () => {
 			mockLogService as any,
 			mockSettingsService as any,
 			mockMainProcessService as any,
-			mockWebviewWorkbenchService as any
+			mockWebviewWorkbenchService as any,
+			mockDomAnalysisService as any,
+			mockPagePatternDetector as any
 		);
 		testDisposables.add(service);
 
@@ -97,7 +111,9 @@ suite('Shared Browser Service Test', () => {
 			mockLogService as any,
 			mockSettingsService as any,
 			mockMainProcessService as any,
-			mockWebviewWorkbenchService as any
+			mockWebviewWorkbenchService as any,
+			mockDomAnalysisService as any,
+			mockPagePatternDetector as any
 		);
 		testDisposables.add(service);
 
@@ -131,7 +147,9 @@ suite('Shared Browser Service Test', () => {
 			mockLogService as any,
 			mockSettingsService as any,
 			mockMainProcessService as any,
-			mockWebviewWorkbenchService as any
+			mockWebviewWorkbenchService as any,
+			mockDomAnalysisService as any,
+			mockPagePatternDetector as any
 		);
 		testDisposables.add(service);
 
@@ -168,7 +186,9 @@ suite('Shared Browser Service Test', () => {
 			mockLogService as any,
 			mockSettingsService as any,
 			mockMainProcessService as any,
-			mockWebviewWorkbenchService as any
+			mockWebviewWorkbenchService as any,
+			mockDomAnalysisService as any,
+			mockPagePatternDetector as any
 		);
 		testDisposables.add(service);
 
@@ -205,7 +225,9 @@ suite('Shared Browser Service Test', () => {
 			mockLogService as any,
 			mockSettingsService as any,
 			mockMainProcessService as any,
-			mockWebviewWorkbenchService as any
+			mockWebviewWorkbenchService as any,
+			mockDomAnalysisService as any,
+			mockPagePatternDetector as any
 		);
 		testDisposables.add(service);
 
@@ -242,7 +264,9 @@ suite('Shared Browser Service Test', () => {
 			mockLogService as any,
 			mockSettingsService as any,
 			mockMainProcessService as any,
-			mockWebviewWorkbenchService as any
+			mockWebviewWorkbenchService as any,
+			mockDomAnalysisService as any,
+			mockPagePatternDetector as any
 		);
 		testDisposables.add(service);
 
@@ -283,7 +307,9 @@ suite('Shared Browser Service Test', () => {
 			mockLogService as any,
 			mockSettingsService as any,
 			mockMainProcessService as any,
-			mockWebviewWorkbenchService as any
+			mockWebviewWorkbenchService as any,
+			mockDomAnalysisService as any,
+			mockPagePatternDetector as any
 		);
 		testDisposables.add(service);
 
@@ -326,7 +352,9 @@ suite('Shared Browser Service Test', () => {
 			mockLogService as any,
 			mockSettingsService as any,
 			mockMainProcessService as any,
-			mockWebviewWorkbenchService as any
+			mockWebviewWorkbenchService as any,
+			mockDomAnalysisService as any,
+			mockPagePatternDetector as any
 		);
 		testDisposables.add(service);
 
@@ -376,7 +404,9 @@ suite('Shared Browser Service Test', () => {
 			mockLogService as any,
 			mockSettingsService as any,
 			mockMainProcessService as any,
-			mockWebviewWorkbenchService as any
+			mockWebviewWorkbenchService as any,
+			mockDomAnalysisService as any,
+			mockPagePatternDetector as any
 		);
 		testDisposables.add(service);
 
@@ -413,7 +443,9 @@ suite('Shared Browser Service Test', () => {
 			mockLogService as any,
 			mockSettingsService as any,
 			mockMainProcessService as any,
-			mockWebviewWorkbenchService as any
+			mockWebviewWorkbenchService as any,
+			mockDomAnalysisService as any,
+			mockPagePatternDetector as any
 		);
 		testDisposables.add(service);
 

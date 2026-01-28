@@ -17,6 +17,9 @@ export type PagePatternType =
 	| 'form'
 	| 'ecommerce'
 	| 'dashboard'
+	| 'social_feed'
+	| 'chat_interface'
+	| 'email_compose'
 	| 'documentation'
 	| 'api'
 	| 'unknown';
@@ -88,6 +91,19 @@ export class PagePatternDetector extends Disposable implements IPagePatternDetec
 
 	detectPattern(snapshot: DOMSnapshot): PagePattern {
 		try {
+			// Verificação defensiva: garantir que o snapshot é válido
+			if (!snapshot || !snapshot.elements || !Array.isArray(snapshot.elements)) {
+				this.logService.warn('[PagePatternDetector] Invalid or empty snapshot provided');
+				return {
+					type: 'unknown',
+					confidence: 0,
+					indicators: ['Invalid snapshot data'],
+					suggestedActions: [],
+					description: 'Invalid or empty page data',
+					metadata: { isValid: false },
+				};
+			}
+
 			const indicators: string[] = [];
 			let type: PagePatternType = 'unknown';
 			let confidence = 0;
@@ -98,6 +114,9 @@ export class PagePatternDetector extends Disposable implements IPagePatternDetec
 			const ecommercePattern = this._detectEcommerce(snapshot, indicators);
 			const formPattern = this._detectForm(snapshot, indicators);
 			const dashboardPattern = this._detectDashboard(snapshot, indicators);
+			const socialPattern = this._detectSocialFeed(snapshot, indicators);
+			const chatPattern = this._detectChatInterface(snapshot, indicators);
+			const emailPattern = this._detectEmailCompose(snapshot, indicators);
 			const apiPattern = this._detectAPI(snapshot, indicators);
 
 			// Determinar padrão com maior confiança
@@ -107,6 +126,9 @@ export class PagePatternDetector extends Disposable implements IPagePatternDetec
 				{ type: 'ecommerce' as PagePatternType, confidence: ecommercePattern },
 				{ type: 'form' as PagePatternType, confidence: formPattern },
 				{ type: 'dashboard' as PagePatternType, confidence: dashboardPattern },
+				{ type: 'social_feed' as PagePatternType, confidence: socialPattern },
+				{ type: 'chat_interface' as PagePatternType, confidence: chatPattern },
+				{ type: 'email_compose' as PagePatternType, confidence: emailPattern },
 				{ type: 'api' as PagePatternType, confidence: apiPattern },
 			];
 
@@ -129,10 +151,10 @@ export class PagePatternDetector extends Disposable implements IPagePatternDetec
 				suggestedActions,
 				description: this._getPatternDescription(type),
 				metadata: {
-					formCount: snapshot.forms.length,
-					buttonCount: snapshot.buttons.length,
-					inputCount: snapshot.inputs.length,
-					linkCount: snapshot.links.length,
+					formCount: (snapshot.forms || []).length,
+					buttonCount: (snapshot.buttons || []).length,
+					inputCount: (snapshot.inputs || []).length,
+					linkCount: (snapshot.links || []).length,
 				},
 			};
 		} catch (error) {
@@ -150,6 +172,11 @@ export class PagePatternDetector extends Disposable implements IPagePatternDetec
 	}
 
 	findSearchBox(elements: ElementInfo[]): ElementInfo | null {
+		// Verificação defensiva
+		if (!elements || !Array.isArray(elements)) {
+			return null;
+		}
+
 		// Procurar por input com características de busca
 		const searchPatterns = ['search', 'query', 'q', 'find', 'look'];
 		
@@ -169,6 +196,11 @@ export class PagePatternDetector extends Disposable implements IPagePatternDetec
 	}
 
 	findLoginForm(forms: FormInfo[], elements: ElementInfo[]): FormInfo | null {
+		// Verificação defensiva
+		if (!forms || !Array.isArray(forms) || !elements || !Array.isArray(elements)) {
+			return null;
+		}
+
 		for (const form of forms) {
 			// Verificar se tem campos de usuário/email e senha
 			const hasUserField = form.inputs.some(input => 
@@ -189,7 +221,10 @@ export class PagePatternDetector extends Disposable implements IPagePatternDetec
 
 	findForm(forms: FormInfo[]): FormInfo | null {
 		// Retornar o primeiro formulário válido
-		return forms.length > 0 ? forms[0] : null;
+		if (forms && Array.isArray(forms) && forms.length > 0) {
+			return forms[0];
+		}
+		return null;
 	}
 
 	suggestNextSteps(pattern: PagePattern, elements: ElementInfo[]): SuggestedAction[] {
@@ -308,6 +343,55 @@ export class PagePatternDetector extends Disposable implements IPagePatternDetec
 				break;
 			}
 
+			case 'social_feed': {
+				const postBox = elements.find(e => 
+					(e.placeholder || '').toLowerCase().includes('thinking') || 
+					(e.placeholder || '').toLowerCase().includes('pensando') ||
+					(e.ariaLabel || '').toLowerCase().includes('post')
+				);
+				if (postBox) {
+					suggestions.push({
+						type: 'click',
+						element: postBox.selector,
+						ref: postBox.ref,
+						reason: 'Click on post creation box',
+						confidence: 0.95,
+					});
+				}
+				break;
+			}
+
+			case 'chat_interface': {
+				const messageBox = elements.find(e => 
+					(e.placeholder || '').toLowerCase().includes('message') || 
+					(e.placeholder || '').toLowerCase().includes('mensagem')
+				);
+				if (messageBox) {
+					suggestions.push({
+						type: 'type',
+						element: messageBox.selector,
+						ref: messageBox.ref,
+						reason: 'Type a new message',
+						confidence: 0.9,
+					});
+				}
+				break;
+			}
+
+			case 'email_compose': {
+				const toField = elements.find(e => (e.ariaLabel || '').toLowerCase().includes('to') || (e.placeholder || '').toLowerCase().includes('para'));
+				if (toField) {
+					suggestions.push({
+						type: 'type',
+						element: toField.selector,
+						ref: toField.ref,
+						reason: 'Fill recipient email',
+						confidence: 0.9,
+					});
+				}
+				break;
+			}
+
 			default:
 				// Para padrões desconhecidos, sugerir screenshot
 				suggestions.push({
@@ -337,8 +421,8 @@ export class PagePatternDetector extends Disposable implements IPagePatternDetec
 			indicators.push('Login in URL');
 		}
 
-		// Procurar por formulário de login
-		const loginForm = this.findLoginForm(snapshot.forms, snapshot.elements);
+		// Procurar por formulário de login (safe array fallback)
+		const loginForm = this.findLoginForm(snapshot.forms || [], snapshot.elements);
 		if (loginForm) {
 			score += 0.5;
 			indicators.push('Login form detected');
@@ -348,15 +432,18 @@ export class PagePatternDetector extends Disposable implements IPagePatternDetec
 	}
 
 	private _detectSearch(snapshot: DOMSnapshot, indicators: string[]): number {
+		if (!snapshot || !snapshot.elements) return 0;
 		let score = 0;
 
-		const searchBox = this.findSearchBox(snapshot.elements);
+		const elements = snapshot.elements || [];
+
+		const searchBox = this.findSearchBox(elements);
 		if (searchBox) {
 			score += 0.6;
 			indicators.push('Search box found');
 		}
 
-		if (snapshot.elements.some(e => e.text.toLowerCase().includes('search results'))) {
+		if (elements.some(e => (e.text || '').toLowerCase().includes('search results'))) {
 			score += 0.3;
 			indicators.push('Search results detected');
 		}
@@ -365,10 +452,11 @@ export class PagePatternDetector extends Disposable implements IPagePatternDetec
 	}
 
 	private _detectEcommerce(snapshot: DOMSnapshot, indicators: string[]): number {
+		if (!snapshot || !snapshot.elements) return 0;
 		let score = 0;
 
 		const ecommerceKeywords = ['product', 'price', 'add to cart', 'buy', 'shop', 'store'];
-		const pageText = snapshot.elements.map(e => e.text.toLowerCase()).join(' ');
+		const pageText = (snapshot.elements || []).map(e => (e.text || '').toLowerCase()).join(' ');
 
 		for (const keyword of ecommerceKeywords) {
 			if (pageText.includes(keyword)) {
@@ -381,19 +469,24 @@ export class PagePatternDetector extends Disposable implements IPagePatternDetec
 	}
 
 	private _detectForm(snapshot: DOMSnapshot, indicators: string[]): number {
+		if (!snapshot) return 0;
 		let score = 0;
 
-		if (snapshot.forms.length > 0) {
+		const forms = snapshot.forms || [];
+		const inputs = snapshot.inputs || [];
+		const buttons = snapshot.buttons || [];
+
+		if (forms.length > 0) {
 			score += 0.3;
-			indicators.push(`${snapshot.forms.length} form(s) detected`);
+			indicators.push(`${forms.length} form(s) detected`);
 		}
 
-		if (snapshot.inputs.length > 2) {
+		if (inputs.length > 2) {
 			score += 0.3;
-			indicators.push(`${snapshot.inputs.length} input fields detected`);
+			indicators.push(`${inputs.length} input fields detected`);
 		}
 
-		if (snapshot.buttons.some(b => b.text.toLowerCase().includes('submit'))) {
+		if (buttons.some(b => (b.text || '').toLowerCase().includes('submit'))) {
 			score += 0.2;
 			indicators.push('Submit button found');
 		}
@@ -402,19 +495,20 @@ export class PagePatternDetector extends Disposable implements IPagePatternDetec
 	}
 
 	private _detectDashboard(snapshot: DOMSnapshot, indicators: string[]): number {
+		if (!snapshot) return 0;
 		let score = 0;
 
 		const dashboardKeywords = ['dashboard', 'overview', 'analytics', 'metrics', 'report'];
 
 		for (const keyword of dashboardKeywords) {
-			if (snapshot.title.toLowerCase().includes(keyword)) {
+			if ((snapshot.title || '').toLowerCase().includes(keyword)) {
 				score += 0.2;
 				indicators.push(`Dashboard keyword in title: ${keyword}`);
 			}
 		}
 
 		// Muitos elementos podem indicar dashboard
-		if (snapshot.elements.length > 50) {
+		if ((snapshot.elements || []).length > 50) {
 			score += 0.2;
 			indicators.push('Complex page structure');
 		}
@@ -423,16 +517,100 @@ export class PagePatternDetector extends Disposable implements IPagePatternDetec
 	}
 
 	private _detectAPI(snapshot: DOMSnapshot, indicators: string[]): number {
+		if (!snapshot || !snapshot.elements) return 0;
 		let score = 0;
 
 		const apiKeywords = ['api', 'endpoint', 'json', 'swagger', 'openapi', 'graphql'];
-		const pageText = snapshot.elements.map(e => e.text.toLowerCase()).join(' ');
+		const pageText = (snapshot.elements || []).map(e => (e.text || '').toLowerCase()).join(' ');
 
 		for (const keyword of apiKeywords) {
-			if (pageText.includes(keyword) || snapshot.url.toLowerCase().includes(keyword)) {
+			if (pageText.includes(keyword) || (snapshot.url || '').toLowerCase().includes(keyword)) {
 				score += 0.25;
 				indicators.push(`API keyword: ${keyword}`);
 			}
+		}
+
+		return Math.min(score, 1);
+	}
+
+	private _detectSocialFeed(snapshot: DOMSnapshot, indicators: string[]): number {
+		if (!snapshot || !snapshot.elements) return 0;
+		let score = 0;
+
+		const socialKeywords = ['facebook', 'linkedin', 'twitter', 'instagram', 'feed', 'post', 'timeline'];
+		const url = (snapshot.url || '').toLowerCase();
+
+		for (const keyword of socialKeywords) {
+			if (url.includes(keyword)) {
+				score += 0.4;
+				indicators.push(`Social platform detected in URL: ${keyword}`);
+			}
+		}
+
+		const postIndicators = ['thinking', 'pensando', 'share', 'compartilhar'];
+		const elements = snapshot.elements || [];
+		
+		for (const element of elements) {
+			const placeholder = (element.placeholder || '').toLowerCase();
+			if (postIndicators.some(p => placeholder.includes(p))) {
+				score += 0.5;
+				indicators.push('Post creation box detected');
+				break;
+			}
+		}
+
+		return Math.min(score, 1);
+	}
+
+	private _detectChatInterface(snapshot: DOMSnapshot, indicators: string[]): number {
+		if (!snapshot || !snapshot.elements) return 0;
+		let score = 0;
+
+		const chatKeywords = ['whatsapp', 'messenger', 'telegram', 'slack', 'discord', 'chat'];
+		const url = (snapshot.url || '').toLowerCase();
+
+		for (const keyword of chatKeywords) {
+			if (url.includes(keyword)) {
+				score += 0.5;
+				indicators.push(`Chat platform detected in URL: ${keyword}`);
+			}
+		}
+
+		const elements = snapshot.elements || [];
+		const messageBox = elements.find(e => 
+			(e.placeholder || '').toLowerCase().includes('message') || 
+			(e.placeholder || '').toLowerCase().includes('mensagem')
+		);
+
+		if (messageBox) {
+			score += 0.4;
+			indicators.push('Chat input field detected');
+		}
+
+		return Math.min(score, 1);
+	}
+
+	private _detectEmailCompose(snapshot: DOMSnapshot, indicators: string[]): number {
+		if (!snapshot || !snapshot.elements) return 0;
+		let score = 0;
+
+		const emailKeywords = ['mail', 'outlook', 'gmail', 'compose', 'escrever'];
+		const url = (snapshot.url || '').toLowerCase();
+
+		for (const keyword of emailKeywords) {
+			if (url.includes(keyword)) {
+				score += 0.3;
+				indicators.push(`Email platform detected in URL: ${keyword}`);
+			}
+		}
+
+		const elements = snapshot.elements || [];
+		const hasTo = elements.some(e => (e.ariaLabel || '').toLowerCase().includes('to') || (e.placeholder || '').toLowerCase().includes('para'));
+		const hasSubject = elements.some(e => (e.ariaLabel || '').toLowerCase().includes('subject') || (e.placeholder || '').toLowerCase().includes('assunto'));
+
+		if (hasTo && hasSubject) {
+			score += 0.6;
+			indicators.push('Email composition fields detected');
 		}
 
 		return Math.min(score, 1);
@@ -461,6 +639,9 @@ export class PagePatternDetector extends Disposable implements IPagePatternDetec
 			form: 'Form page - has input fields and submission button',
 			ecommerce: 'E-commerce page - typically for shopping',
 			dashboard: 'Dashboard/Analytics page - provides overview and metrics',
+			social_feed: 'Social media feed - typically for browsing and posting updates',
+			chat_interface: 'Chat or messaging interface',
+			email_compose: 'Email composition interface',
 			documentation: 'Documentation page - contains API or product documentation',
 			api: 'API documentation or endpoint',
 			unknown: 'Unknown page type',

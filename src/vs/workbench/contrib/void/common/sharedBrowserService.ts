@@ -63,6 +63,7 @@ export interface ISharedBrowserService {
 	readonly onDidUpdateState: Event<void>;
 	readonly onDidChangeControlMode: Event<'agent' | 'user'>;
 	open(): Promise<void>;
+	show(): Promise<void>;
 	close(): Promise<void>;
 	assumeUserControl(): Promise<void>;
 	returnToAgentControl(): Promise<void>;
@@ -102,6 +103,8 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 		@IVoidSettingsService private readonly settingsService: IVoidSettingsService,
 		@IMainProcessService private readonly mainProcessService: IMainProcessService,
 		@IWebviewWorkbenchService private readonly webviewWorkbenchService: IWebviewWorkbenchService,
+		@IDOMAnalysisService private readonly domAnalysisService: IDOMAnalysisService,
+		@IPagePatternDetector private readonly pagePatternDetector: IPagePatternDetector,
 	) {
 		super();
 		
@@ -168,28 +171,28 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 			return;
 		}
 		
-		// Se já está ativo, não fazer nada (evitar chamadas redundantes)
+		// Se já está ativo, apenas mostrar e focar
 		if (this._state.isActive) {
-			this.logService.info('[SharedBrowserService] Browser already active, skipping...');
+			this.logService.info('[SharedBrowserService] Browser already active, showing...');
+			await this.show();
 			return;
 		}
 
 		this._isOpening = true;
 		try {
-			// Criar APENAS o background browser window para automação do agente
-			// O WebviewPanel será criado apenas quando o usuário solicitar visualização
+			// Criar a janela do browser. Agora ela é criada como VISÍVEL por padrão no Main
 			try {
 				await this._sharedBrowserMainService.createBrowserWindow();
-				this.logService.info('[SharedBrowserService] Background browser window created for agent automation');
+				this.logService.info('[SharedBrowserService] Browser window created for agent automation');
 			} catch (ipcError) {
-				this.logService.debug(`[SharedBrowserService] Main process browser window creation skipped or failed: ${ipcError}`);
+				this.logService.debug(`[SharedBrowserService] Main process browser window creation failed: ${ipcError}`);
 			}
 
-			// Marcar como ativo SEM criar WebviewPanel ainda
+			// Marcar como ativo
 			this._state.isActive = true;
 			this._onDidUpdateState.fire();
 			
-			this.logService.info('[SharedBrowserService] Browser opened (background only, no webview panel)');
+			this.logService.info('[SharedBrowserService] Browser opened and visible');
 		} catch (error) {
 			this._state.isActive = false;
 			this.logService.error(`[SharedBrowserService] Failed to open browser: ${error}`);
@@ -199,12 +202,24 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 		}
 	}
 	
+	async show(): Promise<void> {
+		try {
+			await this._sharedBrowserMainService.show();
+			this.logService.info('[SharedBrowserService] Requested main browser window to show');
+		} catch (error) {
+			this.logService.error(`[SharedBrowserService] Failed to show browser: ${error}`);
+		}
+	}
+
 	async openWebviewPanel(): Promise<void> {
-		// Se não está ativo, abrir background browser primeiro
+		// Se não está ativo, abrir browser primeiro
 		if (!this._state.isActive) {
-			await this.open(); // Abre background browser também
+			await this.open();
 		}
 		
+		// Garantir que a janela principal também apareça
+		await this.show();
+
 		// Se WebviewPanel já existe e não está disposed, apenas revelar
 		if (this._webviewPanel && !this._webviewPanel.isDisposed) {
 			this.logService.info('[SharedBrowserService] WebviewPanel already exists, revealing...');
@@ -447,6 +462,9 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 				type: 'click', // Use click as fallback type
 				description: time ? `Waited for ${time} seconds` : `Waited for text: ${text || 'unknown'}`,
 			});
+		} else if (toolName === 'browser_show' || toolName === 'mcp_cursor-ide-browser_browser_show') {
+			await this.show();
+			return { success: true, message: 'Browser window is now visible and focused.' };
 		}
 
 		// Execute action via IPC if we have one
@@ -459,15 +477,18 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 				await this._sharedBrowserMainService.executeAction(channelAction);
 				
 				// Capture snapshot and state after action
-				const snapshot = await this._sharedBrowserMainService.captureSnapshot();
-				if (snapshot) {
-					this._state.currentSnapshot = snapshot;
+				const snapshotData = await this._sharedBrowserMainService.getSnapshot();
+				if (snapshotData) {
+					// Usar o serviço de análise para processar o snapshot de forma robusta
+					const processedSnapshot = this.domAnalysisService.processBrowserSnapshot(snapshotData);
 					
-					// Enrich snapshot with context for agent
-					if (channelAction.type === 'snapshot') {
-						this.logService.info('[SharedBrowserService] Enriching snapshot with context for agent...');
-						// The enrichment happens in AgentSnapshotEnricher which is used by ChatThreadService
-					}
+					// Detectar padrões de página (Facebook, WhatsApp, etc)
+					const pattern = this.pagePatternDetector.detectPattern(processedSnapshot);
+					
+					// Atualizar o estado
+					this._state.currentSnapshot = processedSnapshot as any;
+					this._state.lastPageAnalysis = { pattern } as any;
+					this._state.lastAccessibilityContent = snapshotData.snapshotText;
 				}
 				
 				await this._syncStateFromMain();
@@ -517,11 +538,12 @@ export class SharedBrowserService extends Disposable implements ISharedBrowserSe
 		// Return the current state to the agent
 		return {
 			url: this._state.currentUrl,
-			snapshot: this._state.currentSnapshot, // This contains the accessibility tree/text
+			snapshot: this._state.currentSnapshot, // This contains the accessibility tree/text with refs [e1], [e2], etc.
 			success: true,
 			message: `Action ${toolName} executed successfully.`,
 			lastError: this._state.lastError,
-			isLoading: this._state.isLoading
+			isLoading: this._state.isLoading,
+			instructions: 'You can now use the numeric references [e1], [e2], etc. found in the snapshot to interact with elements using browser_click or browser_type.'
 		};
 	}
 

@@ -79,6 +79,10 @@ export interface IDOMAnalysisService {
 	 */
 	analyzeDOMStructure(htmlContent: string, url: string): DOMSnapshot;
 	/**
+	 * Converte um snapshot JSON do navegador em um DOMSnapshot estruturado
+	 */
+	processBrowserSnapshot(jsonSnapshot: any): DOMSnapshot;
+	/**
 	 * Encontra um elemento pelo selector CSS
 	 */
 	findElementBySelector(elements: ElementInfo[], selector: string): ElementInfo | null;
@@ -115,15 +119,13 @@ export class DOMAnalysisService extends Disposable implements IDOMAnalysisServic
 
 	analyzeDOMStructure(htmlContent: string, url: string): DOMSnapshot {
 		try {
-			this.logService.debug('[DOMAnalysisService] Starting DOM analysis...');
+			this.logService.debug('[DOMAnalysisService] Starting DOM analysis from HTML...');
 			
 			const startTime = Date.now();
 			const elements: ElementInfo[] = [];
 			const errors: string[] = [];
 			const warnings: string[] = [];
 			
-			// Parser simples de HTML (em produção, usar jsdom ou similar)
-			// Por enquanto, retornar estrutura básica
 			const snapshot: DOMSnapshot = {
 				url,
 				title: this._extractTitle(htmlContent),
@@ -140,7 +142,7 @@ export class DOMAnalysisService extends Disposable implements IDOMAnalysisServic
 				warnings,
 			};
 
-			// Processar página
+			// Processar página (método legado via Regex)
 			this._extractElements(htmlContent, snapshot);
 			snapshot.accessibility_tree = this.buildAccessibilityTree(snapshot.elements);
 
@@ -150,24 +152,91 @@ export class DOMAnalysisService extends Disposable implements IDOMAnalysisServic
 			return snapshot;
 		} catch (error) {
 			this.logService.error(`[DOMAnalysisService] Error analyzing DOM: ${error}`);
-			
-			// Retornar snapshot vazio em caso de erro
-			return {
+			return this._emptySnapshot(url, String(error));
+		}
+	}
+
+	processBrowserSnapshot(jsonSnapshot: any): DOMSnapshot {
+		try {
+			if (!jsonSnapshot) throw new Error('Snapshot data is empty');
+
+			const url = jsonSnapshot.url || '';
+			const elements: ElementInfo[] = [];
+			const snapshot: DOMSnapshot = {
 				url,
-				title: 'Error',
-				timestamp: Date.now(),
+				title: jsonSnapshot.title || 'Untitled',
+				timestamp: jsonSnapshot.timestamp || Date.now(),
 				hash: '',
 				isLoading: false,
-				elements: [],
+				elements,
 				forms: [],
 				links: [],
 				buttons: [],
 				inputs: [],
 				accessibility_tree: '',
-				errors: [String(error)],
+				errors: [],
 				warnings: [],
 			};
+
+			// Função recursiva para achatar a árvore em uma lista plana de elementos
+			const flatten = (node: any, parentRef?: string) => {
+				if (!node) return;
+
+				const element: ElementInfo = {
+					ref: node.ref || `gen-${elements.length}`,
+					selector: node.ref ? `[data-void-ref="${node.ref}"]` : '',
+					tagName: node.role || 'div',
+					role: node.role || 'generic',
+					ariaLabel: node.name || '',
+					text: node.name || '',
+					isClickable: !!node.isInteractive,
+					isVisible: true,
+					isFocusable: !!node.isInteractive,
+					parent: parentRef,
+				};
+
+				elements.push(element);
+
+				// Categorizar
+				if (element.isClickable) {
+					if (element.role === 'link' || element.tagName === 'a') snapshot.links.push(element);
+					else if (element.role === 'button' || element.tagName === 'button') snapshot.buttons.push(element);
+					else if (element.role === 'textbox' || element.tagName === 'input') snapshot.inputs.push(element);
+				}
+
+				if (node.children && Array.isArray(node.children)) {
+					node.children.forEach((child: any) => flatten(child, element.ref));
+				}
+			};
+
+			flatten(jsonSnapshot.tree);
+			
+			snapshot.hash = this._generateHash(JSON.stringify(elements));
+			snapshot.accessibility_tree = this.buildAccessibilityTree(elements);
+
+			return snapshot;
+		} catch (error) {
+			this.logService.error(`[DOMAnalysisService] Error processing JSON snapshot: ${error}`);
+			return this._emptySnapshot('', String(error));
 		}
+	}
+
+	private _emptySnapshot(url: string, error?: string): DOMSnapshot {
+		return {
+			url,
+			title: 'Error',
+			timestamp: Date.now(),
+			hash: '',
+			isLoading: false,
+			elements: [],
+			forms: [],
+			links: [],
+			buttons: [],
+			inputs: [],
+			accessibility_tree: '',
+			errors: error ? [error] : [],
+			warnings: [],
+		};
 	}
 
 	findElementBySelector(elements: ElementInfo[], selector: string): ElementInfo | null {

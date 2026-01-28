@@ -373,6 +373,9 @@ export class ToolsService implements IToolsService {
 				const time = validateNumber(timeUnknown, { default: null }) ?? undefined;
 				return { text, textGone, time };
 			},
+			browser_show: (_params: RawToolParamsObj) => {
+				return {};
+			},
 
 		}
 
@@ -604,47 +607,46 @@ export class ToolsService implements IToolsService {
 					if (!this.sharedBrowserMainService) {
 						throw new Error('Browser main service not available');
 					}
-					const snapshot = await this.sharedBrowserMainService.captureSnapshot();
-					if (!snapshot) {
-						// If no snapshot, wait a bit and try again
-						await timeout(500);
-						const state = await this.sharedBrowserMainService.getState();
-						return { result: { snapshot: state.currentSnapshot || null } };
+					
+					// Obter a árvore de acessibilidade (estilo Clawdbot)
+					const snapshotData = await this.sharedBrowserMainService.getSnapshot();
+					
+					if (!snapshotData || !snapshotData.tree) {
+						return { result: { snapshot: null, error: 'Failed to capture accessibility tree' } };
 					}
 
-					// Enrich snapshot with context
+					// Enriquecer snapshot com contexto (opcional)
 					let enrichedContext: any = {};
 					try {
-						// Parse snapshot if it's a string (JSON)
-						let snapshotData = typeof snapshot === 'string' ? JSON.parse(snapshot) : snapshot;
+						// Analisar a estrutura da árvore para extrair elementos interativos
+						const accessibilityText = this._formatAccessibilityTree(snapshotData.tree);
 						
-						// Detect page pattern
+						// Detectar padrões de página
 						const pattern = this.pagePatternDetector.detectPattern(snapshotData);
 						
-						// Analyze and enrich snapshot with recommendations and suggestions
+						// Enriquecer com recomendações
 						enrichedContext = this.agentContextEnhancer.analyzeSnapshot(
 							snapshotData.url || '',
 							snapshotData.title || '',
-							snapshotData.accessibilityTree || '',
+							accessibilityText,
 							undefined
 						);
 						
-						this.logService.debug(`[ToolsService] Snapshot enriched with pattern: ${pattern.type}, confidence: ${pattern.confidence}`);
+						this.logService.debug(`[ToolsService] Snapshot enriched. Pattern: ${pattern.type}`);
 					} catch (enrichError) {
 						this.logService.warn(`[ToolsService] Failed to enrich snapshot: ${enrichError}`);
-						// Continue anyway, enrichment is optional
 					}
 
 					return { 
 						result: { 
-							snapshot,
-							enrichedContext: enrichedContext || undefined,
-							pattern: enrichedContext?.pattern
+							snapshot: snapshotData,
+							accessibilityTree: this._formatAccessibilityTree(snapshotData.tree),
+							enrichedContext: enrichedContext || undefined
 						} 
 					};
 				} catch (error) {
 					this.logService.error(`[ToolsService] browser_snapshot error: ${error}`);
-					return { result: { snapshot: null } };
+					return { result: { snapshot: null, error: String(error) } };
 				}
 			},
 			browser_screenshot: async ({ fullPage }) => {
@@ -724,6 +726,14 @@ export class ToolsService implements IToolsService {
 						timestamp: Date.now(),
 						description: text ? `Wait for "${text}"` : textGone ? `Wait for "${textGone}" to disappear` : `Wait ${time}s`,
 					});
+					return { result: { success: true } };
+				}
+				return { result: { success: false } };
+			},
+			browser_show: async () => {
+				await this.sharedBrowserService.open();
+				if (this.sharedBrowserMainService) {
+					await this.sharedBrowserMainService.show();
 					return { result: { success: true } };
 				}
 				return { result: { success: false } };
@@ -850,21 +860,22 @@ export class ToolsService implements IToolsService {
 				return result.success ? `Successfully typed into "${params.element}"` : `Failed to type into "${params.element}"`;
 			},
 			browser_snapshot: (_params, result) => {
-				if (result.snapshot) {
-					// Retorna o conteúdo completo do snapshot para o agente poder identificar elementos
-					const snapshotText = typeof result.snapshot === 'string' 
-						? result.snapshot 
-						: JSON.stringify(result.snapshot, null, 2);
-					
-					// Limita o tamanho do snapshot para evitar exceder o contexto
-					const MAX_SNAPSHOT_LENGTH = 50000; // ~50k caracteres
-					const truncatedSnapshot = snapshotText.length > MAX_SNAPSHOT_LENGTH
-						? snapshotText.substring(0, MAX_SNAPSHOT_LENGTH) + '\n\n[... snapshot truncated ...]'
-						: snapshotText;
-					
-					return `Snapshot captured. Here is the accessibility tree with element references (use the 'ref' field to identify elements for clicking):\n\n${truncatedSnapshot}`;
+				if (result.snapshot && result.accessibilityTree) {
+					let output = `Snapshot captured for: ${result.snapshot.title || 'Untitled'}\n`;
+					output += `URL: ${result.snapshot.url}\n\n`;
+					output += `### Accessibility Tree (Use [ref=...] for actions):\n`;
+					output += `\`\`\`\n${result.accessibilityTree}\n\`\`\`\n\n`;
+
+					if (result.enrichedContext && result.enrichedContext.suggestedActions) {
+						output += `### Suggested Next Steps:\n`;
+						result.enrichedContext.suggestedActions.forEach((a: any) => {
+							output += `- **${a.action}**: ${a.reasoning}\n`;
+						});
+					}
+
+					return output;
 				}
-				return `Failed to capture snapshot.`;
+				return `Failed to capture snapshot. ${result.error || ''}`;
 			},
 			browser_screenshot: (_params, result) => {
 				return result.screenshot ? `Screenshot captured successfully (${result.screenshot.length} bytes).` : `Failed to capture screenshot.`;
@@ -880,6 +891,9 @@ export class ToolsService implements IToolsService {
 			},
 			browser_wait_for: (_params, result) => {
 				return result.success ? `Wait completed successfully.` : `Wait failed.`;
+			},
+			browser_show: (_params, result) => {
+				return result.success ? `Successfully showed the browser window to the user.` : `Failed to show the browser window.`;
 			},
 		}
 
@@ -995,6 +1009,23 @@ export class ToolsService implements IToolsService {
 		} catch (error) {
 			this.logService.warn(`[ToolsService] Failed to save screenshot file (non-critical): ${error}`);
 		}
+	}
+
+	private _formatAccessibilityTree(node: any, indent: string = ''): string {
+		if (!node) return '';
+
+		let result = `${indent}${node.role}`;
+		if (node.name) result += ` "${node.name}"`;
+		if (node.ref) result += ` [ref=${node.ref}]`;
+		result += '\n';
+
+		if (node.children && Array.isArray(node.children)) {
+			for (const child of node.children) {
+				result += this._formatAccessibilityTree(child, indent + '  ');
+			}
+		}
+
+		return result;
 	}
 
 	private _convertToolCallToBrowserAction(toolName: string, rawParams: RawToolParamsObj): BrowserAction {

@@ -419,11 +419,10 @@ export class CodeApplication extends Disposable {
 				this.auxiliaryWindowsMainService?.registerWindow(contents);
 			}
 
-			// Block any in-page navigation
+			// Allow all navigation - unblocked for both user and agent
 			contents.on('will-navigate', event => {
-				this.logService.error('webContents#will-navigate: Prevented webcontent navigation');
-
-				event.preventDefault();
+				this.logService.trace('webContents#will-navigate: Allowing navigation to', event.url);
+				// No blocking - free navigation for user and agent
 			});
 
 			// All Windows: only allow about:blank auxiliary windows to open

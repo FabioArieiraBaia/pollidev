@@ -408,6 +408,11 @@ export const builtinTools: {
 			text_gone: { description: 'Text to wait for to disappear (optional)' },
 			time: { description: 'Time to wait in seconds (optional)' }
 		}
+	},
+	browser_show: {
+		name: 'browser_show',
+		description: `Show the browser window and bring it to the front. Use this when you need the user to see the browser (e.g., for login or QR code).`,
+		params: {}
 	}
 
 	// go_to_definition

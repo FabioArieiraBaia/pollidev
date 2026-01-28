@@ -18,6 +18,8 @@ export interface ISharedBrowserMainService {
 	navigate(url: string): Promise<void>;
 	executeAction(action: BrowserAction): Promise<any>;
 	captureSnapshot(): Promise<string | null>;
+	getSnapshot(): Promise<any>;
+	show(): Promise<void>;
 	setControlMode(mode: 'agent' | 'user'): Promise<void>;
 	getState(): Promise<BrowserState>;
 	getHtmlContent(): Promise<string | null>;
@@ -47,22 +49,32 @@ export class SharedBrowserMainService extends Disposable implements ISharedBrows
 
 	async createBrowserWindow(): Promise<void> {
 		if (this.browserWindow && !this.browserWindow.isDestroyed()) {
+			this.browserWindow.show();
+			this.browserWindow.focus();
 			return;
 		}
 
 		this.browserWindow = new BrowserWindow({
-			width: 1200,
-			height: 800,
-			show: false, // Don't show until ready to prevent white flash
+			width: 1280,
+			height: 850,
+			show: true, // Sempre visível
+			title: 'PolliBot - Navegador de Automação',
 			webPreferences: {
 				nodeIntegration: false,
-				contextIsolation: true
+				contextIsolation: true,
+				sandbox: false // Necessário para algumas automações avançadas
 			},
 		});
 
-		// Show window when ready to prevent white flash
+		// Marcar para permitir navegação no app.ts
+		(this.browserWindow.webContents as any).isAgentAutomation = true;
+		(this.browserWindow.webContents as any).isVoidAutomation = true;
+
 		this.browserWindow.once('ready-to-show', () => {
-			this.browserWindow?.show();
+			if (this.browserWindow) {
+				this.browserWindow.show();
+				this.browserWindow.focus();
+			}
 		});
 
 		this.browserWindow.on('closed', () => {
@@ -82,6 +94,11 @@ export class SharedBrowserMainService extends Disposable implements ISharedBrows
 		}
 
 		if (this.browserWindow) {
+			// Marcar para permitir navegação no app.ts se não estiver marcado
+			if (!(this.browserWindow.webContents as any).isAgentAutomation) {
+				(this.browserWindow.webContents as any).isAgentAutomation = true;
+			}
+			
 			await this.browserWindow.loadURL(url);
 			this._state.currentUrl = url;
 			this._onDidUpdateState.fire();
@@ -92,12 +109,23 @@ export class SharedBrowserMainService extends Disposable implements ISharedBrows
 		}
 	}
 
+	async show(): Promise<void> {
+		if (this.browserWindow) {
+			this.browserWindow.show();
+			this.browserWindow.focus();
+		}
+	}
+
 	async executeAction(action: BrowserAction): Promise<any> {
 		if (!this.browserWindow || this.browserWindow.isDestroyed()) {
-			throw new Error('Browser window is not open');
+			await this.createBrowserWindow();
 		}
 
-		const webContents = this.browserWindow.webContents;
+		const webContents = this.browserWindow!.webContents;
+		
+		// SEMPRE focar e mostrar a janela antes de qualquer ação
+		this.browserWindow!.show();
+		this.browserWindow!.focus();
 
 		switch (action.type) {
 			case 'navigate':
@@ -106,35 +134,168 @@ export class SharedBrowserMainService extends Disposable implements ISharedBrows
 				}
 				break;
 			case 'click':
-				if (action.ref) {
-					await webContents.executeJavaScript(`
-						const element = document.querySelector('[data-ref="${action.ref}"]');
-						if (element) element.click();
-					`);
-				} else if (action.element) {
-					await webContents.executeJavaScript(`
-						const element = document.querySelector('${action.element}');
-						if (element) element.click();
+				const clickTarget = action.ref || action.element;
+				if (clickTarget) {
+					return await webContents.executeJavaScript(`
+						(async function() {
+							const target = "${clickTarget}";
+							const element = document.querySelector('[data-void-ref="' + target + '"]') || 
+											document.querySelector('[data-ref="' + target + '"]') || 
+											document.querySelector(target);
+							if (element) {
+								element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+								await new Promise(r => setTimeout(r, 300)); // Esperar scroll
+								
+								element.focus();
+								
+								// Simular clique real ultra-robusto
+								const rect = element.getBoundingClientRect();
+								const x = rect.left + rect.width / 2;
+								const y = rect.top + rect.height / 2;
+
+								const mouseEvents = ['mouseenter', 'mouseover', 'mousedown', 'mouseup', 'click'];
+								mouseEvents.forEach(name => {
+									const event = new MouseEvent(name, {
+										bubbles: true,
+										cancelable: true,
+										view: window,
+										clientX: x,
+										clientY: y,
+										buttons: 1
+									});
+									element.dispatchEvent(event);
+								});
+								
+								// Alguns sites (FB) precisam de focus específico
+								element.dispatchEvent(new Event('focus', { bubbles: true }));
+								
+								return { success: true, message: 'Clicked on ' + target };
+							}
+							return { success: false, message: 'Element not found: ' + target };
+						})()
 					`);
 				}
 				break;
 			case 'type':
-				if (action.ref && action.text) {
-					await webContents.executeJavaScript(`
-						const element = document.querySelector('[data-ref="${action.ref}"]');
-						if (element) {
-							element.value = ${JSON.stringify(action.text)};
-							element.dispatchEvent(new Event('input', { bubbles: true }));
-						}
+				const typeTarget = action.ref || action.element;
+				if (typeTarget && action.text !== undefined) {
+					return await webContents.executeJavaScript(`
+						(async function() {
+							const target = "${typeTarget}";
+							const text = ${JSON.stringify(action.text)};
+							const element = document.querySelector('[data-void-ref="' + target + '"]') || 
+											document.querySelector('[data-ref="' + target + '"]') || 
+											document.querySelector(target);
+							if (element) {
+								element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+								await new Promise(r => setTimeout(r, 300));
+								
+								element.focus();
+								
+								// Limpar de forma que o React/Vue perceba
+								if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+									element.value = '';
+								} else if (element.isContentEditable) {
+									element.innerHTML = '';
+								}
+								
+								element.dispatchEvent(new Event('input', { bubbles: true }));
+
+								// Simular digitação caractere por caractere para sites com validação real-time
+								for (let i = 0; i < text.length; i++) {
+									const char = text[i];
+									const keyEventParams = { key: char, char: char, keyCode: char.charCodeAt(0), bubbles: true };
+									element.dispatchEvent(new KeyboardEvent('keydown', keyEventParams));
+									element.dispatchEvent(new KeyboardEvent('keypress', keyEventParams));
+									
+									if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+										element.value += char;
+									} else if (element.isContentEditable) {
+										element.innerHTML += char;
+									}
+									
+									element.dispatchEvent(new InputEvent('input', { data: char, bubbles: true }));
+									element.dispatchEvent(new KeyboardEvent('keyup', keyEventParams));
+									await new Promise(r => setTimeout(r, 10)); // Delay humano
+								}
+
+								element.dispatchEvent(new Event('change', { bubbles: true }));
+								element.dispatchEvent(new Event('blur', { bubbles: true }));
+								
+								return { success: true, message: 'Typed text into ' + target };
+							}
+							return { success: false, message: 'Element not found: ' + target };
+						})()
 					`);
-				} else if (action.element && action.text) {
+				}
+				break;
+			case 'hover':
+				const hoverTarget = action.ref || action.element;
+				if (hoverTarget) {
 					await webContents.executeJavaScript(`
-						const element = document.querySelector('${action.element}');
-						if (element) {
-							element.value = ${JSON.stringify(action.text)};
-							element.dispatchEvent(new Event('input', { bubbles: true }));
-						}
+						(function() {
+							const target = "${hoverTarget}";
+							const element = document.querySelector('[data-void-ref="' + target + '"]') || 
+											document.querySelector('[data-ref="' + target + '"]') || 
+											document.querySelector(target);
+							if (element) {
+								element.scrollIntoView({ behavior: 'instant', block: 'center' });
+								const rect = element.getBoundingClientRect();
+								const x = rect.left + rect.width / 2;
+								const y = rect.top + rect.height / 2;
+								// Simulando hover via mousemove
+								element.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientX: x, clientY: y }));
+								element.dispatchEvent(new MouseEvent('mouseover', { bubbles: true, clientX: x, clientY: y }));
+								return true;
+							}
+							return false;
+						})()
 					`);
+				}
+				break;
+			case 'press_key':
+				if (action.key) {
+					await webContents.sendInputEvent({ type: 'keyDown', viewModel: action.key } as any);
+					await webContents.sendInputEvent({ type: 'keyUp', viewModel: action.key } as any);
+				}
+				break;
+			case 'select_option':
+				const selectTarget = action.ref || action.element;
+				if (selectTarget && action.values) {
+					await webContents.executeJavaScript(`
+						(function() {
+							const target = "${selectTarget}";
+							const values = ${JSON.stringify(action.values)};
+							const element = document.querySelector('[data-void-ref="' + target + '"]') || 
+											document.querySelector('[data-ref="' + target + '"]') || 
+											document.querySelector(target);
+							if (element && element.tagName === 'SELECT') {
+								Array.from(element.options).forEach(opt => {
+									opt.selected = values.includes(opt.value) || values.includes(opt.text);
+								});
+								element.dispatchEvent(new Event('change', { bubbles: true }));
+								element.dispatchEvent(new Event('input', { bubbles: true }));
+								return true;
+							}
+							return false;
+						})()
+					`);
+				}
+				break;
+			case 'wait_for':
+				const waitTime = action.time;
+				if (typeof waitTime === 'number' && waitTime > 0) {
+					await new Promise(resolve => setTimeout(resolve, waitTime * 1000));
+				} else if (action.text) {
+					const startTime = Date.now();
+					const timeout = 10000; // 10s default
+					while (Date.now() - startTime < timeout) {
+						const found = await webContents.executeJavaScript(`
+							document.body.innerText.includes(${JSON.stringify(action.text)})
+						`);
+						if (found) break;
+						await new Promise(resolve => setTimeout(resolve, 500));
+					}
 				}
 				break;
 			case 'screenshot':
@@ -155,8 +316,10 @@ export class SharedBrowserMainService extends Disposable implements ISharedBrows
 			const dataUrl = image.toDataURL();
 			this._state.currentSnapshot = dataUrl;
 			this._onDidUpdateState.fire();
+			// Return the base64 string, not the NativeImage object
 			return dataUrl;
 		} catch (error) {
+			console.error('[SharedBrowserMainService] Screenshot error:', error);
 			return null;
 		}
 	}
@@ -223,27 +386,75 @@ export class SharedBrowserMainService extends Disposable implements ISharedBrows
 	}
 
 	async getSnapshot(): Promise<any> {
-		if (!this.browserWindow) {
+		if (!this.browserWindow || this.browserWindow.isDestroyed()) {
 			throw new Error('Browser window is not open');
 		}
 
+		// Implementação inspirada no Clawdbot: extração de árvore de acessibilidade simplificada com refs
 		const snapshot = await this.browserWindow.webContents.executeJavaScript(`
 			(function() {
-				function getAccessibilityTree(element) {
-					const role = element.getAttribute('role') || element.tagName.toLowerCase();
-					const name = element.getAttribute('aria-label') || element.getAttribute('name') || element.textContent?.trim().substring(0, 50);
-					const tree = { role, name, children: [] };
+				const INTERACTIVE_ROLES = new Set([
+					'button', 'link', 'textbox', 'checkbox', 'radio', 'combobox', 
+					'listbox', 'menuitem', 'option', 'searchbox', 'slider', 'spinbutton', 
+					'switch', 'tab', 'treeitem', 'input', 'select', 'textarea'
+				]);
+
+				let refCounter = 0;
+				const elementMap = new Map();
+
+				function simplifyNode(node, depth = 0) {
+					if (!node || depth > 10) return null;
+
+					const role = node.getAttribute?.('role') || node.tagName?.toLowerCase();
+					if (!role) return null;
+
+					// Pular elementos de script/style
+					if (role === 'script' || role === 'style' || role === 'meta' || role === 'head') return null;
+
+					const name = node.getAttribute?.('aria-label') || 
+								 node.getAttribute?.('name') || 
+								 node.getAttribute?.('placeholder') ||
+								 (node.innerText || '').trim().substring(0, 100);
+
+					const isInteractive = INTERACTIVE_ROLES.has(role) || 
+										 (node.tagName === 'INPUT' || node.tagName === 'BUTTON' || node.tagName === 'A' || node.tagName === 'SELECT');
+
+					const ref = isInteractive ? 'e' + (++refCounter) : null;
 					
-					for (let child of element.children) {
-						tree.children.push(getAccessibilityTree(child));
+					if (ref) {
+						node.setAttribute('data-void-ref', ref);
 					}
-					
-					return tree;
+
+					const children = [];
+					for (const child of node.children || []) {
+						const simplifiedChild = simplifyNode(child, depth + 1);
+						if (simplifiedChild) {
+							children.push(simplifiedChild);
+						}
+					}
+
+					// Se não for interativo e não tiver filhos úteis, e não tiver texto, ignorar (compactação)
+					if (!isInteractive && children.length === 0 && !name) return null;
+
+					return {
+						role,
+						name,
+						ref,
+						isInteractive,
+						children: children.length > 0 ? children : undefined
+					};
 				}
-				return getAccessibilityTree(document.body);
+
+				const tree = simplifyNode(document.body);
+				return {
+					url: window.location.href,
+					title: document.title,
+					tree,
+					timestamp: Date.now()
+				};
 			})();
 		`);
 
-		return { ...snapshot, timestamp: Date.now() };
+		return snapshot;
 	}
 }

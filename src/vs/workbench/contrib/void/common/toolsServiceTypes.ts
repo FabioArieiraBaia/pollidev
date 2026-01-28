@@ -37,6 +37,7 @@ export const approvalTypeOfBuiltinToolName: Partial<{ [T in BuiltinToolName]?: '
 	'browser_press_key': 'browser',
 	'browser_select_option': 'browser',
 	'browser_wait_for': 'browser',
+	'browser_show': 'browser',
 }
 
 
@@ -81,6 +82,7 @@ export type BuiltinToolCallParams = {
 	'browser_press_key': { key: string },
 	'browser_select_option': { element: string, ref: string, values: string[] },
 	'browser_wait_for': { text?: string, textGone?: string, time?: number },
+	'browser_show': {},
 }
 
 // RESULT OF TOOL CALL
@@ -106,12 +108,18 @@ export type BuiltinToolResultType = {
 	'browser_navigate': { success: boolean, url: string },
 	'browser_click': { success: boolean },
 	'browser_type': { success: boolean },
-	'browser_snapshot': { snapshot: string | null }, // base64 image or accessibility tree
+	'browser_snapshot': { 
+		snapshot: any | null, 
+		accessibilityTree?: string, 
+		enrichedContext?: any, 
+		error?: string 
+	}, // accessibility tree and context
 	'browser_screenshot': { screenshot: string | null }, // base64 image
 	'browser_hover': { success: boolean },
 	'browser_press_key': { success: boolean },
 	'browser_select_option': { success: boolean },
 	'browser_wait_for': { success: boolean },
+	'browser_show': { success: boolean },
 }
 
 
